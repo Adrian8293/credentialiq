@@ -301,7 +301,60 @@ tbody tr:hover{background:#f8fafd;}
 .sort-pill{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--ink-3);transition:all var(--t);}
 .sort-pill:hover{border-color:var(--primary);color:var(--primary);}
 .sort-pill.active{background:var(--primary);border-color:var(--primary);color:white;}
+
+/* GLOBAL SEARCH */
+.gsearch-overlay{position:fixed;inset:0;background:rgba(9,22,48,.55);backdrop-filter:blur(8px);z-index:800;display:flex;align-items:flex-start;justify-content:center;padding-top:80px;animation:fadeIn .15s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.gsearch-box{background:var(--surface);border-radius:var(--r-xl);box-shadow:var(--shadow-lg);width:100%;max-width:620px;overflow:hidden;animation:slideDown .18s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:none;}}
+.gsearch-input-wrap{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);}
+.gsearch-icon{font-size:18px;color:var(--ink-4);flex-shrink:0;}
+.gsearch-input{flex:1;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink);background:transparent;}
+.gsearch-input::placeholder{color:var(--ink-4);}
+.gsearch-kbd{background:var(--surface-2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:11px;color:var(--ink-4);font-family:'DM Sans',sans-serif;white-space:nowrap;}
+.gsearch-results{max-height:440px;overflow-y:auto;}
+.gsearch-section{padding:8px 0 4px;}
+.gsearch-section-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-4);padding:4px 20px 6px;}
+.gsearch-item{display:flex;align-items:center;gap:12px;padding:10px 20px;cursor:pointer;transition:background var(--t);}
+.gsearch-item:hover,.gsearch-item.focused{background:var(--primary-l);}
+.gsearch-item-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.gsearch-item-main{flex:1;min-width:0;}
+.gsearch-item-title{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gsearch-item-sub{font-size:11.5px;color:var(--ink-4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.gsearch-item-tag{flex-shrink:0;}
+.gsearch-empty{text-align:center;padding:36px 20px;color:var(--ink-4);font-size:13px;}
+.gsearch-footer{padding:10px 20px;border-top:1px solid var(--border);display:flex;gap:16px;align-items:center;}
+.gsearch-hint{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-4);}
+.topbar-search-btn{display:flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface-2);cursor:pointer;color:var(--ink-4);font-size:12.5px;font-family:'DM Sans',sans-serif;transition:all var(--t);min-width:200px;}
+.topbar-search-btn:hover{border-color:var(--primary);color:var(--ink);}
+.topbar-search-btn span{flex:1;}
 .progress-bar{height:8px;background:var(--border-2);border-radius:4px;overflow:hidden;}
+
+/* PROVIDER LOOKUP */
+.lookup-result-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:10px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;box-shadow:var(--shadow-sm);transition:all var(--t);}
+.lookup-result-card:hover{border-color:#93c5fd;box-shadow:var(--shadow);}
+.lookup-avatar{width:44px;height:44px;border-radius:10px;background:var(--primary-l);border:1px solid var(--blue-b);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:17px;color:var(--primary);flex-shrink:0;}
+.lookup-name{font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.lookup-meta{font-size:12px;color:var(--ink-3);margin-bottom:6px;}
+.lookup-chips{display:flex;gap:5px;flex-wrap:wrap;}
+.lookup-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
+.lookup-count{font-size:12px;color:var(--ink-4);margin-bottom:12px;font-style:italic;}
+.verif-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px;margin-bottom:12px;display:flex;align-items:flex-start;gap:16px;box-shadow:var(--shadow-sm);}
+.verif-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.verif-body{flex:1;}
+.verif-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.verif-desc{font-size:12.5px;color:var(--ink-3);margin-bottom:10px;line-height:1.5;}
+.verif-note{font-size:11.5px;color:var(--ink-4);background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r);padding:6px 10px;margin-top:8px;}
+.lookup-tabs{display:flex;gap:2px;margin-bottom:20px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);padding:4px;}
+.lookup-tab{flex:1;padding:8px 12px;border-radius:var(--r-md);cursor:pointer;font-size:13px;font-weight:500;color:var(--ink-4);text-align:center;transition:all var(--t);}
+.lookup-tab:hover{color:var(--ink);}
+.lookup-tab.active{background:var(--surface);color:var(--primary);box-shadow:var(--shadow-sm);border:1px solid var(--border);}
+.import-preview{background:var(--primary-l);border:1px solid #c3d9fd;border-radius:var(--r-lg);padding:16px 18px;margin-top:10px;}
+.import-preview-title{font-size:12px;font-weight:700;color:var(--primary);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px;}
+.import-row{display:flex;gap:8px;font-size:12.5px;padding:4px 0;border-bottom:1px solid #d0e6fc;}
+.import-row:last-child{border-bottom:none;}
+.import-label{color:var(--ink-4);width:130px;flex-shrink:0;}
+.import-val{color:var(--ink);font-weight:500;}
 .progress-fill{height:100%;border-radius:4px;transition:width .4s ease;}
 @media(max-width:900px){.sidebar{width:190px;}.main{margin-left:190px;}.kpi-grid{grid-template-columns:repeat(2,1fr);}.form-grid,.grid-2,.grid-3{grid-template-columns:1fr;}.form-grid .full{grid-column:1;}}
 `
@@ -358,12 +411,7 @@ export default function App() {
   const [wfSearch, setWfSearch] = useState(''); const [wfFPriority, setWfFPriority] = useState(''); const [wfFStatus, setWfFStatus] = useState('')
   const [auditSearch, setAuditSearch] = useState(''); const [auditFType, setAuditFType] = useState('')
   const [npiInput, setNpiInput] = useState(''); const [npiResult, setNpiResult] = useState(null); const [npiLoading, setNpiLoading] = useState(false)
-
-  // Provider Lookup page state
-  const [lookupForm, setLookupForm] = useState({ firstName:'', lastName:'', state:'OR', specialty:'', npi:'' })
-  const [lookupResults, setLookupResults] = useState(null)
-  const [lookupLoading, setLookupLoading] = useState(false)
-  const [importingNpi, setImportingNpi] = useState(null)
+  const [globalSearchOpen, setGlobalSearchOpen] = useState(false)
 
   // ─── AUTH ────────────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -375,6 +423,19 @@ export default function App() {
       setUser(session?.user ?? null)
     })
     return () => subscription.unsubscribe()
+  }, [])
+
+  // ─── GLOBAL SEARCH SHORTCUT
+  useEffect(() => {
+    function onKey(e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        setGlobalSearchOpen(o => !o)
+      }
+      if (e.key === 'Escape') setGlobalSearchOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
   }, [])
 
   // ─── LOAD DATA ───────────────────────────────────────────────────────────────
@@ -632,43 +693,6 @@ export default function App() {
     setNpiLoading(false)
   }
 
-  // ─── IMPORT PROVIDER FROM NPPES LOOKUP ───────────────────────────────────────
-  async function handleImportProvider(result) {
-    setImportingNpi(result.npi)
-    try {
-      // Map NPPES taxonomy to our cred/spec fields
-      const taxDesc = (result.taxonomies?.[0]?.desc || '').toLowerCase()
-      let cred = 'Other', spec = 'Mental Health'
-      if (taxDesc.includes('clinical social')) { cred = 'LCSW'; spec = 'Mental Health' }
-      else if (taxDesc.includes('counselor') || taxDesc.includes('counseling')) { cred = 'LPC'; spec = 'Mental Health' }
-      else if (taxDesc.includes('marriage') || taxDesc.includes('family')) { cred = 'LMFT'; spec = 'Mental Health' }
-      else if (taxDesc.includes('psychologist')) { cred = 'Licensed Psychologist'; spec = 'Mental Health' }
-      else if (taxDesc.includes('psychiatric') || taxDesc.includes('nurse')) { cred = 'PMHNP'; spec = 'Mental Health' }
-      else if (taxDesc.includes('naturo')) { cred = 'Naturopathic Physician'; spec = 'Naturopathic' }
-      else if (taxDesc.includes('chiro')) { cred = 'Chiropractor'; spec = 'Chiropractic' }
-      else if (taxDesc.includes('acupunct')) { cred = 'Acupuncturist'; spec = 'Acupuncture' }
-      else if (taxDesc.includes('massage')) { cred = 'LMT'; spec = 'Massage Therapy' }
-      else if (taxDesc.includes('physician') || taxDesc.includes('doctor of medicine')) { cred = 'MD'; spec = 'Mental Health' }
-
-      const loc = result.addresses?.[0] || {}
-      const provData = {
-        fname: result.fname || '',
-        lname: result.lname || '',
-        cred,
-        spec,
-        status: 'Pending',
-        npi: result.npi,
-        focus: result.taxonomies?.[0]?.desc || '',
-        notes: `Imported from NPPES on ${new Date().toLocaleDateString()}. Address: ${[loc.address_1, loc.city, loc.state, loc.postal_code].filter(Boolean).join(', ')}`,
-      }
-      const saved = await upsertProvider(provData)
-      setDb(prev => ({ ...prev, providers: [...prev.providers, saved] }))
-      toast(`${saved.fname} ${saved.lname} imported successfully! Review and complete their profile.`, 'success')
-      await addAudit('Provider', 'Imported from NPPES', `${saved.fname} ${saved.lname} NPI:${result.npi}`, saved.id)
-    } catch(err) { toast('Import failed: ' + err.message, 'error') }
-    setImportingNpi(null)
-  }
-
   // ─── LOAD SAMPLE DATA ─────────────────────────────────────────────────────────
   async function loadSampleData() {
     if (!confirm('Load sample data? This will add sample providers and payers.')) return
@@ -778,7 +802,7 @@ export default function App() {
 
         {/* ─── MAIN ─── */}
         <div className="main">
-          <Topbar page={page} setPage={setPage} openEnrollModal={openEnrollModal} openPayerModal={openPayerModal} openDocModal={openDocModal} openTaskModal={openTaskModal} exportJSON={exportJSON} loadSampleData={loadSampleData} saving={saving} />
+          <Topbar page={page} setPage={setPage} openEnrollModal={openEnrollModal} openPayerModal={openPayerModal} openDocModal={openDocModal} openTaskModal={openTaskModal} exportJSON={exportJSON} loadSampleData={loadSampleData} saving={saving} onOpenSearch={()=>setGlobalSearchOpen(true)} />
 
           {loading ? (
             <div className="loading-screen">
@@ -790,6 +814,7 @@ export default function App() {
               {page === 'dashboard' && <Dashboard db={db} setPage={setPage} openEnrollModal={openEnrollModal} />}
               {page === 'alerts' && <Alerts db={db} />}
               {page === 'providers' && <Providers db={db} search={provSearch} setSearch={setProvSearch} fStatus={provFStatus} setFStatus={setProvFStatus} fSpec={provFSpec} setFSpec={setProvFSpec} openProvDetail={openProvDetail} editProvider={editProvider} setPage={setPage} setProvForm={setProvForm} setEditingId={setEditingId} setNpiInput={setNpiInput} setNpiResult={setNpiResult} />}
+              {page === 'provider-lookup' && <ProviderLookup db={db} setPage={setPage} setProvForm={setProvForm} setEditingId={setEditingId} setNpiInput={setNpiInput} setNpiResult={setNpiResult} />}
               {page === 'add-provider' && <AddProvider db={db} provForm={provForm} setProvForm={setProvForm} editingId={editingId} setEditingId={setEditingId} npiInput={npiInput} setNpiInput={setNpiInput} npiResult={npiResult} setNpiResult={setNpiResult} npiLoading={npiLoading} lookupNPI={lookupNPI} handleSaveProvider={handleSaveProvider} handleDeleteProvider={handleDeleteProvider} setPage={setPage} saving={saving} />}
               {page === 'enrollments' && <Enrollments db={db} search={enrSearch} setSearch={setEnrSearch} fStage={enrFStage} setFStage={setEnrFStage} fProv={enrFProv} setFProv={setEnrFProv} openEnrollModal={openEnrollModal} handleDeleteEnrollment={handleDeleteEnrollment} />}
               {page === 'payers' && <Payers db={db} search={paySearch} setSearch={setPaySearch} fType={payFType} setFType={setPayFType} openPayerModal={openPayerModal} handleDeletePayer={handleDeletePayer} />}
@@ -798,8 +823,6 @@ export default function App() {
               {page === 'reports' && <Reports db={db} exportJSON={exportJSON} />}
               {page === 'audit' && <Audit db={db} search={auditSearch} setSearch={setAuditSearch} fType={auditFType} setFType={setAuditFType} handleClearAudit={handleClearAudit} />}
               {page === 'settings' && <Settings settingsForm={settingsForm} setSettingsForm={setSettingsForm} handleSaveSettings={handleSaveSettings} exportJSON={exportJSON} />}
-              {page === 'provider-lookup' && <ProviderLookup db={db} lookupForm={lookupForm} setLookupForm={setLookupForm} lookupResults={lookupResults} setLookupResults={setLookupResults} lookupLoading={lookupLoading} setLookupLoading={setLookupLoading} importingNpi={importingNpi} setImportingNpi={setImportingNpi} handleImportProvider={handleImportProvider} toast={toast} />}
-              {page === 'license-verify' && <LicenseVerify db={db} />}
             </div>
           )}
         </div>
@@ -812,6 +835,8 @@ export default function App() {
         {modal === 'provDetail' && provDetail && <ProvDetailModal prov={provDetail} db={db} tab={provDetailTab} setTab={setProvDetailTab} onClose={()=>setModal(null)} editProvider={editProvider} openEnrollModal={openEnrollModal} />}
 
         {/* ─── TOASTS ─── */}
+        {globalSearchOpen && <GlobalSearch db={db} onClose={()=>setGlobalSearchOpen(false)} setPage={setPage} openProvDetail={openProvDetail} openEnrollModal={openEnrollModal} />}
+
         <div className="toast-wrap">
           {toasts.map(t => (
             <div key={t.id} className={`toast t-${t.type}`}>
@@ -853,6 +878,7 @@ function Sidebar({ page, setPage, alertCount, pendingEnroll, expDocs, user, sign
         <div className="sb-section">Providers</div>
         {navItem('providers','⊞','All Providers')}
         {navItem('add-provider','⊕','Add Provider')}
+        {navItem('provider-lookup','⌕','Provider Lookup')}
         <div className="sb-section">Enrollments</div>
         {navItem('enrollments','⊟','Payer Enrollments', pendingEnroll, 'amber')}
         {navItem('payers','⊠','Payer Directory')}
@@ -864,9 +890,6 @@ function Sidebar({ page, setPage, alertCount, pendingEnroll, expDocs, user, sign
         {navItem('audit','◨','Audit Trail')}
         <div className="sb-section">System</div>
         {navItem('settings','◫','Settings')}
-        <div className="sb-section">Tools</div>
-        {navItem('provider-lookup','🔭','Provider Lookup')}
-        {navItem('license-verify','✅','License Verify')}
       </nav>
       <div className="sb-footer">
         <div className="sb-user">
@@ -881,8 +904,8 @@ function Sidebar({ page, setPage, alertCount, pendingEnroll, expDocs, user, sign
   )
 }
 
-function Topbar({ page, setPage, openEnrollModal, openPayerModal, openDocModal, openTaskModal, exportJSON, loadSampleData, saving }) {
-  const titles = { dashboard:'Dashboard', alerts:'Alerts', providers:'All Providers', 'add-provider':'Add Provider', enrollments:'Payer Enrollments', payers:'Payer Directory', documents:'Documents & Expiry', workflows:'Workflows & Tasks', reports:'Reports & Analytics', audit:'Audit Trail', settings:'Settings', 'provider-lookup':'Provider Lookup — NPPES Registry', 'license-verify':'License Verification — Oregon Boards' }
+function Topbar({ page, setPage, openEnrollModal, openPayerModal, openDocModal, openTaskModal, exportJSON, loadSampleData, saving, onOpenSearch }) {
+  const titles = { dashboard:'Dashboard', alerts:'Alerts', providers:'All Providers', 'add-provider':'Add Provider', 'provider-lookup':'Provider Lookup', enrollments:'Payer Enrollments', payers:'Payer Directory', documents:'Documents & Expiry', workflows:'Workflows & Tasks', reports:'Reports & Analytics', audit:'Audit Trail', settings:'Settings' }
   function topCTA() {
     if (page==='enrollments') openEnrollModal()
     else if (page==='payers') openPayerModal()
@@ -897,6 +920,11 @@ function Topbar({ page, setPage, openEnrollModal, openPayerModal, openDocModal, 
         <span className="topbar-crumb">CredentialIQ</span>
         <span className="topbar-sep"> / </span>
         <span className="topbar-title">{titles[page]||page}</span>
+        <button className="topbar-search-btn" onClick={onOpenSearch} style={{marginLeft:20}}>
+          <span style={{fontSize:14,opacity:.6}}>🔍</span>
+          <span>Search everything…</span>
+          <span className="gsearch-kbd">⌘K</span>
+        </button>
       </div>
       <div className="topbar-actions">
         <button className="btn btn-ghost btn-sm" onClick={exportJSON}>⬇ Export</button>
@@ -1054,7 +1082,7 @@ function Alerts({ db }) {
 // ─── PROVIDERS PAGE ────────────────────────────────────────────────────────────
 function Providers({ db, search, setSearch, fStatus, setFStatus, fSpec, setFSpec, openProvDetail, editProvider, setPage, setProvForm, setEditingId, setNpiInput, setNpiResult }) {
   const list = db.providers.filter(p => {
-    const txt = `${p.fname} ${p.lname} ${p.cred} ${p.npi} ${p.focus} ${p.spec}`.toLowerCase()
+    const txt = `${p.fname} ${p.lname} ${p.cred} ${p.npi} ${p.focus} ${p.spec} ${p.email||''} ${p.phone||''} ${p.license||''} ${p.medicaid||''} ${p.caqh||''} ${p.dea||''} ${p.supervisor||''} ${p.notes||''}`.toLowerCase()
     return (!search || txt.includes(search.toLowerCase())) && (!fStatus || p.status===fStatus) && (!fSpec || p.spec===fSpec)
   })
   return <div className="page">
@@ -1117,7 +1145,12 @@ function AddProvider({ db, provForm, setProvForm, editingId, setEditingId, npiIn
               <div className="nr-detail">{npiResult.spec} {npiResult.addr?' · '+npiResult.addr:''}</div>
             </>}
           </div>}
-          <span className="field-note">Auto-fills name and credential from the NPPES National Provider Registry.</span>
+          <span className="field-note">
+            Auto-fills name and credential from the NPPES National Provider Registry. {' '}
+            <span style={{color:'var(--primary)',cursor:'pointer',fontWeight:500,textDecoration:'underline'}} onClick={()=>setPage('provider-lookup')}>
+              Search by name instead →
+            </span>
+          </span>
         </div>
         <div className="form-grid">
           <div className="section-divider">Personal Information</div>
@@ -1622,370 +1655,666 @@ function ProvDetailModal({ prov, db, tab, setTab, onClose, editProvider, openEnr
 }
 
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// CSS
+// ═══════════════════════════════════════════════════════════════════════════════
 
-// ─── PROVIDER LOOKUP PAGE ─────────────────────────────────────────────────────
-const US_STATES = ['AK','AL','AR','AZ','CA','CO','CT','DC','DE','FL','GA','HI','IA','ID','IL','IN','KS','KY','LA','MA','MD','ME','MI','MN','MO','MS','MT','NC','ND','NE','NH','NJ','NM','NV','NY','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VA','VT','WA','WI','WV','WY']
 
-const NPPES_TAXONOMIES = [
-  { label:'Any Specialty', value:'' },
-  { label:'Clinical Social Worker', value:'1041C0700X' },
-  { label:'Licensed Professional Counselor', value:'101YP2500X' },
-  { label:'Marriage & Family Therapist', value:'106H00000X' },
-  { label:'Psychologist', value:'103T00000X' },
-  { label:'Psychiatric Nurse Practitioner', value:'364SP0809X' },
-  { label:'Naturopathic Physician', value:'175F00000X' },
-  { label:'Chiropractor', value:'111N00000X' },
-  { label:'Acupuncturist', value:'171100000X' },
-  { label:'Massage Therapist', value:'225700000X' },
-  { label:'Physician (MD/DO)', value:'208D00000X' },
-]
+// ─── GLOBAL SEARCH ─────────────────────────────────────────────────────────────
+function GlobalSearch({ db, onClose, setPage, openProvDetail, openEnrollModal }) {
+  const [query, setQuery] = useState('')
+  const [focused, setFocused] = useState(0)
+  const inputRef = useRef(null)
 
-function ProviderLookup({ db, lookupForm, setLookupForm, lookupResults, setLookupResults, lookupLoading, setLookupLoading, importingNpi, setImportingNpi, handleImportProvider }) {
-  const set = (k, v) => setLookupForm(prev => ({ ...prev, [k]: v }))
-  const existingNpis = new Set(db.providers.map(p => p.npi).filter(Boolean))
+  useEffect(() => { inputRef.current?.focus() }, [])
 
-  async function doSearch() {
-    const { firstName, lastName, state, specialty, npi } = lookupForm
-    if (!firstName && !lastName && !npi) { alert('Enter at least a first name, last name, or NPI to search.'); return }
-    setLookupLoading(true)
-    setLookupResults(null)
-    try {
-      const params = new URLSearchParams({ version: '2.1', limit: 20 })
-      if (npi) {
-        params.set('number', npi)
-      } else {
-        if (firstName) params.set('first_name', firstName + '*')
-        if (lastName) params.set('last_name', lastName + '*')
-        if (state) params.set('state', state)
-        if (specialty) params.set('taxonomy_description', specialty)
-        params.set('enumeration_type', 'NPI-1')
-      }
-      const res = await fetch(`https://npiregistry.cms.hhs.gov/api/?${params}`)
-      const data = await res.json()
-      const results = (data.results || []).map(r => {
-        const basic = r.basic || {}
-        return {
-          npi: r.number,
-          fname: basic.first_name || '',
-          lname: basic.last_name || '',
-          credential: (basic.credential || '').replace(/\./g, '').trim(),
-          status: basic.status || '',
-          taxonomies: r.taxonomies || [],
-          addresses: r.addresses || [],
-        }
-      })
-      setLookupResults(results)
-    } catch(e) { alert('Could not reach NPPES registry. Check your connection.') }
-    setLookupLoading(false)
+  const q = query.trim().toLowerCase()
+
+  const provResults = q.length < 1 ? [] : db.providers.filter(p => {
+    const txt = [p.fname, p.lname, p.cred, p.spec, p.npi, p.license, p.medicaid,
+      p.caqh, p.dea, p.email, p.phone, p.focus, p.supervisor, p.notes].join(' ').toLowerCase()
+    return txt.includes(q)
+  }).slice(0, 5)
+
+  const enrResults = q.length < 1 ? [] : db.enrollments.filter(e => {
+    const pn = pName(db.providers, e.provId).toLowerCase()
+    const pay = payName(db.payers, e.payId).toLowerCase()
+    return pn.includes(q) || pay.includes(q) || e.stage.toLowerCase().includes(q)
+  }).slice(0, 4)
+
+  const payResults = q.length < 1 ? [] : db.payers.filter(p =>
+    `${p.name} ${p.payerId} ${p.type}`.toLowerCase().includes(q)
+  ).slice(0, 3)
+
+  const docResults = q.length < 1 ? [] : db.documents.filter(d => {
+    const pn = pName(db.providers, d.provId).toLowerCase()
+    return pn.includes(q) || (d.type||'').toLowerCase().includes(q) ||
+      (d.issuer||'').toLowerCase().includes(q) || (d.number||'').toLowerCase().includes(q)
+  }).slice(0, 3)
+
+  const taskResults = q.length < 1 ? [] : db.tasks.filter(t =>
+    (t.task||'').toLowerCase().includes(q) || (t.cat||'').toLowerCase().includes(q)
+  ).slice(0, 3)
+
+  // Build flat list for keyboard nav
+  const allItems = [
+    ...provResults.map(r => ({ type:'provider', data:r })),
+    ...enrResults.map(r => ({ type:'enrollment', data:r })),
+    ...payResults.map(r => ({ type:'payer', data:r })),
+    ...docResults.map(r => ({ type:'doc', data:r })),
+    ...taskResults.map(r => ({ type:'task', data:r })),
+  ]
+  const total = allItems.length
+
+  useEffect(() => { setFocused(0) }, [query])
+
+  function handleKey(e) {
+    if (e.key === 'ArrowDown') { e.preventDefault(); setFocused(f => Math.min(f+1, total-1)) }
+    if (e.key === 'ArrowUp')   { e.preventDefault(); setFocused(f => Math.max(f-1, 0)) }
+    if (e.key === 'Enter' && total > 0) { handleSelect(allItems[focused]) }
+  }
+
+  function handleSelect(item) {
+    if (item.type === 'provider') { setPage('providers'); openProvDetail(item.data.id) }
+    else if (item.type === 'enrollment') { setPage('enrollments'); openEnrollModal(item.data.id) }
+    else if (item.type === 'payer') { setPage('payers') }
+    else if (item.type === 'doc') { setPage('documents') }
+    else if (item.type === 'task') { setPage('workflows') }
+    onClose()
+  }
+
+  const isEmpty = q.length > 0 && total === 0
+  const isBlank = q.length === 0
+
+  let itemIdx = 0
+  function Section({ label, items, icon, color, renderItem }) {
+    if (!items.length) return null
+    return (
+      <div className="gsearch-section">
+        <div className="gsearch-section-label">{label}</div>
+        {items.map((item, i) => {
+          const idx = itemIdx++
+          return (
+            <div key={i} className={`gsearch-item ${focused===idx?'focused':''}`}
+              onMouseEnter={() => setFocused(idx)}
+              onClick={() => handleSelect({ type: item._type, data: item })}>
+              <div className="gsearch-item-icon" style={{background:color+'22',color}}>{icon}</div>
+              <div className="gsearch-item-main">{renderItem(item)}</div>
+            </div>
+          )
+        })}
+      </div>
+    )
   }
 
   return (
+    <div className="gsearch-overlay" onClick={e => { if(e.target===e.currentTarget) onClose() }}>
+      <div className="gsearch-box">
+        <div className="gsearch-input-wrap">
+          <span className="gsearch-icon">🔍</span>
+          <input
+            ref={inputRef}
+            className="gsearch-input"
+            placeholder="Search providers, payers, enrollments, documents…"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            onKeyDown={handleKey}
+          />
+          <span className="gsearch-kbd">ESC</span>
+        </div>
+
+        <div className="gsearch-results">
+          {isBlank && (
+            <div className="gsearch-empty">
+              <div style={{fontSize:28,marginBottom:8}}>🔍</div>
+              <div style={{fontWeight:600,color:'var(--ink-3)',marginBottom:4}}>Search everything</div>
+              <div>Providers · Payers · Enrollments · Documents · Tasks</div>
+            </div>
+          )}
+          {isEmpty && (
+            <div className="gsearch-empty">
+              <div style={{fontSize:28,marginBottom:8}}>😔</div>
+              <div style={{fontWeight:600,color:'var(--ink-3)',marginBottom:4}}>No results for "{query}"</div>
+              <div>Try a name, NPI, license number, payer, or specialty</div>
+            </div>
+          )}
+
+          {provResults.map(p => { p._type='provider'; return null })}
+          {enrResults.map(e => { e._type='enrollment'; return null })}
+          {payResults.map(p => { p._type='payer'; return null })}
+          {docResults.map(d => { d._type='doc'; return null })}
+          {taskResults.map(t => { t._type='task'; return null })}
+
+          {(() => { itemIdx = 0; return null })()}
+
+          {provResults.length > 0 && (
+            <div className="gsearch-section">
+              <div className="gsearch-section-label">Providers</div>
+              {provResults.map((p, i) => {
+                const idx = itemIdx++
+                const hasDays = daysUntil(p.licenseExp)
+                const urgent = hasDays !== null && hasDays <= 30
+                return (
+                  <div key={p.id} className={`gsearch-item ${focused===idx?'focused':''}`}
+                    onMouseEnter={() => setFocused(idx)}
+                    onClick={() => handleSelect({type:'provider',data:p})}>
+                    <div className="gsearch-item-icon" style={{background:(SPEC_COLORS[p.spec]||'#4f7ef8')+'25',color:SPEC_COLORS[p.spec]||'#4f7ef8',fontFamily:'DM Serif Display,serif',fontSize:15,fontWeight:600}}>
+                      {initials(p)}
+                    </div>
+                    <div className="gsearch-item-main">
+                      <div className="gsearch-item-title">{p.fname} {p.lname}{p.cred?', '+p.cred:''}</div>
+                      <div className="gsearch-item-sub">
+                        {p.spec}{p.npi?' · NPI '+p.npi:''}{p.license?' · '+p.license:''}
+                        {p.email?' · '+p.email:''}
+                      </div>
+                    </div>
+                    <div className="gsearch-item-tag" style={{display:'flex',flexDirection:'column',gap:4,alignItems:'flex-end'}}>
+                      <span className={`badge badge-dot ${p.status==='Active'?'b-green':p.status==='Pending'?'b-amber':'b-gray'}`}>{p.status}</span>
+                      {urgent && <span className="badge b-red" style={{fontSize:10}}>⚠ Expiring</span>}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {enrResults.length > 0 && (
+            <div className="gsearch-section">
+              <div className="gsearch-section-label">Enrollments</div>
+              {enrResults.map((e, i) => {
+                const idx = itemIdx++
+                return (
+                  <div key={e.id} className={`gsearch-item ${focused===idx?'focused':''}`}
+                    onMouseEnter={() => setFocused(idx)}
+                    onClick={() => handleSelect({type:'enrollment',data:e})}>
+                    <div className="gsearch-item-icon" style={{background:'#eff6ff',color:'#2563eb'}}>🏥</div>
+                    <div className="gsearch-item-main">
+                      <div className="gsearch-item-title">{pNameShort(db.providers, e.provId)}</div>
+                      <div className="gsearch-item-sub">{payName(db.payers, e.payId)}</div>
+                    </div>
+                    <div className="gsearch-item-tag">
+                      <span className={`badge ${STAGE_COLOR[e.stage]||'b-gray'}`} style={{fontSize:10}}>{e.stage}</span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {payResults.length > 0 && (
+            <div className="gsearch-section">
+              <div className="gsearch-section-label">Payers</div>
+              {payResults.map((p, i) => {
+                const idx = itemIdx++
+                return (
+                  <div key={p.id} className={`gsearch-item ${focused===idx?'focused':''}`}
+                    onMouseEnter={() => setFocused(idx)}
+                    onClick={() => handleSelect({type:'payer',data:p})}>
+                    <div className="gsearch-item-icon" style={{background:'#fefce8',color:'#ca8a04'}}>🗂</div>
+                    <div className="gsearch-item-main">
+                      <div className="gsearch-item-title">{p.name}</div>
+                      <div className="gsearch-item-sub">{p.type}{p.payerId?' · ID: '+p.payerId:''}{p.timeline?' · '+p.timeline:''}</div>
+                    </div>
+                    <div className="gsearch-item-tag">
+                      <span className="badge b-blue" style={{fontSize:10}}>{p.type}</span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {docResults.length > 0 && (
+            <div className="gsearch-section">
+              <div className="gsearch-section-label">Documents</div>
+              {docResults.map((d, i) => {
+                const idx = itemIdx++
+                const days = daysUntil(d.exp)
+                return (
+                  <div key={d.id} className={`gsearch-item ${focused===idx?'focused':''}`}
+                    onMouseEnter={() => setFocused(idx)}
+                    onClick={() => handleSelect({type:'doc',data:d})}>
+                    <div className="gsearch-item-icon" style={{background:'#ecfeff',color:'#0891b2'}}>📎</div>
+                    <div className="gsearch-item-main">
+                      <div className="gsearch-item-title">{d.type} — {pNameShort(db.providers, d.provId)}</div>
+                      <div className="gsearch-item-sub">{d.issuer||''}{d.number?' · '+d.number:''}</div>
+                    </div>
+                    <div className="gsearch-item-tag">
+                      <span className={`badge ${days===null?'b-gray':days<0?'b-red':days<=30?'b-red':days<=90?'b-amber':'b-green'}`} style={{fontSize:10}}>
+                        {days===null?'No exp':days<0?`Expired`:days<=90?`${days}d left`:'Active'}
+                      </span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {taskResults.length > 0 && (
+            <div className="gsearch-section">
+              <div className="gsearch-section-label">Tasks</div>
+              {taskResults.map((t, i) => {
+                const idx = itemIdx++
+                const dd = daysUntil(t.due)
+                return (
+                  <div key={t.id} className={`gsearch-item ${focused===idx?'focused':''}`}
+                    onMouseEnter={() => setFocused(idx)}
+                    onClick={() => handleSelect({type:'task',data:t})}>
+                    <div className="gsearch-item-icon" style={{background:'#f5f3ff',color:'#7c3aed'}}>⚡</div>
+                    <div className="gsearch-item-main">
+                      <div className="gsearch-item-title">{t.task}</div>
+                      <div className="gsearch-item-sub">{t.cat}{t.due?' · Due '+fmtDate(t.due):''}</div>
+                    </div>
+                    <div className="gsearch-item-tag" style={{display:'flex',gap:4}}>
+                      <span className={`badge ${PRIORITY_COLOR[t.priority]||'b-gray'}`} style={{fontSize:10}}>{t.priority}</span>
+                      <span className={`badge ${STATUS_COLOR[t.status]||'b-gray'}`} style={{fontSize:10}}>{t.status}</span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="gsearch-footer">
+          <div className="gsearch-hint"><span className="gsearch-kbd">↑↓</span> navigate</div>
+          <div className="gsearch-hint"><span className="gsearch-kbd">↵</span> open</div>
+          <div className="gsearch-hint"><span className="gsearch-kbd">ESC</span> close</div>
+          <div style={{marginLeft:'auto',fontSize:11,color:'var(--ink-4)'}}>
+            {total > 0 ? `${total} result${total!==1?'s':''}` : ''}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+
+// ─── PROVIDER LOOKUP PAGE ─────────────────────────────────────────────────────
+function ProviderLookup({ db, setPage, setProvForm, setEditingId, setNpiInput, setNpiResult }) {
+  const [activeTab, setActiveTab] = useState('nppes')
+
+  // NPPES search state
+  const [fname, setFname] = useState('')
+  const [lname, setLname] = useState('')
+  const [state, setState] = useState('OR')
+  const [specialty, setSpecialty] = useState('')
+  const [results, setResults] = useState(null)
+  const [resultCount, setResultCount] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [importing, setImporting] = useState(null) // result being previewed
+
+  const STATES = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY']
+
+  const SPECIALTIES = [
+    'Clinical Social Worker','Licensed Professional Counselor','Marriage & Family Therapist',
+    'Psychologist','Psychiatry','Naturopathic Medicine','Chiropractic',
+    'Acupuncture','Massage Therapy','Mental Health Counselor','Nurse Practitioner',
+  ]
+
+  async function doSearch(e) {
+    e && e.preventDefault()
+    if (!fname.trim() && !lname.trim()) { setError('Enter at least a first or last name.'); return }
+    setLoading(true); setError(''); setResults(null); setImporting(null)
+    try {
+      const params = new URLSearchParams()
+      if (fname.trim()) params.append('first_name', fname.trim())
+      if (lname.trim()) params.append('last_name', lname.trim())
+      if (state)        params.append('state', state)
+      if (specialty)    params.append('taxonomy', specialty)
+      const res = await fetch(`/api/npi-search?${params}`)
+      const data = await res.json()
+      if (data.error) { setError(data.error); setLoading(false); return }
+      setResults(data.results || [])
+      setResultCount(data.resultCount || 0)
+    } catch (e) {
+      setError('Could not reach the NPI registry. Please try again.')
+    }
+    setLoading(false)
+  }
+
+  function importProvider(r) {
+    // Pre-fill the Add Provider form with NPPES data and navigate
+    setProvForm({
+      fname: r.fname,
+      lname: r.lname,
+      cred:  r.cred || '',
+      npi:   r.npi  || '',
+      phone: r.phone || '',
+      status: 'Active',
+      spec: guessSpec(r.specialty),
+      focus: r.specialty || '',
+    })
+    setEditingId(e => ({ ...e, provider: null }))
+    setNpiInput(r.npi || '')
+    setNpiResult({ fname: r.fname, lname: r.lname, cred: r.cred, spec: r.specialty, addr: r.address, npi: r.npi })
+    setPage('add-provider')
+  }
+
+  function guessSpec(tax) {
+    if (!tax) return 'Mental Health'
+    const t = tax.toLowerCase()
+    if (t.includes('social work') || t.includes('counselor') || t.includes('psycholog') || t.includes('mental') || t.includes('marriage') || t.includes('psychiatr')) return 'Mental Health'
+    if (t.includes('naturo')) return 'Naturopathic'
+    if (t.includes('chiroprac')) return 'Chiropractic'
+    if (t.includes('acupunc')) return 'Acupuncture'
+    if (t.includes('massage')) return 'Massage Therapy'
+    return 'Mental Health'
+  }
+
+  function alreadyInSystem(npi) {
+    return db.providers.some(p => p.npi === npi)
+  }
+
+  // Oregon board deep-link builder
+  function oregonBoardLink(boardName, lname, fname) {
+    const boards = {
+      'OBLPCT': `https://oblpct.state.or.us/lookup/default.aspx`,
+      'OMB':    `https://omb.oregon.gov/search`,
+      'OBN':    `https://www.oregon.gov/osbn/Pages/license-verification.aspx`,
+      'HLO':    `https://hlo.oregon.gov/Lookup/LicenseLookup.aspx`,
+      'OBOP':   `https://pharmacy.oregon.gov/Pages/VerifyLicense.aspx`,
+    }
+    return boards[boardName] || '#'
+  }
+
+  const VERIF_SOURCES = [
+    {
+      icon: '🏛️',
+      title: 'NPPES NPI Registry',
+      desc: 'Official CMS database of all licensed US healthcare providers. Search by name, NPI, specialty, or location. Free, real-time, no login required.',
+      bg: '#eff6ff', color: '#2563eb',
+      cta: 'Search NPPES →',
+      href: 'https://npiregistry.cms.hhs.gov/search',
+      note: 'Also available above in the "NPI Registry Search" tab.',
+      apiAvail: true,
+    },
+    {
+      icon: '🎓',
+      title: 'OBLPCT — Oregon Board of Licensed Professional Counselors & Therapists',
+      desc: 'Verify licenses for LPCs, LMFTs, and associates (LPCA, LMFTA). Covers the most common mental health credentials at Positive Inner Self.',
+      bg: '#f0fdf4', color: '#16a34a',
+      cta: 'Verify License →',
+      href: 'https://oblpct.state.or.us/lookup/default.aspx',
+      note: 'Covers: LPC, LPCA, LMFT, LMFTA',
+    },
+    {
+      icon: '🧠',
+      title: 'Oregon Board of Psychology (OBP)',
+      desc: 'Verify licenses for Licensed Psychologists (PhD/PsyD). Required for Elena Vasquez and similar providers.',
+      bg: '#faf5ff', color: '#7c3aed',
+      cta: 'Verify License →',
+      href: 'https://psychology.oregon.gov/Pages/license_verify.aspx',
+      note: 'Covers: Licensed Psychologist, Psychological Associate',
+    },
+    {
+      icon: '🌿',
+      title: 'Oregon Board of Naturopathic Medicine (OBNM)',
+      desc: 'Verify ND (Naturopathic Doctor) licenses. Required for Priya Nair and naturopathic providers.',
+      bg: '#f0fdf4', color: '#0891b2',
+      cta: 'Verify License →',
+      href: 'https://www.oregon.gov/obnm/pages/license-verification.aspx',
+      note: 'Covers: Naturopathic Physician (ND)',
+    },
+    {
+      icon: '🦴',
+      title: 'Oregon Board of Chiropractic Examiners (OBCE)',
+      desc: 'Verify DC (Doctor of Chiropractic) licenses. Required for David Park and chiropractic providers.',
+      bg: '#fffbeb', color: '#d97706',
+      cta: 'Verify License →',
+      href: 'https://www.oregon.gov/obce/Pages/LicenseLookup.aspx',
+      note: 'Covers: Doctor of Chiropractic (DC)',
+    },
+    {
+      icon: '⚕️',
+      title: 'Oregon Health Licensing Office (HLO)',
+      desc: 'Central hub for massage therapists, acupuncturists, and 19 other health professions licensed in Oregon.',
+      bg: '#fef2f2', color: '#dc2626',
+      cta: 'Verify License →',
+      href: 'https://hlo.oregon.gov/Lookup/LicenseLookup.aspx',
+      note: 'Covers: LMT, LAc, and 17 other professions',
+    },
+    {
+      icon: '📋',
+      title: 'CAQH ProView',
+      desc: 'Access full provider credentialing profiles, attestation status, and document uploads. Requires a Participating Organization (PO) account — contact CAQH to set up API access for Positive Inner Self.',
+      bg: '#ecfeff', color: '#0891b2',
+      cta: 'Open CAQH ProView →',
+      href: 'https://proview.caqh.org',
+      note: 'Note: CAQH ProView requires a Participating Organization agreement. Public lookup is not available. Call CAQH at 888-599-1771 to request PO access.',
+      apiAvail: false,
+    },
+    {
+      icon: '🏥',
+      title: 'OHA Medicaid Provider Enrollment Check',
+      desc: 'Verify if a provider is currently enrolled in Oregon Health Plan (OHP/Medicaid). Enter the provider's NPI on OHA's tool.',
+      bg: '#f0fdf4', color: '#16a34a',
+      cta: 'Check OHA Enrollment →',
+      href: 'https://www.oregon.gov/oha/hsd/ohp/pages/provider-enroll.aspx',
+      note: 'Enter the provider's NPI at the OHA tool to check enrollment status.',
+    },
+    {
+      icon: '🚨',
+      title: 'OIG LEIE — Exclusions Database',
+      desc: 'Check if a provider has been excluded from federal healthcare programs (Medicare, Medicaid). Required for compliance. Search by name or NPI.',
+      bg: '#fef2f2', color: '#dc2626',
+      cta: 'Search OIG Exclusions →',
+      href: 'https://exclusions.oig.hhs.gov/',
+      note: 'Always run this check before credentialing a new provider. Free, real-time.',
+    },
+    {
+      icon: '💊',
+      title: 'DEA Registration Verification',
+      desc: 'Verify active DEA registration for providers with prescribing authority (NDs, PMHNPs, MDs). Requires DEA number.',
+      bg: '#faf5ff', color: '#7c3aed',
+      cta: 'Verify DEA →',
+      href: 'https://www.deadiversion.usdoj.gov/webforms/validateLogin.jsp',
+      note: 'DEA verification requires a DEA account. Contact your DEA Diversion Investigator for access if needed.',
+    },
+  ]
+
+  return (
     <div className="page">
-      <div style={{ background:'#fffbeb', border:'1px solid #fde68a', borderRadius:10, padding:'12px 16px', marginBottom:20, display:'flex', alignItems:'flex-start', gap:12 }}>
-        <div style={{ fontSize:18, flexShrink:0 }}>ℹ️</div>
-        <div>
-          <div style={{ fontWeight:600, fontSize:13, color:'#92400e', marginBottom:3 }}>About CAQH ProView</div>
-          <div style={{ fontSize:12.5, color:'#92400e', lineHeight:1.6 }}>
-            CAQH has no public search API. Your organization needs a <strong>Participating Organization (PO) agreement</strong> with CAQH to access provider data.
-            Once enrolled, use <a href="https://proview.caqh.org" target="_blank" rel="noreferrer" style={{ color:'#b45309', fontWeight:600 }}>CAQH ProView ↗</a> to look up providers.
-            Providers must separately authorize your organization within ProView.
-          </div>
+      {/* Tab switcher */}
+      <div className="lookup-tabs">
+        <div className={`lookup-tab ${activeTab==='nppes'?'active':''}`} onClick={()=>setActiveTab('nppes')}>
+          🔍 NPI Registry Search
+        </div>
+        <div className={`lookup-tab ${activeTab==='verify'?'active':''}`} onClick={()=>setActiveTab('verify')}>
+          ✅ License Verification Sources
         </div>
       </div>
 
-      <div className="card mb-20">
-        <div className="card-header">
-          <h3>🔭 Search NPPES National Provider Registry</h3>
-          <div className="ch-meta">Search by name, state, specialty, or NPI — results come live from npiregistry.cms.hhs.gov</div>
-        </div>
-        <div className="card-body">
-          <div className="form-grid">
-            <div className="fg">
-              <label>First Name</label>
-              <input type="text" value={lookupForm.firstName} onChange={e=>set('firstName',e.target.value)} onKeyDown={e=>e.key==='Enter'&&doSearch()} placeholder="Jane" />
-            </div>
-            <div className="fg">
-              <label>Last Name</label>
-              <input type="text" value={lookupForm.lastName} onChange={e=>set('lastName',e.target.value)} onKeyDown={e=>e.key==='Enter'&&doSearch()} placeholder="Smith" />
-            </div>
-            <div className="fg">
-              <label>State</label>
-              <select value={lookupForm.state} onChange={e=>set('state',e.target.value)}>
-                <option value="">Any State</option>
-                {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-              </select>
-            </div>
-            <div className="fg">
-              <label>Specialty / Taxonomy</label>
-              <select value={lookupForm.specialty} onChange={e=>set('specialty',e.target.value)}>
-                {NPPES_TAXONOMIES.map(t => <option key={t.value} value={t.value}>{t.label}</option>)}
-              </select>
-            </div>
-            <div className="fg">
-              <label>NPI Number (search by NPI directly)</label>
-              <input type="text" value={lookupForm.npi} onChange={e=>set('npi',e.target.value.replace(/\D/g,''))} onKeyDown={e=>e.key==='Enter'&&doSearch()} placeholder="1234567890" maxLength={10} />
-            </div>
-            <div className="fg" style={{ justifyContent:'flex-end' }}>
-              <label>&nbsp;</label>
-              <button className="btn btn-primary" onClick={doSearch} disabled={lookupLoading} style={{ alignSelf:'flex-end' }}>
-                {lookupLoading ? <><span className="spinner"></span> Searching…</> : '🔍 Search Registry'}
-              </button>
-            </div>
-          </div>
-          <div className="field-note" style={{ marginTop:8 }}>Wildcard search applied automatically. Results capped at 20 — narrow your search if needed.</div>
-        </div>
-      </div>
-
-      {lookupLoading && (
-        <div style={{ textAlign:'center', padding:48, color:'var(--ink-4)' }}>
-          <div className="spinner-lg" style={{ margin:'0 auto 16px' }}></div>
-          <div>Searching NPPES registry…</div>
-        </div>
-      )}
-
-      {lookupResults && !lookupLoading && (
+      {/* ── TAB 1: NPPES SEARCH ── */}
+      {activeTab === 'nppes' && (
         <div>
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
-            <div style={{ fontSize:13, color:'var(--ink-3)', fontWeight:500 }}>
-              {lookupResults.length === 0 ? 'No results found.' : `${lookupResults.length} result${lookupResults.length===1?'':'s'} found`}
+          <div className="card mb-16">
+            <div className="card-header">
+              <h3>Search NPPES National Provider Registry</h3>
+              <span className="ch-meta">Live data from CMS · 8M+ providers · No login required</span>
             </div>
-            {lookupResults.length === 20 && <div style={{ fontSize:12, color:'var(--amber)' }}>⚠ Results capped at 20 — narrow your search</div>}
+            <div className="card-body">
+              <form onSubmit={doSearch}>
+                <div className="form-grid" style={{marginBottom:14}}>
+                  <div className="fg">
+                    <label>First Name</label>
+                    <input type="text" value={fname} onChange={e=>setFname(e.target.value)} placeholder="Sarah" />
+                  </div>
+                  <div className="fg">
+                    <label>Last Name</label>
+                    <input type="text" value={lname} onChange={e=>setLname(e.target.value)} placeholder="Chen" />
+                  </div>
+                  <div className="fg">
+                    <label>State</label>
+                    <select value={state} onChange={e=>setState(e.target.value)}>
+                      <option value="">All States</option>
+                      {STATES.map(s=><option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
+                  <div className="fg">
+                    <label>Specialty / Taxonomy</label>
+                    <select value={specialty} onChange={e=>setSpecialty(e.target.value)}>
+                      <option value="">All Specialties</option>
+                      {SPECIALTIES.map(s=><option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </div>
+                </div>
+                {error && (
+                  <div style={{color:'var(--red)',background:'var(--red-l)',border:'1px solid var(--red-b)',borderRadius:'var(--r)',padding:'8px 12px',fontSize:12.5,marginBottom:12}}>
+                    {error}
+                  </div>
+                )}
+                <div style={{display:'flex',gap:8,alignItems:'center'}}>
+                  <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading ? <><span className="spinner"></span> Searching NPPES…</> : '🔍 Search Registry'}
+                  </button>
+                  {results && (
+                    <button type="button" className="btn btn-ghost btn-sm" onClick={()=>{setResults(null);setFname('');setLname('');setState('OR');setSpecialty('');setImporting(null)}}>
+                      Clear
+                    </button>
+                  )}
+                  <span style={{fontSize:12,color:'var(--ink-4)',marginLeft:4}}>
+                    Searches the official CMS NPPES database in real time
+                  </span>
+                </div>
+              </form>
+            </div>
           </div>
-          {lookupResults.length === 0 ? (
-            <div className="empty-state"><div className="ei">🔍</div><h4>No providers found</h4><p>Try broader search terms or remove specialty filters.</p></div>
-          ) : (
-            <div className="tbl-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th className="no-sort">NPI</th>
-                    <th className="no-sort">Name</th>
-                    <th className="no-sort">Credential</th>
-                    <th className="no-sort">Specialty / Taxonomy</th>
-                    <th className="no-sort">Practice Address</th>
-                    <th className="no-sort">Status</th>
-                    <th className="no-sort">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {lookupResults.map(r => {
-                    const addr = r.addresses.find(a => a.address_purpose === 'LOCATION') || r.addresses[0] || {}
-                    const taxonomy = r.taxonomies[0] || {}
-                    const alreadyIn = existingNpis.has(r.npi)
-                    const isImporting = importingNpi === r.npi
-                    return (
-                      <tr key={r.npi}>
-                        <td><code style={{ background:'var(--surface-2)', padding:'2px 6px', borderRadius:4, fontSize:11.5 }}>{r.npi}</code></td>
-                        <td>
-                          <div style={{ fontWeight:600, fontSize:13 }}>{r.fname} {r.lname}</div>
-                          {r.credential && <div className="text-xs text-muted">{r.credential}</div>}
-                        </td>
-                        <td style={{ fontSize:12.5 }}>{r.credential || '—'}</td>
-                        <td>
-                          <div style={{ fontSize:12.5 }}>{taxonomy.desc || '—'}</div>
-                          {taxonomy.state && <div className="text-xs text-muted">Licensed: {taxonomy.state}</div>}
-                        </td>
-                        <td style={{ fontSize:12, color:'var(--ink-3)' }}>
-                          {[addr.address_1, addr.city, addr.state, addr.postal_code].filter(Boolean).join(', ') || '—'}
-                        </td>
-                        <td><span className={`badge ${r.status==='A'?'b-green':'b-gray'}`}>{r.status==='A'?'Active':'Inactive'}</span></td>
-                        <td>
-                          {alreadyIn ? (
-                            <span className="badge b-teal">✓ In System</span>
-                          ) : (
-                            <button className="btn btn-primary btn-sm" onClick={() => handleImportProvider(r)} disabled={isImporting}>
-                              {isImporting ? <><span className="spinner"></span> Importing…</> : '⬇ Import'}
+
+          {/* Results */}
+          {results !== null && (
+            <div>
+              <div className="lookup-count">
+                {results.length === 0
+                  ? 'No providers found. Try a broader search — use last name only, or remove the state filter.'
+                  : `Showing ${results.length} of ${resultCount.toLocaleString()} matches in NPPES${resultCount > 20 ? ' — refine your search to narrow results' : ''}`
+                }
+              </div>
+
+              {results.map((r, i) => {
+                const inSystem = alreadyInSystem(r.npi)
+                const isImporting = importing?.npi === r.npi
+                return (
+                  <div key={r.npi || i} className="lookup-result-card">
+                    <div className="lookup-avatar">
+                      {(r.fname[0]||'?')}{(r.lname[0]||'')}
+                    </div>
+                    <div>
+                      <div className="lookup-name">
+                        {r.fname} {r.lname}{r.cred ? `, ${r.cred}` : ''}
+                      </div>
+                      <div className="lookup-meta">
+                        {[r.specialty, r.address].filter(Boolean).join(' · ')}
+                      </div>
+                      <div className="lookup-chips">
+                        <span className="info-chip">NPI {r.npi}</span>
+                        {r.phone && <span className="info-chip">📞 {r.phone}</span>}
+                        {r.state && <span className="badge b-blue">{r.state}</span>}
+                        {inSystem && <span className="badge b-green">✓ In CredentialIQ</span>}
+                      </div>
+
+                      {/* Import preview */}
+                      {isImporting && (
+                        <div className="import-preview">
+                          <div className="import-preview-title">Will be imported as:</div>
+                          {[
+                            ['Name', `${r.fname} ${r.lname}${r.cred?', '+r.cred:''}`],
+                            ['NPI', r.npi],
+                            ['Specialty', guessSpec(r.specialty) + (r.specialty?' ('+r.specialty+')':'')],
+                            ['Phone', r.phone || '—'],
+                            ['Address', r.address || '—'],
+                          ].map(([label, val]) => (
+                            <div key={label} className="import-row">
+                              <span className="import-label">{label}</span>
+                              <span className="import-val">{val}</span>
+                            </div>
+                          ))}
+                          <div style={{display:'flex',gap:8,marginTop:12}}>
+                            <button className="btn btn-primary btn-sm" onClick={()=>importProvider(r)}>
+                              ✓ Confirm Import to CredentialIQ
                             </button>
-                          )}
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
+                            <button className="btn btn-ghost btn-sm" onClick={()=>setImporting(null)}>Cancel</button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className="lookup-actions">
+                      {!inSystem ? (
+                        <button
+                          className={`btn btn-sm ${isImporting ? 'btn-secondary' : 'btn-primary'}`}
+                          onClick={() => isImporting ? setImporting(null) : setImporting(r)}
+                        >
+                          {isImporting ? 'Cancel' : '＋ Import'}
+                        </button>
+                      ) : (
+                        <span className="badge b-green" style={{fontSize:11}}>Already added</span>
+                      )}
+                      <a
+                        href={`https://npiregistry.cms.hhs.gov/provider-view/${r.npi}`}
+                        target="_blank" rel="noreferrer"
+                        className="btn btn-ghost btn-sm"
+                        style={{textAlign:'center'}}
+                      >
+                        NPPES ↗
+                      </a>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+
+          {results === null && !loading && (
+            <div className="empty-state">
+              <div className="ei">🔍</div>
+              <h4>Search the national provider registry</h4>
+              <p style={{maxWidth:400,margin:'0 auto',lineHeight:1.6}}>
+                Enter a provider's first or last name above to search all 8M+ providers
+                in the CMS NPPES registry. Filter by state and specialty to narrow results.
+                Import directly into CredentialIQ with one click.
+              </p>
             </div>
           )}
         </div>
       )}
-    </div>
-  )
-}
 
-// ─── LICENSE VERIFICATION PAGE ────────────────────────────────────────────────
-const OR_BOARDS = [
-  {
-    name: 'Oregon Board of Licensed Professional Counselors & Therapists',
-    abbr: 'OBLPCT',
-    emoji: '🧠',
-    covers: ['LPC','LMFT','MFT Associate','LCSW Associate'],
-    buildUrl: (p) => 'https://www.oregon.gov/oblpct/Pages/verify.aspx',
-    note: 'Covers LPC, LMFT, and associates. Manual search on their portal.',
-    color: '#3563c9',
-  },
-  {
-    name: 'Oregon Board of Clinical Social Workers',
-    abbr: 'OBCSW',
-    emoji: '👥',
-    covers: ['LCSW','LCSW Associate'],
-    buildUrl: (p) => 'https://www.oregon.gov/OBCSW/Pages/LicenseLookup.aspx',
-    note: 'Covers LCSW and LCSW Associates.',
-    color: '#0891b2',
-  },
-  {
-    name: 'Oregon Psychology Board',
-    abbr: 'OPB',
-    emoji: '🎓',
-    covers: ['Licensed Psychologist'],
-    buildUrl: (p) => 'https://www.oregon.gov/opb/pages/licensee.aspx',
-    note: 'Covers licensed psychologists (PhD/PsyD).',
-    color: '#6d3fb5',
-  },
-  {
-    name: 'Oregon Medical Board',
-    abbr: 'OMB',
-    emoji: '🩺',
-    covers: ['MD','DO','PMHNP','Naturopathic Physician'],
-    buildUrl: (p) => p && p.license
-      ? `https://omb.oregon.gov/Clients/ORMB/PublicLookup/GeneralInformation.aspx?LicenseeNumber=${encodeURIComponent(p.license)}`
-      : 'https://omb.oregon.gov/Clients/ORMB/PublicLookup/',
-    note: 'Covers MD, DO, PMHNP, and Naturopathic Physicians. Pre-fills license number when available.',
-    color: '#dc2626',
-  },
-  {
-    name: 'Oregon Board of Naturopathic Medicine',
-    abbr: 'OBNM',
-    emoji: '🌿',
-    covers: ['Naturopathic Physician'],
-    buildUrl: (p) => 'https://www.oregon.gov/obnm/pages/verify.aspx',
-    note: 'Covers Naturopathic Physicians (ND).',
-    color: '#16a34a',
-  },
-  {
-    name: 'Oregon Board of Chiropractic Examiners',
-    abbr: 'OBCE',
-    emoji: '🦴',
-    covers: ['Chiropractor'],
-    buildUrl: (p) => 'https://www.oregon.gov/obce/Pages/verify.aspx',
-    note: 'Covers licensed chiropractors (DC).',
-    color: '#c97d1e',
-  },
-  {
-    name: 'Oregon Health Licensing Office (HLO)',
-    abbr: 'HLO',
-    emoji: '📋',
-    covers: ['Acupuncturist','LMT'],
-    buildUrl: (p) => 'https://hlo.oregon.gov/DesktopDefault.aspx?tabid=17',
-    note: 'Covers LAc, LMT, and many allied health professions.',
-    color: '#1a8a7a',
-  },
-  {
-    name: 'NPPES NPI Registry',
-    abbr: 'NPPES',
-    emoji: '🏛️',
-    covers: ['All'],
-    buildUrl: (p) => p && p.npi ? `https://npiregistry.cms.hhs.gov/provider-view/${p.npi}` : 'https://npiregistry.cms.hhs.gov/',
-    note: 'Federal NPI registry. Pre-fills NPI when available.',
-    color: '#2563eb',
-  },
-]
-
-function credMatchesBoard(cred, board) {
-  if (board.covers.includes('All')) return true
-  return board.covers.some(c => (cred || '').toLowerCase().includes(c.toLowerCase()) || c.toLowerCase().includes((cred || '').split(' ')[0].toLowerCase()))
-}
-
-function LicenseVerify({ db }) {
-  const [selectedProv, setSelectedProv] = useState('')
-  const prov = db.providers.find(p => p.id === selectedProv) || null
-
-  return (
-    <div className="page">
-      <div style={{ background:'#eff6ff', border:'1px solid #bfdbfe', borderRadius:10, padding:'12px 16px', marginBottom:20, display:'flex', alignItems:'flex-start', gap:12 }}>
-        <div style={{ fontSize:18, flexShrink:0 }}>ℹ️</div>
+      {/* ── TAB 2: VERIFICATION SOURCES ── */}
+      {activeTab === 'verify' && (
         <div>
-          <div style={{ fontWeight:600, fontSize:13, color:'#1e40af', marginBottom:3 }}>Oregon License Verification — Smart Deep Links</div>
-          <div style={{ fontSize:12.5, color:'#1e40af', lineHeight:1.6 }}>
-            Oregon licensing boards have no public API. These links open the correct board portal directly.
-            Select a provider below to filter to their relevant boards and pre-fill their license number or NPI where supported.
+          <div style={{background:'var(--blue-l)',border:'1px solid var(--blue-b)',borderRadius:'var(--r-lg)',padding:'14px 18px',marginBottom:20,fontSize:13,color:'var(--blue)'}}>
+            <strong>How to use this page:</strong> Click any source below to open the official verification portal in a new tab.
+            For each provider you credential, run checks against NPPES, their state board, and the OIG exclusions database at minimum.
           </div>
-        </div>
-      </div>
-
-      <div className="card mb-20">
-        <div className="card-header"><h3>Select Provider to Filter Boards</h3><div className="ch-meta">Optional — shows all boards if none selected</div></div>
-        <div className="card-body">
-          <div style={{ display:'flex', alignItems:'center', gap:12, flexWrap:'wrap' }}>
-            <select className="filter-select" value={selectedProv} onChange={e=>setSelectedProv(e.target.value)} style={{ minWidth:300 }}>
-              <option value="">— Show all boards —</option>
-              {db.providers.map(p => <option key={p.id} value={p.id}>{p.fname} {p.lname} — {p.cred}</option>)}
-            </select>
-            {prov && (
-              <div style={{ display:'flex', gap:6, flexWrap:'wrap' }}>
-                <span className="badge b-blue">NPI: {prov.npi || 'Not set'}</span>
-                <span className="badge b-gray">License: {prov.license || 'Not set'}</span>
-                <span className="badge b-purple">{prov.cred}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(340px, 1fr))', gap:14 }}>
-        {OR_BOARDS
-          .filter(board => !prov || credMatchesBoard(prov.cred, board))
-          .map(board => {
-            const url = board.buildUrl(prov)
-            return (
-              <div key={board.abbr} className="card">
-                <div className="card-header" style={{ borderLeft:`4px solid ${board.color}` }}>
-                  <div style={{ fontSize:20, flexShrink:0 }}>{board.emoji}</div>
-                  <div style={{ flex:1 }}>
-                    <h3 style={{ fontSize:13.5 }}>{board.name}</h3>
-                    <div className="ch-meta">{board.abbr} · Covers: {board.covers.join(', ')}</div>
-                  </div>
-                </div>
-                <div className="card-body" style={{ paddingTop:12, paddingBottom:14 }}>
-                  <div style={{ fontSize:12, color:'var(--ink-3)', marginBottom:12, lineHeight:1.6 }}>{board.note}</div>
-                  {prov && (
-                    <div style={{ background:'var(--surface-2)', borderRadius:8, padding:'8px 12px', marginBottom:12, fontSize:12, color:'var(--ink-3)' }}>
-                      <strong style={{ color:'var(--ink-2)' }}>Verifying:</strong> {prov.fname} {prov.lname}
-                      {prov.npi && <span style={{ marginLeft:8 }}>· NPI: <code style={{ fontSize:11 }}>{prov.npi}</code></span>}
-                      {prov.license && <span style={{ marginLeft:8 }}>· License: <code style={{ fontSize:11 }}>{prov.license}</code></span>}
-                    </div>
-                  )}
-                  <a href={url} target="_blank" rel="noreferrer" className="btn btn-primary btn-sm"
-                    style={{ display:'inline-flex', width:'100%', justifyContent:'center', textDecoration:'none' }}>
-                    Open {board.abbr} Verification ↗
+          {VERIF_SOURCES.map((s, i) => (
+            <div key={i} className="verif-card">
+              <div className="verif-icon" style={{background:s.bg,color:s.color}}>{s.icon}</div>
+              <div className="verif-body">
+                <div className="verif-title">{s.title}</div>
+                <div className="verif-desc">{s.desc}</div>
+                <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap'}}>
+                  <a href={s.href} target="_blank" rel="noreferrer" className="btn btn-sm btn-primary">
+                    {s.cta}
                   </a>
+                  {s.apiAvail && <span className="badge b-green" style={{fontSize:10}}>✓ Free API</span>}
                 </div>
+                {s.note && <div className="verif-note">{s.note}</div>}
               </div>
-            )
-          })}
-      </div>
-
-      {prov && (
-        <div className="card mt-12">
-          <div className="card-header"><h3>📋 All Oregon Boards Reference</h3></div>
-          <div className="card-body" style={{ padding:0 }}>
-            <table>
-              <thead><tr><th className="no-sort">Board</th><th className="no-sort">Covers</th><th className="no-sort">Verify Link</th></tr></thead>
-              <tbody>
-                {OR_BOARDS.map(b => (
-                  <tr key={b.abbr}>
-                    <td><strong>{b.abbr}</strong><div className="text-xs text-muted">{b.name}</div></td>
-                    <td style={{ lineHeight:2 }}>{b.covers.map(c => <span key={c} className="badge b-gray" style={{ marginRight:3, fontSize:10 }}>{c}</span>)}</td>
-                    <td><a href={b.buildUrl(null)} target="_blank" rel="noreferrer" style={{ color:'var(--primary)', fontSize:12, fontWeight:500 }}>Open ↗</a></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+            </div>
+          ))}
         </div>
       )}
     </div>
   )
-}
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// CSS
-// ═══════════════════════════════════════════════════════════════════════════════
+  function guessSpec(tax) {
+    if (!tax) return 'Mental Health'
+    const t = tax.toLowerCase()
+    if (t.includes('social work') || t.includes('counselor') || t.includes('psycholog') || t.includes('mental') || t.includes('marriage') || t.includes('psychiatr')) return 'Mental Health'
+    if (t.includes('naturo')) return 'Naturopathic'
+    if (t.includes('chiroprac')) return 'Chiropractic'
+    if (t.includes('acupunc')) return 'Acupuncture'
+    if (t.includes('massage')) return 'Massage Therapy'
+    return 'Mental Health'
+  }
+}
