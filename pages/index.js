@@ -2568,7 +2568,7 @@ function PsychologyToday({ db, setPage, editProvider }) {
                 <div className="card-body" style={{padding:'12px 16px'}}>
                   {[
                     ['🔑 PT Provider Login','Sign into your Psychology Today account','https://member.psychologytoday.com/us/login'],
-                    ['🔍 Our Beaverton Listing','See how PIS appears in PT search results','https://www.psychologytoday.com/us/therapists/oregon/beaverton'],
+                    ['🔍 Our Beaverton Listing','See how PIS appears in PT search results','https://www.psychologytoday.com/us/therapists/positive-inner-self-llc-beaverton-or/751449'],
                     ['📖 PT Profile Best Practices','PT guide to getting more clients from your listing','https://www.psychologytoday.com/us/therapists/how-to-attract-clients'],
                     ['💳 PT Billing & Subscription','Manage your $29.95/mo subscription','https://member.psychologytoday.com/us/profile'],
                   ].map(([label, desc, href]) => (
