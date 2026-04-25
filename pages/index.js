@@ -421,6 +421,32 @@ tbody tr:hover{background:#f8fafd;}
 .import-label{color:var(--ink-4);width:130px;flex-shrink:0;}
 .import-val{color:var(--ink);font-weight:500;}
 .progress-fill{height:100%;border-radius:4px;transition:width .4s ease;}
+
+/* CSV IMPORT */
+.csv-drop-zone{border:2px dashed var(--border);border-radius:var(--r-lg);padding:36px 20px;text-align:center;cursor:pointer;transition:all var(--t);background:var(--surface-2);}
+.csv-drop-zone:hover,.csv-drop-zone.drag-over{border-color:var(--primary);background:var(--primary-l);}
+.csv-drop-zone-icon{font-size:36px;margin-bottom:10px;}
+.csv-drop-zone h4{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;}
+.csv-drop-zone p{font-size:12px;color:var(--ink-4);}
+.csv-preview-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px;}
+.csv-preview-table th{padding:7px 10px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-3);text-align:left;}
+.csv-preview-table td{padding:7px 10px;border-bottom:1px solid var(--border-2);color:var(--ink-2);}
+.csv-preview-table tr:last-child td{border-bottom:none;}
+.csv-preview-table tr.row-ok td:first-child{border-left:3px solid var(--green);}
+.csv-preview-table tr.row-warn td:first-child{border-left:3px solid var(--amber);}
+.csv-preview-table tr.row-error td:first-child{border-left:3px solid var(--red);}
+.csv-map-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.csv-map-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r);font-size:12px;}
+.csv-map-label{flex:1;color:var(--ink-3);font-weight:500;}
+.csv-map-arrow{color:var(--ink-4);font-size:14px;}
+.csv-map-target{flex:1;color:var(--primary);font-weight:600;}
+.import-progress-bar{height:6px;background:var(--border-2);border-radius:3px;overflow:hidden;margin:8px 0;}
+.import-progress-fill{height:100%;background:var(--primary);border-radius:3px;transition:width .3s ease;}
+.import-result-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border-2);font-size:12.5px;}
+.import-result-row:last-child{border-bottom:none;}
+.template-field{display:inline-flex;align-items:center;gap:4px;background:var(--surface-2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:11px;font-family:monospace;color:var(--ink-2);margin:2px;}
+.template-field.required{background:var(--primary-l);border-color:var(--blue-b);color:var(--primary);font-weight:600;}
+
 @media(max-width:900px){.sidebar{width:190px;}.main{margin-left:190px;}.kpi-grid{grid-template-columns:repeat(2,1fr);}.form-grid,.grid-2,.grid-3{grid-template-columns:1fr;}.form-grid .full{grid-column:1;}}
 `
 
@@ -446,6 +472,149 @@ function useSorted(items, defaultKey, defaultDir='asc') {
   return {sorted,sortKey,sortDir,toggleSort,thProps}
 }
 
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// CSV IMPORT UTILITIES
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// Parse a raw CSV string into array of objects (handles quoted fields, commas inside quotes)
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/)
+  if (lines.length < 2) return []
+  function parseLine(line) {
+    const cells = []; let cur = ''; let inQ = false
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i]
+      if (ch === '"') { if (inQ && line[i+1]==='"') { cur+='"'; i++ } else inQ=!inQ }
+      else if (ch === ',' && !inQ) { cells.push(cur.trim()); cur='' }
+      else cur += ch
+    }
+    cells.push(cur.trim()); return cells
+  }
+  const headers = parseLine(lines[0]).map(h => h.replace(/^"|"$/g,'').trim())
+  return lines.slice(1).filter(l=>l.trim()).map(line => {
+    const vals = parseLine(line)
+    const row = {}
+    headers.forEach((h,i) => { row[h] = (vals[i]||'').replace(/^"|"$/g,'').trim() })
+    return row
+  })
+}
+
+// Normalize a dollar string to a float: "$1,250.00" -> 1250.00
+function parseMoney(s) {
+  if (!s) return null
+  const n = parseFloat(String(s).replace(/[$,\s]/g,''))
+  return isNaN(n) ? null : n
+}
+
+// Normalize a date string to YYYY-MM-DD
+function parseDate(s) {
+  if (!s) return null
+  const cleaned = s.trim()
+  // MM/DD/YYYY or M/D/YYYY
+  const mdy = cleaned.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/)
+  if (mdy) {
+    const [,m,d,y] = mdy
+    const yr = y.length===2 ? (parseInt(y)>50?'19':'20')+y : y
+    return `${yr}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`
+  }
+  // Already YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(cleaned)) return cleaned
+  // Try native parse as fallback
+  const dt = new Date(cleaned)
+  if (!isNaN(dt)) return dt.toISOString().split('T')[0]
+  return null
+}
+
+// SimplePractice billing export column mapping
+// SP exports vary — we support their common column names and common aliases
+const SP_COLUMN_MAP = [
+  // [SP column name(s), our field, transform fn]
+  { sp: ['Client Name','Patient Name','Client'], field: 'patient_name', fn: v=>v },
+  { sp: ['Date of Birth','DOB','Client DOB'],    field: 'dob',          fn: parseDate },
+  { sp: ['Date of Service','DOS','Service Date','Appointment Date'], field: 'dos', fn: parseDate },
+  { sp: ['Claim Number','Claim #','Claim ID'],   field: 'claim_num',    fn: v=>v },
+  { sp: ['CPT Code','CPT','Procedure Code','Service Code'], field: 'cpt_codes', fn: v=>v?[v]:[] },
+  { sp: ['Diagnosis Code','Diagnosis','ICD Code','Primary Diagnosis'], field: 'diagnosis_codes', fn: v=>v?[v]:[] },
+  { sp: ['Amount Billed','Billed','Charge Amount','Fee'], field: 'billed_amount', fn: parseMoney },
+  { sp: ['Amount Paid','Paid','Payment','Insurance Paid'], field: 'paid_amount',  fn: parseMoney },
+  { sp: ['Patient Paid','Copay Collected','Patient Responsibility','Patient Balance'], field: 'patient_resp', fn: parseMoney },
+  { sp: ['Allowed Amount','Allowed'],            field: 'allowed_amount', fn: parseMoney },
+  { sp: ['Claim Status','Status','Billing Status'], field: 'status',   fn: v => {
+    const s = (v||'').toLowerCase()
+    if (s.includes('paid') || s.includes('processed')) return 'Paid'
+    if (s.includes('denied') || s.includes('reject'))  return 'Denied'
+    if (s.includes('partial'))                         return 'Partial'
+    if (s.includes('appeal'))                          return 'Appeal'
+    if (s.includes('pending') || s.includes('pend'))  return 'Pending'
+    if (s.includes('submit'))                          return 'Submitted'
+    return 'Submitted'
+  }},
+  { sp: ['Date Submitted','Submitted Date','Submission Date'], field: 'submitted_date', fn: parseDate },
+  { sp: ['Date Paid','Paid Date','Payment Date'],              field: 'paid_date',      fn: parseDate },
+  { sp: ['Clinician','Provider','Clinician Name','Rendering Provider'], field: '_provider_name', fn: v=>v },
+  { sp: ['Insurance','Payer','Insurance Name','Payer Name'],   field: '_payer_name',   fn: v=>v },
+  { sp: ['Notes','Comments','Internal Notes'],                 field: 'notes',         fn: v=>v },
+]
+
+// Match a CSV column header to one of our mappings (case-insensitive)
+function detectColumnMap(headers) {
+  const matched = {}
+  SP_COLUMN_MAP.forEach(({ sp, field }) => {
+    const found = headers.find(h => sp.some(s => s.toLowerCase() === h.toLowerCase()))
+    if (found) matched[found] = field
+  })
+  return matched
+}
+
+// Convert a raw CSV row to a claim object, resolving provider/payer by name
+function rowToClaim(row, columnMap, providers, payers) {
+  const raw = {}
+  Object.entries(columnMap).forEach(([csvCol, ourField]) => {
+    const mapping = SP_COLUMN_MAP.find(m => m.field === ourField)
+    if (mapping) raw[ourField] = mapping.fn(row[csvCol])
+  })
+
+  // Resolve provider by name match
+  if (raw._provider_name) {
+    const name = raw._provider_name.toLowerCase().trim()
+    const prov = providers.find(p =>
+      `${p.fname} ${p.lname}`.toLowerCase().includes(name) ||
+      name.includes(p.lname.toLowerCase())
+    )
+    raw.prov_id = prov?.id || null
+  }
+
+  // Resolve payer by name match
+  if (raw._payer_name) {
+    const name = raw._payer_name.toLowerCase().trim()
+    const payer = payers.find(p =>
+      p.name.toLowerCase().includes(name) ||
+      name.includes(p.name.toLowerCase().split(' ')[0])
+    )
+    raw.payer_id = payer?.id || null
+  }
+
+  // Warnings
+  const warnings = []
+  if (!raw.patient_name) warnings.push('Missing patient name')
+  if (!raw.dos) warnings.push('Missing date of service')
+  if (!raw.prov_id && raw._provider_name) warnings.push(`Provider "${raw._provider_name}" not found — assign manually`)
+  if (!raw.payer_id && raw._payer_name) warnings.push(`Payer "${raw._payer_name}" not found — assign manually`)
+
+  delete raw._provider_name; delete raw._payer_name
+  return { ...raw, _warnings: warnings, _valid: !!raw.patient_name && !!raw.dos }
+}
+
+// Download a blank CSV template
+function downloadTemplate() {
+  const headers = ['Client Name','Date of Birth','Date of Service','Claim Number','CPT Code','Diagnosis Code','Amount Billed','Amount Paid','Patient Paid','Allowed Amount','Claim Status','Date Submitted','Date Paid','Clinician','Insurance','Notes']
+  const example = ['Smith, Jane','01/15/1985','04/01/2025','CLM-001','90837','F41.1','200.00','160.00','40.00','160.00','Paid','04/02/2025','04/20/2025','Sarah Chen','Aetna','']
+  const csv = [headers.join(','), example.join(',')].join('\n')
+  const blob = new Blob([csv], { type: 'text/csv' })
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob)
+  a.download = 'credentialiq-claims-template.csv'; a.click()
+}
 
 export default function App() {
   const [user, setUser] = useState(null)
@@ -2952,6 +3121,17 @@ function ClaimsPage({ db, toast }) {
   const [fProv, setFProv] = useState('')
   const [activeTab, setActiveTab] = useState('list')
 
+  // ─── CSV Import state ─────────────────────────────────────────────────────
+  const [csvRows, setCsvRows] = useState(null)       // parsed rows ready for review
+  const [csvHeaders, setCsvHeaders] = useState([])   // CSV file headers
+  const [columnMap, setColumnMap] = useState({})     // header → our field
+  const [previewRows, setPreviewRows] = useState([]) // transformed claim objects
+  const [importStep, setImportStep] = useState('upload') // upload | map | preview | importing | done
+  const [importProgress, setImportProgress] = useState(0)
+  const [importResults, setImportResults] = useState({ imported:0, skipped:0, errors:[] })
+  const [isDragging, setIsDragging] = useState(false)
+  const fileInputRef = useRef(null)
+
   useEffect(() => { setClaims(db.claims || []) }, [db.claims])
 
   function openAdd() {
@@ -2979,6 +3159,76 @@ function ClaimsPage({ db, toast }) {
     if (!confirm('Delete this claim?')) return
     try { await deleteClaim(id); setClaims(c=>c.filter(x=>x.id!==id)); toast('Deleted.','warn') }
     catch(e) { toast(e.message,'error') }
+  }
+
+  // ─── CSV Import handlers ──────────────────────────────────────────────────
+  function handleFileSelect(file) {
+    if (!file || !file.name.endsWith('.csv')) { toast('Please select a .csv file','error'); return }
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const text = e.target.result
+      const rows = parseCSV(text)
+      if (!rows.length) { toast('CSV is empty or could not be parsed','error'); return }
+      const headers = Object.keys(rows[0])
+      const detected = detectColumnMap(headers)
+      setCsvRows(rows)
+      setCsvHeaders(headers)
+      setColumnMap(detected)
+      // Build preview
+      const preview = rows.slice(0,5).map(r => rowToClaim(r, detected, providers, payers))
+      setPreviewRows(preview)
+      setImportStep('map')
+    }
+    reader.readAsText(file)
+  }
+
+  function handleDrop(e) {
+    e.preventDefault(); setIsDragging(false)
+    const file = e.dataTransfer.files[0]; handleFileSelect(file)
+  }
+
+  function updateColumnMap(csvCol, ourField) {
+    const next = { ...columnMap, [csvCol]: ourField }
+    // Remove old mapping for this ourField to avoid duplicates
+    Object.keys(next).forEach(k => { if (k !== csvCol && next[k] === ourField) delete next[k] })
+    setColumnMap(next)
+    const preview = (csvRows||[]).slice(0,5).map(r => rowToClaim(r, next, providers, payers))
+    setPreviewRows(preview)
+  }
+
+  function goToPreview() {
+    const all = (csvRows||[]).map(r => rowToClaim(r, columnMap, providers, payers))
+    setPreviewRows(all)
+    setImportStep('preview')
+  }
+
+  async function runImport() {
+    setImportStep('importing')
+    setImportProgress(0)
+    const valid = previewRows.filter(r => r._valid)
+    let imported = 0; const errors = []
+    for (let i = 0; i < valid.length; i++) {
+      const { _warnings, _valid, ...clean } = valid[i]
+      try {
+        const saved = await upsertClaim(clean)
+        setClaims(prev => { const idx=prev.findIndex(x=>x.id===saved.id); return idx>=0?prev.map(x=>x.id===saved.id?saved:x):[saved,...prev] })
+        imported++
+      } catch(e) {
+        errors.push(`Row ${i+1} (${clean.patient_name||'?'}): ${e.message}`)
+      }
+      setImportProgress(Math.round(((i+1)/valid.length)*100))
+      // Small yield to keep UI responsive
+      if (i % 5 === 0) await new Promise(r => setTimeout(r, 0))
+    }
+    setImportResults({ imported, skipped: previewRows.length - valid.length, errors })
+    setImportStep('done')
+    if (imported > 0) toast(`✅ Imported ${imported} claim${imported>1?'s':''}!`, 'success')
+  }
+
+  function resetImport() {
+    setCsvRows(null); setCsvHeaders([]); setColumnMap({}); setPreviewRows([])
+    setImportStep('upload'); setImportProgress(0); setImportResults({ imported:0, skipped:0, errors:[] })
+    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   const filtered = claims.filter(c => {
@@ -3014,7 +3264,7 @@ function ClaimsPage({ db, toast }) {
       </div>
 
       <div className="tabs">
-        {[['list','📋 All Claims'],['aging','📊 A/R Aging']].map(([t,l])=>(
+        {[['list','📋 All Claims'],['aging','📊 A/R Aging'],['import','⬆ CSV Import']].map(([t,l])=>(
           <div key={t} className={`tab ${activeTab===t?'active':''}`} onClick={()=>setActiveTab(t)}>{l}</div>
         ))}
       </div>
@@ -3066,8 +3316,8 @@ function ClaimsPage({ db, toast }) {
           </select>
           <div className="toolbar-right"><button className="btn btn-primary btn-sm" onClick={openAdd}>＋ Add Claim</button></div>
         </div>
-        <div style={{marginBottom:12,fontSize:12,color:'var(--ink-4)',padding:'8px 12px',background:'var(--amber-l)',border:'1px solid var(--amber-b)',borderRadius:'var(--r-md)'}}>
-          💡 <strong>SimplePractice users:</strong> Export claims from SP → Reports → Billing, then enter manually here. A CSV import tool is planned for a future update.
+        <div style={{marginBottom:12,fontSize:12,color:'var(--ink-3)',padding:'8px 12px',background:'var(--blue-l)',border:'1px solid var(--blue-b)',borderRadius:'var(--r-md)'}}>
+          💡 <strong>SimplePractice users:</strong> Use the <button className="btn btn-ghost btn-sm" style={{display:'inline',padding:'0 4px',fontSize:12,color:'var(--primary)',textDecoration:'underline',border:'none',background:'none',cursor:'pointer'}} onClick={()=>setActiveTab('import')}>CSV Import tab ↑</button> to batch-import your billing export. Or add claims one at a time below.
         </div>
         <div className="tbl-wrap">
           <table>
@@ -3110,13 +3360,188 @@ function ClaimsPage({ db, toast }) {
         </div>
       </>}
 
-      {modal && (
-        <div className="overlay open" onClick={e=>e.target===e.currentTarget&&setModal(false)}>
-          <div className="modal modal-lg">
-            <div className="modal-header">
-              <div><h3>{form.id?'Edit Claim':'New Claim'}</h3><div className="mh-sub">Log a claim from SimplePractice or your clearinghouse</div></div>
-              <button className="modal-close" onClick={()=>setModal(false)}>✕</button>
+      {activeTab === 'import' && (
+        <div>
+          {importStep === 'upload' && (
+            <div>
+              <div style={{background:'var(--blue-l)',border:'1px solid var(--blue-b)',borderRadius:'var(--r-lg)',padding:'14px 18px',marginBottom:20,fontSize:13,color:'var(--blue)'}}>
+                <strong>SimplePractice CSV Import</strong> — Export your billing data from SP (Reports → Billing → Export CSV), then drop the file below. CredentialIQ will auto-detect columns and let you review before importing.
+              </div>
+              <div style={{display:'flex',gap:12,marginBottom:20}}>
+                <div className="card" style={{flex:1}}>
+                  <div className="card-header"><h3>How to export from SimplePractice</h3></div>
+                  <div className="card-body" style={{fontSize:13,color:'var(--ink-3)',lineHeight:1.9}}>
+                    <ol style={{paddingLeft:18}}>
+                      <li>In SimplePractice, go to <strong>Reports → Billing</strong></li>
+                      <li>Set your date range (e.g., last month or quarter)</li>
+                      <li>Click <strong>Export → Download CSV</strong></li>
+                      <li>Drop the downloaded file below ↓</li>
+                    </ol>
+                  </div>
+                </div>
+                <div className="card" style={{flex:1}}>
+                  <div className="card-header"><h3>Supported columns</h3><button className="btn btn-secondary btn-sm" onClick={downloadTemplate}>⬇ Download template</button></div>
+                  <div className="card-body">
+                    <div style={{marginBottom:6,fontSize:11.5,color:'var(--ink-4)'}}><span style={{color:'var(--primary)',fontWeight:600}}>Blue = required</span> · Gray = optional</div>
+                    <div style={{lineHeight:2}}>
+                      {[{h:'Client Name',req:true},{h:'Date of Service',req:true},{h:'Date of Birth',req:false},{h:'Claim Number',req:false},{h:'CPT Code',req:false},{h:'Diagnosis Code',req:false},{h:'Amount Billed',req:false},{h:'Amount Paid',req:false},{h:'Patient Paid',req:false},{h:'Claim Status',req:false},{h:'Date Submitted',req:false},{h:'Clinician',req:false},{h:'Insurance',req:false}]
+                        .map(({h,req})=><span key={h} className={`template-field ${req?'required':''}`}>{h}</span>)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={`csv-drop-zone ${isDragging?'drag-over':''}`} onDragOver={e=>{e.preventDefault();setIsDragging(true)}} onDragLeave={()=>setIsDragging(false)} onDrop={handleDrop} onClick={()=>fileInputRef.current?.click()}>
+                <div className="csv-drop-zone-icon">📂</div>
+                <h4>Drop your SimplePractice CSV here</h4>
+                <p>or click to browse · .csv files only</p>
+                <input ref={fileInputRef} type="file" accept=".csv" style={{display:'none'}} onChange={e=>handleFileSelect(e.target.files[0])} />
+              </div>
             </div>
+          )}
+
+          {importStep === 'map' && csvRows && (
+            <div>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+                <div>
+                  <div style={{fontFamily:'DM Serif Display,serif',fontSize:18,color:'var(--ink)'}}>Column Mapping</div>
+                  <div style={{fontSize:12,color:'var(--ink-4)',marginTop:2}}>{csvRows.length} rows detected · Verify the mapping below then proceed</div>
+                </div>
+                <div style={{display:'flex',gap:8}}><button className="btn btn-secondary" onClick={resetImport}>← Start over</button><button className="btn btn-primary" onClick={goToPreview}>Preview import →</button></div>
+              </div>
+              <div className="card mb-16">
+                <div className="card-header"><h3>Auto-detected column mapping</h3><span className="ch-meta">{Object.keys(columnMap).length} of {csvHeaders.length} columns mapped</span></div>
+                <div className="card-body">
+                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
+                    {csvHeaders.map(h => {
+                      const OUR_FIELDS = [{v:'patient_name',l:'Patient Name'},{v:'dob',l:'Date of Birth'},{v:'dos',l:'Date of Service'},{v:'claim_num',l:'Claim Number'},{v:'cpt_codes',l:'CPT Code(s)'},{v:'diagnosis_codes',l:'Diagnosis Code(s)'},{v:'billed_amount',l:'Billed Amount'},{v:'paid_amount',l:'Paid Amount'},{v:'patient_resp',l:'Patient Responsibility'},{v:'allowed_amount',l:'Allowed Amount'},{v:'status',l:'Status'},{v:'submitted_date',l:'Date Submitted'},{v:'paid_date',l:'Date Paid'},{v:'_provider_name',l:'Provider (name)'},{v:'_payer_name',l:'Payer (name)'},{v:'notes',l:'Notes'},{v:'_skip',l:'— Skip —'}]
+                      return (
+                        <div key={h} style={{display:'flex',alignItems:'center',gap:8,padding:'7px 10px',background:'var(--surface-2)',border:`1px solid ${columnMap[h]?'var(--blue-b)':'var(--border)'}`,borderRadius:'var(--r)',fontSize:12}}>
+                          <div style={{flex:1,fontWeight:500,color:'var(--ink-2)',minWidth:0,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}} title={h}>{h}</div>
+                          <div style={{color:'var(--ink-4)'}}>→</div>
+                          <select value={columnMap[h]||'_skip'} onChange={e=>updateColumnMap(h,e.target.value==='_skip'?undefined:e.target.value)} style={{flex:1,padding:'4px 6px',border:'1px solid var(--border)',borderRadius:'var(--r)',fontSize:11.5,color:'var(--primary)',background:'white',outline:'none'}}>
+                            {OUR_FIELDS.map(({v,l})=><option key={v} value={v}>{l}</option>)}
+                          </select>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+              <div className="card">
+                <div className="card-header"><h3>Preview (first 5 rows)</h3></div>
+                <div style={{overflowX:'auto'}}>
+                  <table className="csv-preview-table">
+                    <thead><tr><th>Patient</th><th>DOS</th><th>CPT</th><th>Billed</th><th>Paid</th><th>Status</th><th>Provider</th><th>Payer</th><th>Warnings</th></tr></thead>
+                    <tbody>
+                      {previewRows.map((r,i)=>(
+                        <tr key={i} className={r._warnings?.length?'row-warn':r._valid?'row-ok':'row-error'}>
+                          <td>{r.patient_name||<span style={{color:'var(--red)'}}>Missing</span>}</td>
+                          <td>{r.dos||<span style={{color:'var(--red)'}}>Missing</span>}</td>
+                          <td style={{fontFamily:'monospace'}}>{(r.cpt_codes||[]).join(', ')||'—'}</td>
+                          <td>{r.billed_amount!=null?fmtMoney(r.billed_amount):'—'}</td>
+                          <td>{r.paid_amount!=null?fmtMoney(r.paid_amount):'—'}</td>
+                          <td><span className={`badge ${r.status==='Paid'?'b-green':r.status==='Denied'?'b-red':'b-amber'}`} style={{fontSize:10}}>{r.status||'Submitted'}</span></td>
+                          <td style={{fontSize:11}}>{r.prov_id?pNameShort(providers,r.prov_id):<span style={{color:'var(--amber)'}}>Unmatched</span>}</td>
+                          <td style={{fontSize:11}}>{r.payer_id?payName(payers,r.payer_id):<span style={{color:'var(--amber)'}}>Unmatched</span>}</td>
+                          <td style={{fontSize:10.5,color:'var(--amber)'}}>{(r._warnings||[]).join(' · ')||<span style={{color:'var(--green)'}}>✓ OK</span>}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {importStep === 'preview' && (
+            <div>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
+                <div>
+                  <div style={{fontFamily:'DM Serif Display,serif',fontSize:18,color:'var(--ink)'}}>Review Before Import</div>
+                  <div style={{fontSize:12,color:'var(--ink-4)',marginTop:2}}>{previewRows.filter(r=>r._valid).length} valid · {previewRows.filter(r=>!r._valid).length} invalid (skipped) · {previewRows.length} total</div>
+                </div>
+                <div style={{display:'flex',gap:8}}><button className="btn btn-secondary" onClick={()=>setImportStep('map')}>← Back to mapping</button><button className="btn btn-primary" onClick={runImport}>⬆ Import {previewRows.filter(r=>r._valid).length} claims</button></div>
+              </div>
+              <div style={{display:'flex',gap:10,marginBottom:16,flexWrap:'wrap'}}>
+                <span className="badge b-green">✓ {previewRows.filter(r=>r._valid&&!r._warnings?.length).length} clean</span>
+                <span className="badge b-amber">⚠ {previewRows.filter(r=>r._valid&&r._warnings?.length>0).length} with warnings</span>
+                <span className="badge b-red">✕ {previewRows.filter(r=>!r._valid).length} invalid</span>
+              </div>
+              <div className="card">
+                <div style={{overflowX:'auto',maxHeight:480,overflowY:'auto'}}>
+                  <table className="csv-preview-table">
+                    <thead style={{position:'sticky',top:0,background:'var(--surface-2)',zIndex:1}}>
+                      <tr><th>#</th><th>Patient</th><th>DOS</th><th>Billed</th><th>Paid</th><th>Status</th><th>Provider</th><th>Payer</th><th>Warnings</th></tr>
+                    </thead>
+                    <tbody>
+                      {previewRows.map((r,i)=>(
+                        <tr key={i} className={!r._valid?'row-error':r._warnings?.length?'row-warn':'row-ok'}>
+                          <td style={{color:'var(--ink-4)',fontSize:11}}>{i+1}</td>
+                          <td style={{fontWeight:500}}>{r.patient_name||<span style={{color:'var(--red)'}}>Missing</span>}</td>
+                          <td style={{fontSize:11}}>{r.dos||<span style={{color:'var(--red)'}}>Missing</span>}</td>
+                          <td>{r.billed_amount!=null?fmtMoney(r.billed_amount):'—'}</td>
+                          <td style={{color:'var(--green)'}}>{r.paid_amount!=null?fmtMoney(r.paid_amount):'—'}</td>
+                          <td><span className={`badge ${r.status==='Paid'?'b-green':r.status==='Denied'?'b-red':'b-amber'}`} style={{fontSize:10}}>{r.status||'Submitted'}</span></td>
+                          <td style={{fontSize:11}}>{r.prov_id?pNameShort(providers,r.prov_id):<span style={{color:'var(--amber)',fontSize:10}}>Unmatched</span>}</td>
+                          <td style={{fontSize:11}}>{r.payer_id?payName(payers,r.payer_id):<span style={{color:'var(--amber)',fontSize:10}}>Unmatched</span>}</td>
+                          <td style={{fontSize:10.5,color:'var(--amber)'}}>{(r._warnings||[]).join(' · ')||<span style={{color:'var(--green)'}}>✓</span>}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {importStep === 'importing' && (
+            <div className="card" style={{maxWidth:480,margin:'40px auto'}}>
+              <div className="card-body" style={{textAlign:'center',padding:'36px 32px'}}>
+                <div style={{fontSize:40,marginBottom:16}}>⬆</div>
+                <div style={{fontFamily:'DM Serif Display,serif',fontSize:20,marginBottom:8}}>Importing claims…</div>
+                <div style={{fontSize:13,color:'var(--ink-4)',marginBottom:20}}>{importProgress}% complete</div>
+                <div className="import-progress-bar"><div className="import-progress-fill" style={{width:`${importProgress}%`}}/></div>
+                <div style={{fontSize:12,color:'var(--ink-4)',marginTop:12}}>Please don't close this tab</div>
+              </div>
+            </div>
+          )}
+
+          {importStep === 'done' && (
+            <div className="card" style={{maxWidth:520,margin:'40px auto'}}>
+              <div className="card-body" style={{padding:'32px'}}>
+                <div style={{textAlign:'center',marginBottom:24}}>
+                  <div style={{fontSize:48,marginBottom:12}}>✅</div>
+                  <div style={{fontFamily:'DM Serif Display,serif',fontSize:22}}>Import Complete</div>
+                </div>
+                <div style={{display:'flex',gap:12,marginBottom:20}}>
+                  <div style={{flex:1,textAlign:'center',padding:'16px',background:'var(--green-l)',border:'1px solid var(--green-b)',borderRadius:'var(--r-lg)'}}>
+                    <div style={{fontFamily:'DM Serif Display,serif',fontSize:32,color:'var(--green)'}}>{importResults.imported}</div>
+                    <div style={{fontSize:11,fontWeight:700,color:'var(--green)',textTransform:'uppercase',letterSpacing:.5}}>Imported</div>
+                  </div>
+                  <div style={{flex:1,textAlign:'center',padding:'16px',background:'var(--amber-l)',border:'1px solid var(--amber-b)',borderRadius:'var(--r-lg)'}}>
+                    <div style={{fontFamily:'DM Serif Display,serif',fontSize:32,color:'var(--amber)'}}>{importResults.skipped}</div>
+                    <div style={{fontSize:11,fontWeight:700,color:'var(--amber)',textTransform:'uppercase',letterSpacing:.5}}>Skipped</div>
+                  </div>
+                  {importResults.errors.length>0&&<div style={{flex:1,textAlign:'center',padding:'16px',background:'var(--red-l)',border:'1px solid var(--red-b)',borderRadius:'var(--r-lg)'}}>
+                    <div style={{fontFamily:'DM Serif Display,serif',fontSize:32,color:'var(--red)'}}>{importResults.errors.length}</div>
+                    <div style={{fontSize:11,fontWeight:700,color:'var(--red)',textTransform:'uppercase',letterSpacing:.5}}>Errors</div>
+                  </div>}
+                </div>
+                {importResults.errors.length>0&&<div style={{background:'var(--red-l)',border:'1px solid var(--red-b)',borderRadius:'var(--r-md)',padding:'12px 14px',marginBottom:16,fontSize:12,maxHeight:120,overflowY:'auto'}}>
+                  <div style={{fontWeight:700,color:'var(--red)',marginBottom:6}}>Errors:</div>
+                  {importResults.errors.map((e,i)=><div key={i} style={{color:'var(--ink-3)',borderBottom:'1px solid var(--red-b)',paddingBottom:4,marginBottom:4}}>{e}</div>)}
+                </div>}
+                <div style={{display:'flex',gap:8}}>
+                  <button className="btn btn-primary" style={{flex:1}} onClick={()=>{resetImport();setActiveTab('list')}}>View imported claims</button>
+                  <button className="btn btn-secondary" onClick={resetImport}>Import another file</button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {modal && (
             <div className="modal-body">
               <div className="form-grid">
                 <div className="fg"><label>Claim Number</label><input value={form.claim_num||''} onChange={e=>setForm(f=>({...f,claim_num:e.target.value}))} placeholder="Clearinghouse claim #" /></div>
@@ -3555,21 +3980,25 @@ function RevenueAnalytics({ db }) {
       </div>
 
       <div className="card mt-12" style={{marginTop:16}}>
-        <div className="card-header"><h3>SimplePractice Import Guide</h3></div>
+        <div className="card-header"><h3>SimplePractice Data Import</h3></div>
         <div className="card-body">
-          <div style={{fontSize:13,color:'var(--ink-3)',lineHeight:1.7}}>
-            Since SimplePractice doesn't offer a direct API integration, revenue data must be imported manually. Here's the recommended workflow:
+          <div style={{display:'flex',alignItems:'center',gap:20,flexWrap:'wrap'}}>
+            <div style={{flex:1,minWidth:220,fontSize:13,color:'var(--ink-3)',lineHeight:1.7}}>
+              Revenue data is sourced from the <strong>Claims Tracker</strong>. Since SimplePractice doesn't offer a direct API, use the CSV import tool to bulk-load your billing exports in one step.
+            </div>
+            <div style={{display:'flex',flexDirection:'column',gap:10,flexShrink:0}}>
+              <a href="#" onClick={e=>{e.preventDefault();}} className="btn btn-primary" style={{textDecoration:'none',textAlign:'center'}}>
+                ⬆ Go to CSV Import
+              </a>
+              <button className="btn btn-secondary btn-sm" onClick={downloadTemplate}>⬇ Download SP template</button>
+            </div>
           </div>
-          <ol style={{marginTop:12,paddingLeft:20,fontSize:13,color:'var(--ink-3)',lineHeight:2}}>
-            <li>In SimplePractice, go to <strong>Reports → Billing</strong></li>
-            <li>Export to CSV for the desired date range</li>
-            <li>Enter each claim in the <strong>Claims Tracker</strong> (or use the upcoming CSV import feature)</li>
-            <li>Update payment status when EOBs / ERAs are received from payers</li>
-            <li>Log any denials in the <strong>Denial Log</strong> with the reason code from the ERA</li>
+          <ol style={{marginTop:14,paddingLeft:18,fontSize:13,color:'var(--ink-3)',lineHeight:2}}>
+            <li>In SimplePractice → <strong>Reports → Billing</strong> → Export CSV</li>
+            <li>Go to <strong>Claims Tracker → CSV Import tab</strong> and drop the file</li>
+            <li>CredentialIQ auto-maps SP columns and previews before saving</li>
+            <li>Update payment status when EOBs / ERAs arrive — revenue charts update instantly</li>
           </ol>
-          <div style={{marginTop:12,padding:'10px 14px',background:'var(--blue-l)',border:'1px solid var(--blue-b)',borderRadius:'var(--r-md)',fontSize:12,color:'var(--blue)'}}>
-            💡 <strong>Future:</strong> CSV batch import for SimplePractice billing exports is planned. Until then, entering claims manually ensures accurate A/R aging and denial tracking.
-          </div>
         </div>
       </div>
     </div>
