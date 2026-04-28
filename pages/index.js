@@ -659,7 +659,7 @@ function useSorted(items, defaultKey, defaultDir='asc') {
   })
   function thProps(key, label, noSort=false) {
     if(noSort) return {className:'no-sort',children:label}
-    return {onClick:()=>toggleSort(key),className:sortKey===key?`sort-${sortDir}`:'',children:label,style:{cursor:'pointer'}}
+    return {onClick:()=>toggleSort(key),className:sortKey===key?('sort-'+sortDir):'',children:label,style:{cursor:'pointer'}}
   }
   return {sorted,sortKey,sortDir,toggleSort,thProps}
 }
