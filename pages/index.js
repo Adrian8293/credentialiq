@@ -72,11 +72,11 @@ const d = n => { const x=new Date(); x.setDate(x.getDate()+n); return x.toISOStr
 const p = n => { const x=new Date(); x.setDate(x.getDate()-n); return x.toISOString().split('T')[0] }
 
 const SAMPLE_PROVIDERS = [
-  { fname:'Sarah', lname:'Chen', cred:'LCSW', spec:'Mental Health', status:'Active', email:'schen@pis.com', phone:'(503)555-0101', focus:'Trauma, PTSD, EMDR, Anxiety', npi:'1234567890', caqh:'12345678', caqhAttest:p(120), caqhDue:d(45), medicaid:'OR1000001', ptan:'', license:'C12345', licenseExp:d(280), malCarrier:'HPSO', malPolicy:'HP-001', malExp:d(180), dea:'', deaExp:'', recred:d(310), supervisor:'', supExp:'', notes:'Bilingual Spanish/English.' },
-  { fname:'Marcus', lname:'Rivera', cred:'LPC', spec:'Mental Health', status:'Active', email:'mrivera@pis.com', phone:'(503)555-0102', focus:'Adolescents, Substance Use, CBT', npi:'2345678901', caqh:'23456789', caqhAttest:p(20), caqhDue:d(10), medicaid:'OR1000002', ptan:'', license:'C23456', licenseExp:d(60), malCarrier:'CPH&A', malPolicy:'CP-002', malExp:d(20), dea:'', deaExp:'', recred:d(370), supervisor:'', supExp:'', notes:'' },
-  { fname:'Priya', lname:'Nair', cred:'Naturopathic Physician', spec:'Naturopathic', status:'Active', email:'pnair@pis.com', phone:'(503)555-0103', focus:'Integrative Medicine, Hormone Health, BioCharger', npi:'3456789012', caqh:'34567890', caqhAttest:p(90), caqhDue:d(90), medicaid:'', ptan:'', license:'ND45678', licenseExp:d(365), malCarrier:'HPSO', malPolicy:'HP-003', malExp:d(300), dea:'AB1234567', deaExp:d(400), recred:d(730), supervisor:'', supExp:'', notes:'BioCharger certified.' },
-  { fname:'Elena', lname:'Vasquez', cred:'Licensed Psychologist', spec:'Mental Health', status:'Active', email:'evasquez@pis.com', phone:'(503)555-0105', focus:'Neuropsychology, Assessment, Testing', npi:'5678901234', caqh:'56789012', caqhAttest:p(200), caqhDue:d(5), medicaid:'OR1000003', ptan:'PT12345', license:'PSY67890', licenseExp:d(18), malCarrier:'APA Insurance', malPolicy:'APA-005', malExp:d(-5), dea:'', deaExp:'', recred:d(30), supervisor:'', supExp:'', notes:'EPPP certified.' },
-  { fname:'David', lname:'Park', cred:'Chiropractor', spec:'Chiropractic', status:'Active', email:'dpark@pis.com', phone:'(503)555-0106', focus:'Sports Injury, Spinal Manipulation, Rehab', npi:'6789012345', caqh:'67890123', caqhAttest:p(30), caqhDue:d(150), medicaid:'', ptan:'', license:'DC89012', licenseExp:d(410), malCarrier:'HPSO', malPolicy:'HP-006', malExp:d(390), dea:'', deaExp:'', recred:d(800), supervisor:'', supExp:'', notes:'' },
+  { fname:'Sarah', lname:'Chen', cred:'LCSW', spec:'Mental Health', status:'Active', email:'', phone:'(503)555-0101', focus:'Trauma, PTSD, EMDR, Anxiety', npi:'1234567890', caqh:'12345678', caqhAttest:p(120), caqhDue:d(45), medicaid:'OR1000001', ptan:'', license:'C12345', licenseExp:d(280), malCarrier:'HPSO', malPolicy:'HP-001', malExp:d(180), dea:'', deaExp:'', recred:d(310), supervisor:'', supExp:'', notes:'Bilingual Spanish/English.' },
+  { fname:'Marcus', lname:'Rivera', cred:'LPC', spec:'Mental Health', status:'Active', email:'', phone:'(503)555-0102', focus:'Adolescents, Substance Use, CBT', npi:'2345678901', caqh:'23456789', caqhAttest:p(20), caqhDue:d(10), medicaid:'OR1000002', ptan:'', license:'C23456', licenseExp:d(60), malCarrier:'CPH&A', malPolicy:'CP-002', malExp:d(20), dea:'', deaExp:'', recred:d(370), supervisor:'', supExp:'', notes:'' },
+  { fname:'Priya', lname:'Nair', cred:'Naturopathic Physician', spec:'Naturopathic', status:'Active', email:'', phone:'(503)555-0103', focus:'Integrative Medicine, Hormone Health, BioCharger', npi:'3456789012', caqh:'34567890', caqhAttest:p(90), caqhDue:d(90), medicaid:'', ptan:'', license:'ND45678', licenseExp:d(365), malCarrier:'HPSO', malPolicy:'HP-003', malExp:d(300), dea:'AB1234567', deaExp:d(400), recred:d(730), supervisor:'', supExp:'', notes:'BioCharger certified.' },
+  { fname:'Elena', lname:'Vasquez', cred:'Licensed Psychologist', spec:'Mental Health', status:'Active', email:'', phone:'(503)555-0105', focus:'Neuropsychology, Assessment, Testing', npi:'5678901234', caqh:'56789012', caqhAttest:p(200), caqhDue:d(5), medicaid:'OR1000003', ptan:'PT12345', license:'PSY67890', licenseExp:d(18), malCarrier:'APA Insurance', malPolicy:'APA-005', malExp:d(-5), dea:'', deaExp:'', recred:d(30), supervisor:'', supExp:'', notes:'EPPP certified.' },
+  { fname:'David', lname:'Park', cred:'Chiropractor', spec:'Chiropractic', status:'Active', email:'', phone:'(503)555-0106', focus:'Sports Injury, Spinal Manipulation, Rehab', npi:'6789012345', caqh:'67890123', caqhAttest:p(30), caqhDue:d(150), medicaid:'', ptan:'', license:'DC89012', licenseExp:d(410), malCarrier:'HPSO', malPolicy:'HP-006', malExp:d(390), dea:'', deaExp:'', recred:d(800), supervisor:'', supExp:'', notes:'' },
 ]
 
 const SAMPLE_PAYERS = [
@@ -87,17 +87,17 @@ const SAMPLE_PAYERS = [
 
 
 const CSS = `
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
 :root {
-  --navy:#0f1f3d; --navy-deep:#091630; --navy-mid:#162847; --navy-light:#1e3561;
-  --navy-hover:#243e70; --navy-active:#2d4d85; --navy-border:rgba(255,255,255,0.08);
-  --sidebar-text:rgba(255,255,255,0.55); --sidebar-active:#ffffff; --sidebar-accent:#4f9cf9;
+  --navy:#0d1b3d; --navy-deep:#081526; --navy-mid:#132240; --navy-light:#1a2f55;
+  --navy-hover:#1e3666; --navy-active:#243e7a; --navy-border:rgba(255,255,255,0.08);
+  --sidebar-text:rgba(255,255,255,0.55); --sidebar-active:#ffffff; --sidebar-accent:#10b981;
   --bg:#f0f2f7; --surface:#ffffff; --surface-2:#f7f9fc;
   --border:#e2e8f0; --border-2:#edf0f5;
-  --ink:#0d1b35; --ink-2:#2d3f5c; --ink-3:#5a6d8a; --ink-4:#9aa5b8;
-  --primary:#1a6ef5; --primary-h:#1260e0; --primary-l:#eff5ff; --accent:#0ea5e9;
-  --green:#16a34a; --green-l:#f0fdf4; --green-b:#bbf7d0;
+  --ink:#0d1b3d; --ink-2:#2d3f5c; --ink-3:#5a6d8a; --ink-4:#9aa5b8;
+  --primary:#2563eb; --primary-h:#1d55d4; --primary-l:#eff6ff; --accent:#10b981;
+  --green:#10b981; --green-l:#ecfdf5; --green-b:#a7f3d0;
   --red:#dc2626; --red-l:#fef2f2; --red-b:#fecaca;
   --amber:#d97706; --amber-l:#fffbeb; --amber-b:#fed7aa;
   --blue:#2563eb; --blue-l:#eff6ff; --blue-b:#bfdbfe;
@@ -105,56 +105,66 @@ const CSS = `
   --purple:#7c3aed; --purple-l:#f5f3ff; --purple-b:#ddd6fe;
   --gold:#ca8a04; --gold-l:#fefce8; --gold-b:#fde68a;
   --r:6px; --r-md:10px; --r-lg:14px; --r-xl:20px;
-  --shadow-sm:0 1px 3px rgba(15,31,61,.08),0 1px 2px rgba(15,31,61,.04);
-  --shadow:0 4px 12px rgba(15,31,61,.08),0 2px 4px rgba(15,31,61,.04);
-  --shadow-md:0 8px 24px rgba(15,31,61,.12);
-  --shadow-lg:0 20px 60px rgba(15,31,61,.18);
+  --shadow-sm:0 1px 3px rgba(13,27,61,.08),0 1px 2px rgba(13,27,61,.04);
+  --shadow:0 4px 12px rgba(13,27,61,.08),0 2px 4px rgba(13,27,61,.04);
+  --shadow-md:0 8px 24px rgba(13,27,61,.12);
+  --shadow-lg:0 20px 60px rgba(13,27,61,.18);
   --t:0.16s cubic-bezier(.4,0,.2,1);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{font-size:14px;}
-body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;}
+body{font-family:'Poppins',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;}
 a{text-decoration:none;color:inherit;}
 
 .app-root{display:flex;min-height:100vh;}
 
 /* SIDEBAR */
-.sidebar{width:232px;min-height:100vh;background:var(--navy);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;overflow-y:auto;}
-.sb-logo{padding:22px 18px 18px;border-bottom:1px solid var(--navy-border);}
+.sidebar{width:220px;height:100vh;background:var(--navy);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;overflow:hidden;}
+.sb-logo{padding:18px 16px 14px;border-bottom:1px solid var(--navy-border);flex-shrink:0;}
 .sb-logo-mark{display:flex;align-items:center;gap:10px;}
-.sb-logo-icon{width:36px;height:36px;background:var(--sidebar-accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;flex-shrink:0;box-shadow:0 4px 12px rgba(79,156,249,.4);}
-.sb-logo h1{font-family:'DM Serif Display',serif;font-size:16px;color:#fff;line-height:1.2;letter-spacing:-0.3px;}
-.sb-logo p{font-size:10.5px;color:var(--sidebar-text);margin-top:2px;}
-.sb-nav{padding:12px 10px;flex:1;}
-.sb-section{font-size:9.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:14px 10px 5px;margin-top:2px;}
-.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;color:var(--sidebar-text);font-size:13px;font-weight:400;transition:all var(--t);margin-bottom:2px;user-select:none;position:relative;}
+.sb-logo-icon{width:34px;height:34px;background:var(--sidebar-accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;color:white;flex-shrink:0;box-shadow:0 4px 12px rgba(16,185,129,.35);}
+.sb-logo h1{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:#fff;line-height:1.2;letter-spacing:-0.3px;}
+.sb-logo h1 span{color:var(--sidebar-accent);}
+.sb-nav{padding:8px 8px;flex:1;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;}
+.sb-nav-groups{flex:1;overflow:hidden;}
+
+/* Accordion groups */
+.sb-group{margin-bottom:2px;}
+.sb-group-header{display:flex;align-items:center;justify-content:space-between;padding:7px 10px 5px;cursor:pointer;border-radius:6px;transition:background var(--t);}
+.sb-group-header:hover{background:var(--navy-hover);}
+.sb-group-label{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.35);}
+.sb-group-arrow{font-size:9px;color:rgba(255,255,255,0.3);transition:transform var(--t);}
+.sb-group.open .sb-group-arrow{transform:rotate(180deg);}
+.sb-group-items{overflow:hidden;max-height:0;transition:max-height 0.22s ease;}
+.sb-group.open .sb-group-items{max-height:400px;}
+
+.sb-item{display:flex;align-items:center;gap:0;padding:7px 10px;border-radius:7px;cursor:pointer;color:var(--sidebar-text);font-size:12.5px;font-weight:400;transition:all var(--t);margin-bottom:1px;user-select:none;position:relative;}
 .sb-item:hover{background:var(--navy-hover);color:rgba(255,255,255,0.85);}
-.sb-item.active{background:var(--navy-active);color:var(--sidebar-active);font-weight:500;}
-.sb-item.active::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;background:var(--sidebar-accent);border-radius:0 3px 3px 0;}
-.sb-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
-.sb-badge{margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;border-radius:20px;padding:1px 7px;min-width:20px;text-align:center;line-height:1.7;}
+.sb-item.active{background:var(--navy-active);color:var(--sidebar-active);font-weight:600;}
+.sb-item.active::before{content:'';position:absolute;left:0;top:5px;bottom:5px;width:3px;background:var(--sidebar-accent);border-radius:0 3px 3px 0;}
+.sb-badge{margin-left:auto;background:var(--red);color:white;font-size:9.5px;font-weight:700;border-radius:20px;padding:1px 6px;min-width:18px;text-align:center;line-height:1.7;}
 .sb-badge.amber{background:var(--amber);}
-.sb-footer{padding:14px 18px;border-top:1px solid var(--navy-border);}
-.sb-user{display:flex;align-items:center;gap:10px;}
-.sb-avatar{width:32px;height:32px;border-radius:50%;background:var(--navy-active);border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:12px;color:rgba(255,255,255,0.8);font-weight:600;flex-shrink:0;}
+.sb-footer{padding:10px 12px;border-top:1px solid var(--navy-border);flex-shrink:0;}
+.sb-user{display:flex;align-items:center;gap:8px;}
+.sb-avatar{width:28px;height:28px;border-radius:50%;background:var(--navy-active);border:2px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(255,255,255,0.8);font-weight:600;flex-shrink:0;}
 .sb-user-info{flex:1;min-width:0;}
-.sb-user-email{font-size:11px;color:rgba(255,255,255,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.sb-signout{background:none;border:none;color:rgba(255,255,255,0.35);font-size:10.5px;cursor:pointer;padding:0;margin-top:2px;font-family:inherit;transition:color var(--t);}
+.sb-user-email{font-size:10.5px;color:rgba(255,255,255,0.55);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sb-signout{background:none;border:none;color:rgba(255,255,255,0.3);font-size:10px;cursor:pointer;padding:0;margin-top:1px;font-family:inherit;transition:color var(--t);}
 .sb-signout:hover{color:rgba(255,255,255,0.65);}
 
 /* MAIN */
-.main{margin-left:232px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.main{margin-left:220px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
 
 /* TOPBAR */
 .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);}
 .topbar-left{flex:1;display:flex;align-items:center;gap:8px;}
 .topbar-crumb{font-size:11px;color:var(--ink-4);font-weight:500;letter-spacing:0.3px;}
 .topbar-sep{color:var(--border);font-size:16px;}
-.topbar-title{font-family:'DM Serif Display',serif;font-size:20px;color:var(--ink);letter-spacing:-0.3px;}
+.topbar-title{font-family:'Poppins',sans-serif;font-size:20px;color:var(--ink);letter-spacing:-0.3px;}
 .topbar-actions{display:flex;gap:8px;align-items:center;}
 
 /* BUTTONS */
-.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-md);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all var(--t);white-space:nowrap;line-height:1;}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-md);font-family:'Poppins',sans-serif;font-size:13px;font-weight:500;cursor:pointer;border:1px solid transparent;transition:all var(--t);white-space:nowrap;line-height:1;}
 .btn:disabled{opacity:.55;cursor:not-allowed;}
 .btn-primary{background:var(--primary);color:white;border-color:var(--primary);box-shadow:0 2px 8px rgba(26,110,245,.25);}
 .btn-primary:hover:not(:disabled){background:var(--primary-h);}
@@ -178,7 +188,7 @@ a{text-decoration:none;color:inherit;}
 /* CARDS */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);overflow:hidden;}
 .card-header{padding:16px 20px 14px;border-bottom:1px solid var(--border-2);display:flex;align-items:center;gap:10px;}
-.card-header h3{font-family:'DM Serif Display',serif;font-size:16px;color:var(--ink);letter-spacing:-0.2px;flex:1;}
+.card-header h3{font-family:'Poppins',sans-serif;font-size:16px;color:var(--ink);letter-spacing:-0.2px;flex:1;}
 .ch-meta{font-size:12px;color:var(--ink-4);}
 .card-body{padding:18px 20px;}
 
@@ -189,7 +199,7 @@ a{text-decoration:none;color:inherit;}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kpi-color,var(--primary));}
 .kpi-icon{width:36px;height:36px;border-radius:var(--r-md);background:var(--kpi-bg,var(--primary-l));display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:12px;}
 .kpi-label{font-size:11px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;color:var(--ink-4);margin-bottom:6px;}
-.kpi-value{font-family:'DM Serif Display',serif;font-size:36px;line-height:1;color:var(--ink);margin-bottom:4px;}
+.kpi-value{font-family:'Poppins',sans-serif;font-size:36px;line-height:1;color:var(--ink);margin-bottom:4px;}
 .kpi-sub{font-size:11.5px;color:var(--ink-4);}
 .kpi.kpi-red{--kpi-color:var(--red);--kpi-bg:var(--red-l);}
 .kpi.kpi-amber{--kpi-color:var(--amber);--kpi-bg:var(--amber-l);}
@@ -226,10 +236,10 @@ tbody tr:hover{background:#f8fafd;}
 /* TOOLBAR */
 .toolbar{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
 .search-box{position:relative;}
-.search-box input{padding:8px 12px 8px 36px;border:1px solid var(--border);border-radius:var(--r-md);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:var(--surface);outline:none;width:240px;transition:border-color var(--t),box-shadow var(--t);}
+.search-box input{padding:8px 12px 8px 36px;border:1px solid var(--border);border-radius:var(--r-md);font-family:'Poppins',sans-serif;font-size:13px;color:var(--ink);background:var(--surface);outline:none;width:240px;transition:border-color var(--t),box-shadow var(--t);}
 .search-box input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,110,245,.12);}
 .search-box .si{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--ink-4);font-size:14px;pointer-events:none;}
-.filter-select{padding:7px 12px;border:1px solid var(--border);border-radius:var(--r-md);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:var(--surface);outline:none;cursor:pointer;transition:border-color var(--t);}
+.filter-select{padding:7px 12px;border:1px solid var(--border);border-radius:var(--r-md);font-family:'Poppins',sans-serif;font-size:13px;color:var(--ink);background:var(--surface);outline:none;cursor:pointer;transition:border-color var(--t);}
 .filter-select:focus{border-color:var(--primary);}
 .toolbar-right{margin-left:auto;display:flex;gap:8px;}
 
@@ -238,7 +248,7 @@ tbody tr:hover{background:#f8fafd;}
 .form-grid .full{grid-column:1/-1;}
 .fg{display:flex;flex-direction:column;gap:5px;}
 .fg label{font-size:12px;font-weight:600;color:var(--ink-3);}
-.fg input,.fg select,.fg textarea{padding:8px 11px;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:var(--surface);outline:none;transition:border-color var(--t),box-shadow var(--t);}
+.fg input,.fg select,.fg textarea{padding:8px 11px;border:1px solid var(--border);border-radius:var(--r);font-family:'Poppins',sans-serif;font-size:13px;color:var(--ink);background:var(--surface);outline:none;transition:border-color var(--t),box-shadow var(--t);}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,110,245,.12);}
 .fg textarea{resize:vertical;min-height:72px;line-height:1.5;}
 .field-note{font-size:11px;color:var(--ink-4);margin-top:2px;}
@@ -251,7 +261,7 @@ tbody tr:hover{background:#f8fafd;}
 .modal-lg{max-width:780px;}
 @keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(12px);}to{opacity:1;transform:none;}}
 .modal-header{padding:22px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px;position:sticky;top:0;background:var(--surface);z-index:2;border-radius:var(--r-xl) var(--r-xl) 0 0;}
-.modal-header h3{font-family:'DM Serif Display',serif;font-size:20px;flex:1;letter-spacing:-0.3px;}
+.modal-header h3{font-family:'Poppins',sans-serif;font-size:20px;flex:1;letter-spacing:-0.3px;}
 .mh-sub{font-size:12px;color:var(--ink-4);margin-top:2px;}
 .modal-close{background:var(--surface-2);border:1px solid var(--border);font-size:14px;cursor:pointer;color:var(--ink-3);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all var(--t);}
 .modal-close:hover{background:var(--red-l);border-color:var(--red-b);color:var(--red);}
@@ -267,7 +277,7 @@ tbody tr:hover{background:#f8fafd;}
 /* PROVIDER CARDS */
 .prov-card{display:grid;grid-template-columns:auto 1fr auto;align-items:start;gap:14px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);margin-bottom:10px;cursor:pointer;transition:all var(--t);box-shadow:var(--shadow-sm);}
 .prov-card:hover{border-color:#93c5fd;box-shadow:var(--shadow);transform:translateY(-1px);}
-.prov-avatar{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:17px;color:white;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.prov-avatar{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:17px;color:white;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.15);}
 .prov-name{font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:2px;}
 .prov-title{font-size:12px;color:var(--ink-3);margin-bottom:8px;}
 .prov-chips{display:flex;gap:5px;flex-wrap:wrap;}
@@ -347,9 +357,9 @@ tbody tr:hover{background:#f8fafd;}
 @keyframes slideDown{from{opacity:0;transform:translateY(-12px);}to{opacity:1;transform:none;}}
 .gsearch-input-wrap{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border);}
 .gsearch-icon{font-size:18px;color:var(--ink-4);flex-shrink:0;}
-.gsearch-input{flex:1;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink);background:transparent;}
+.gsearch-input{flex:1;border:none;outline:none;font-family:'Poppins',sans-serif;font-size:16px;color:var(--ink);background:transparent;}
 .gsearch-input::placeholder{color:var(--ink-4);}
-.gsearch-kbd{background:var(--surface-2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:11px;color:var(--ink-4);font-family:'DM Sans',sans-serif;white-space:nowrap;}
+.gsearch-kbd{background:var(--surface-2);border:1px solid var(--border);border-radius:5px;padding:2px 7px;font-size:11px;color:var(--ink-4);font-family:'Poppins',sans-serif;white-space:nowrap;}
 .gsearch-results{max-height:440px;overflow-y:auto;}
 .gsearch-section{padding:8px 0 4px;}
 .gsearch-section-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--ink-4);padding:4px 20px 6px;}
@@ -363,14 +373,14 @@ tbody tr:hover{background:#f8fafd;}
 .gsearch-empty{text-align:center;padding:36px 20px;color:var(--ink-4);font-size:13px;}
 .gsearch-footer{padding:10px 20px;border-top:1px solid var(--border);display:flex;gap:16px;align-items:center;}
 .gsearch-hint{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-4);}
-.topbar-search-btn{display:flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface-2);cursor:pointer;color:var(--ink-4);font-size:12.5px;font-family:'DM Sans',sans-serif;transition:all var(--t);min-width:200px;}
+.topbar-search-btn{display:flex;align-items:center;gap:8px;padding:7px 14px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--surface-2);cursor:pointer;color:var(--ink-4);font-size:12.5px;font-family:'Poppins',sans-serif;transition:all var(--t);min-width:200px;}
 .topbar-search-btn:hover{border-color:var(--primary);color:var(--ink);}
 .topbar-search-btn span{flex:1;}
 .progress-bar{height:8px;background:var(--border-2);border-radius:4px;overflow:hidden;}
 
 /* PROVIDER PHOTO */
 .photo-upload-wrap{display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-lg);}
-.photo-preview{width:72px;height:72px;border-radius:14px;object-fit:cover;border:2px solid var(--border);flex-shrink:0;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:26px;color:var(--primary);overflow:hidden;}
+.photo-preview{width:72px;height:72px;border-radius:14px;object-fit:cover;border:2px solid var(--border);flex-shrink:0;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:26px;color:var(--primary);overflow:hidden;}
 .photo-preview img{width:100%;height:100%;object-fit:cover;}
 .photo-actions{flex:1;}
 .photo-label{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:4px;}
@@ -390,7 +400,7 @@ tbody tr:hover{background:#f8fafd;}
 .pt-sub{font-size:11.5px;color:var(--ink-3);}
 .pt-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 18px;margin-bottom:10px;display:flex;align-items:center;gap:12px;transition:all var(--t);}
 .pt-card:hover{border-color:#93c5fd;box-shadow:var(--shadow);}
-.pt-card-avatar{width:46px;height:46px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:16px;color:var(--primary);overflow:hidden;}
+.pt-card-avatar{width:46px;height:46px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--primary-l);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:16px;color:var(--primary);overflow:hidden;}
 .pt-card-avatar img{width:100%;height:100%;object-fit:cover;}
 .pt-missing{background:var(--amber-l);border:1px dashed var(--amber-b);}
 
@@ -398,7 +408,7 @@ tbody tr:hover{background:#f8fafd;}
 /* PROVIDER LOOKUP */
 .lookup-result-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:16px 20px;margin-bottom:10px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;box-shadow:var(--shadow-sm);transition:all var(--t);}
 .lookup-result-card:hover{border-color:#93c5fd;box-shadow:var(--shadow);}
-.lookup-avatar{width:44px;height:44px;border-radius:10px;background:var(--primary-l);border:1px solid var(--blue-b);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:17px;color:var(--primary);flex-shrink:0;}
+.lookup-avatar{width:44px;height:44px;border-radius:10px;background:var(--primary-l);border:1px solid var(--blue-b);display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-size:17px;color:var(--primary);flex-shrink:0;}
 .lookup-name{font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:3px;}
 .lookup-meta{font-size:12px;color:var(--ink-3);margin-bottom:6px;}
 .lookup-chips{display:flex;gap:5px;flex-wrap:wrap;}
@@ -421,33 +431,7 @@ tbody tr:hover{background:#f8fafd;}
 .import-label{color:var(--ink-4);width:130px;flex-shrink:0;}
 .import-val{color:var(--ink);font-weight:500;}
 .progress-fill{height:100%;border-radius:4px;transition:width .4s ease;}
-
-/* CSV IMPORT */
-.csv-drop-zone{border:2px dashed var(--border);border-radius:var(--r-lg);padding:36px 20px;text-align:center;cursor:pointer;transition:all var(--t);background:var(--surface-2);}
-.csv-drop-zone:hover,.csv-drop-zone.drag-over{border-color:var(--primary);background:var(--primary-l);}
-.csv-drop-zone-icon{font-size:36px;margin-bottom:10px;}
-.csv-drop-zone h4{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:4px;}
-.csv-drop-zone p{font-size:12px;color:var(--ink-4);}
-.csv-preview-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px;}
-.csv-preview-table th{padding:7px 10px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-3);text-align:left;}
-.csv-preview-table td{padding:7px 10px;border-bottom:1px solid var(--border-2);color:var(--ink-2);}
-.csv-preview-table tr:last-child td{border-bottom:none;}
-.csv-preview-table tr.row-ok td:first-child{border-left:3px solid var(--green);}
-.csv-preview-table tr.row-warn td:first-child{border-left:3px solid var(--amber);}
-.csv-preview-table tr.row-error td:first-child{border-left:3px solid var(--red);}
-.csv-map-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
-.csv-map-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r);font-size:12px;}
-.csv-map-label{flex:1;color:var(--ink-3);font-weight:500;}
-.csv-map-arrow{color:var(--ink-4);font-size:14px;}
-.csv-map-target{flex:1;color:var(--primary);font-weight:600;}
-.import-progress-bar{height:6px;background:var(--border-2);border-radius:3px;overflow:hidden;margin:8px 0;}
-.import-progress-fill{height:100%;background:var(--primary);border-radius:3px;transition:width .3s ease;}
-.import-result-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border-2);font-size:12.5px;}
-.import-result-row:last-child{border-bottom:none;}
-.template-field{display:inline-flex;align-items:center;gap:4px;background:var(--surface-2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:11px;font-family:monospace;color:var(--ink-2);margin:2px;}
-.template-field.required{background:var(--primary-l);border-color:var(--blue-b);color:var(--primary);font-weight:600;}
-
-@media(max-width:900px){.sidebar{width:190px;}.main{margin-left:190px;}.kpi-grid{grid-template-columns:repeat(2,1fr);}.form-grid,.grid-2,.grid-3{grid-template-columns:1fr;}.form-grid .full{grid-column:1;}}
+@media(max-width:900px){.sidebar{width:180px;}.main{margin-left:180px;}.kpi-grid{grid-template-columns:repeat(2,1fr);}.form-grid,.grid-2,.grid-3{grid-template-columns:1fr;}.form-grid .full{grid-column:1;}}
 `
 
 
@@ -472,149 +456,6 @@ function useSorted(items, defaultKey, defaultDir='asc') {
   return {sorted,sortKey,sortDir,toggleSort,thProps}
 }
 
-
-// ═══════════════════════════════════════════════════════════════════════════════
-// CSV IMPORT UTILITIES
-// ═══════════════════════════════════════════════════════════════════════════════
-
-// Parse a raw CSV string into array of objects (handles quoted fields, commas inside quotes)
-function parseCSV(text) {
-  const lines = text.trim().split(/\r?\n/)
-  if (lines.length < 2) return []
-  function parseLine(line) {
-    const cells = []; let cur = ''; let inQ = false
-    for (let i = 0; i < line.length; i++) {
-      const ch = line[i]
-      if (ch === '"') { if (inQ && line[i+1]==='"') { cur+='"'; i++ } else inQ=!inQ }
-      else if (ch === ',' && !inQ) { cells.push(cur.trim()); cur='' }
-      else cur += ch
-    }
-    cells.push(cur.trim()); return cells
-  }
-  const headers = parseLine(lines[0]).map(h => h.replace(/^"|"$/g,'').trim())
-  return lines.slice(1).filter(l=>l.trim()).map(line => {
-    const vals = parseLine(line)
-    const row = {}
-    headers.forEach((h,i) => { row[h] = (vals[i]||'').replace(/^"|"$/g,'').trim() })
-    return row
-  })
-}
-
-// Normalize a dollar string to a float: "$1,250.00" -> 1250.00
-function parseMoney(s) {
-  if (!s) return null
-  const n = parseFloat(String(s).replace(/[$,\s]/g,''))
-  return isNaN(n) ? null : n
-}
-
-// Normalize a date string to YYYY-MM-DD
-function parseDate(s) {
-  if (!s) return null
-  const cleaned = s.trim()
-  // MM/DD/YYYY or M/D/YYYY
-  const mdy = cleaned.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/)
-  if (mdy) {
-    const [,m,d,y] = mdy
-    const yr = y.length===2 ? (parseInt(y)>50?'19':'20')+y : y
-    return `${yr}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`
-  }
-  // Already YYYY-MM-DD
-  if (/^\d{4}-\d{2}-\d{2}$/.test(cleaned)) return cleaned
-  // Try native parse as fallback
-  const dt = new Date(cleaned)
-  if (!isNaN(dt)) return dt.toISOString().split('T')[0]
-  return null
-}
-
-// SimplePractice billing export column mapping
-// SP exports vary — we support their common column names and common aliases
-const SP_COLUMN_MAP = [
-  // [SP column name(s), our field, transform fn]
-  { sp: ['Client Name','Patient Name','Client'], field: 'patient_name', fn: v=>v },
-  { sp: ['Date of Birth','DOB','Client DOB'],    field: 'dob',          fn: parseDate },
-  { sp: ['Date of Service','DOS','Service Date','Appointment Date'], field: 'dos', fn: parseDate },
-  { sp: ['Claim Number','Claim #','Claim ID'],   field: 'claim_num',    fn: v=>v },
-  { sp: ['CPT Code','CPT','Procedure Code','Service Code'], field: 'cpt_codes', fn: v=>v?[v]:[] },
-  { sp: ['Diagnosis Code','Diagnosis','ICD Code','Primary Diagnosis'], field: 'diagnosis_codes', fn: v=>v?[v]:[] },
-  { sp: ['Amount Billed','Billed','Charge Amount','Fee'], field: 'billed_amount', fn: parseMoney },
-  { sp: ['Amount Paid','Paid','Payment','Insurance Paid'], field: 'paid_amount',  fn: parseMoney },
-  { sp: ['Patient Paid','Copay Collected','Patient Responsibility','Patient Balance'], field: 'patient_resp', fn: parseMoney },
-  { sp: ['Allowed Amount','Allowed'],            field: 'allowed_amount', fn: parseMoney },
-  { sp: ['Claim Status','Status','Billing Status'], field: 'status',   fn: v => {
-    const s = (v||'').toLowerCase()
-    if (s.includes('paid') || s.includes('processed')) return 'Paid'
-    if (s.includes('denied') || s.includes('reject'))  return 'Denied'
-    if (s.includes('partial'))                         return 'Partial'
-    if (s.includes('appeal'))                          return 'Appeal'
-    if (s.includes('pending') || s.includes('pend'))  return 'Pending'
-    if (s.includes('submit'))                          return 'Submitted'
-    return 'Submitted'
-  }},
-  { sp: ['Date Submitted','Submitted Date','Submission Date'], field: 'submitted_date', fn: parseDate },
-  { sp: ['Date Paid','Paid Date','Payment Date'],              field: 'paid_date',      fn: parseDate },
-  { sp: ['Clinician','Provider','Clinician Name','Rendering Provider'], field: '_provider_name', fn: v=>v },
-  { sp: ['Insurance','Payer','Insurance Name','Payer Name'],   field: '_payer_name',   fn: v=>v },
-  { sp: ['Notes','Comments','Internal Notes'],                 field: 'notes',         fn: v=>v },
-]
-
-// Match a CSV column header to one of our mappings (case-insensitive)
-function detectColumnMap(headers) {
-  const matched = {}
-  SP_COLUMN_MAP.forEach(({ sp, field }) => {
-    const found = headers.find(h => sp.some(s => s.toLowerCase() === h.toLowerCase()))
-    if (found) matched[found] = field
-  })
-  return matched
-}
-
-// Convert a raw CSV row to a claim object, resolving provider/payer by name
-function rowToClaim(row, columnMap, providers, payers) {
-  const raw = {}
-  Object.entries(columnMap).forEach(([csvCol, ourField]) => {
-    const mapping = SP_COLUMN_MAP.find(m => m.field === ourField)
-    if (mapping) raw[ourField] = mapping.fn(row[csvCol])
-  })
-
-  // Resolve provider by name match
-  if (raw._provider_name) {
-    const name = raw._provider_name.toLowerCase().trim()
-    const prov = providers.find(p =>
-      `${p.fname} ${p.lname}`.toLowerCase().includes(name) ||
-      name.includes(p.lname.toLowerCase())
-    )
-    raw.prov_id = prov?.id || null
-  }
-
-  // Resolve payer by name match
-  if (raw._payer_name) {
-    const name = raw._payer_name.toLowerCase().trim()
-    const payer = payers.find(p =>
-      p.name.toLowerCase().includes(name) ||
-      name.includes(p.name.toLowerCase().split(' ')[0])
-    )
-    raw.payer_id = payer?.id || null
-  }
-
-  // Warnings
-  const warnings = []
-  if (!raw.patient_name) warnings.push('Missing patient name')
-  if (!raw.dos) warnings.push('Missing date of service')
-  if (!raw.prov_id && raw._provider_name) warnings.push(`Provider "${raw._provider_name}" not found — assign manually`)
-  if (!raw.payer_id && raw._payer_name) warnings.push(`Payer "${raw._payer_name}" not found — assign manually`)
-
-  delete raw._provider_name; delete raw._payer_name
-  return { ...raw, _warnings: warnings, _valid: !!raw.patient_name && !!raw.dos }
-}
-
-// Download a blank CSV template
-function downloadTemplate() {
-  const headers = ['Client Name','Date of Birth','Date of Service','Claim Number','CPT Code','Diagnosis Code','Amount Billed','Amount Paid','Patient Paid','Allowed Amount','Claim Status','Date Submitted','Date Paid','Clinician','Insurance','Notes']
-  const example = ['Smith, Jane','01/15/1985','04/01/2025','CLM-001','90837','F41.1','200.00','160.00','40.00','160.00','Paid','04/02/2025','04/20/2025','Sarah Chen','Aetna','']
-  const csv = [headers.join(','), example.join(',')].join('\n')
-  const blob = new Blob([csv], { type: 'text/csv' })
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob)
-  a.download = 'credentialiq-claims-template.csv'; a.click()
-}
 
 export default function App() {
   const [user, setUser] = useState(null)
@@ -710,7 +551,7 @@ export default function App() {
   }
 
   // ─── AUTH GUARD ───────────────────────────────────────────────────────────────
-  if (authLoading) return <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'DM Sans,sans-serif', color:'#5a6e5a' }}>Loading…</div>
+  if (authLoading) return <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Poppins,sans-serif', color:'#5a6e5a' }}>Loading…</div>
   if (!user) {
     if (typeof window !== 'undefined') window.location.href = '/login'
     return null
@@ -1055,8 +896,8 @@ export default function App() {
   return (
     <>
       <Head>
-        <title>CredentialIQ — Positive Inner Self</title>
-        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+        <title>CredFlow — Credentialing. Simplified. Accelerated.</title>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
         <style>{CSS}</style>
       </Head>
       <div className="app-root">
@@ -1123,48 +964,73 @@ export default function App() {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function Sidebar({ page, setPage, alertCount, pendingEnroll, expDocs, user, signOut }) {
-  const navItem = (pg, icon, label, badge, badgeClass) => (
+  // Track which groups are open. Default: all open
+  const [open, setOpen] = useState({ overview:true, providers:true, enrollments:true, compliance:true, rcm:true, analytics:false, system:false })
+  const toggle = g => setOpen(o => ({ ...o, [g]: !o[g] }))
+
+  const navItem = (pg, label, badge, badgeClass) => (
     <div className={`sb-item ${page===pg?'active':''}`} onClick={() => setPage(pg)}>
-      <span className="sb-icon">{icon}</span>
       <span>{label}</span>
       {badge > 0 && <span className={`sb-badge ${badgeClass||''}`}>{badge}</span>}
     </div>
   )
+
+  const Group = ({ id, label, children }) => (
+    <div className={`sb-group ${open[id]?'open':''}`}>
+      <div className="sb-group-header" onClick={() => toggle(id)}>
+        <span className="sb-group-label">{label}</span>
+        <span className="sb-group-arrow">▼</span>
+      </div>
+      <div className="sb-group-items">{children}</div>
+    </div>
+  )
+
   const emailInitial = (user?.email||'U')[0].toUpperCase()
   return (
     <nav className="sidebar">
       <div className="sb-logo">
         <div className="sb-logo-mark">
-          <div className="sb-logo-icon">⬡</div>
-          <div><h1>CredentialIQ</h1><p>Positive Inner Self</p></div>
+          <div className="sb-logo-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div><h1>Cred<span>Flow</span></h1></div>
         </div>
       </div>
-      <nav className="sb-nav">
-        <div className="sb-section">Overview</div>
-        {navItem('dashboard','◈','Dashboard')}
-        {navItem('alerts','◉','Alerts', alertCount)}
-        <div className="sb-section">Providers</div>
-        {navItem('providers','⊞','All Providers')}
-        {navItem('add-provider','⊕','Add Provider')}
-        {navItem('provider-lookup','⌕','Provider Lookup')}
-        <div className="sb-section">Enrollments</div>
-        {navItem('enrollments','⊟','Payer Enrollments', pendingEnroll, 'amber')}
-        {navItem('payers','⊠','Payer Directory')}
-        <div className="sb-section">Compliance</div>
-        {navItem('documents','⊡','Documents & Expiry', expDocs)}
-        {navItem('workflows','⚡','Workflows & Tasks')}
-        <div className="sb-section">Marketing</div>
-        {navItem('psychology-today','🧠','Psychology Today')}
-        <div className="sb-section">Analytics</div>
-        {navItem('eligibility','🩺','Eligibility Verification')}
-        {navItem('claims','📋','Claims Tracker')}
-        {navItem('denials','🚫','Denial Log')}
-        {navItem('revenue','💰','Revenue Analytics')}
-        {navItem('reports','◧','Reports')}
-        {navItem('audit','◨','Audit Trail')}
-        <div className="sb-section">System</div>
-        {navItem('settings','◫','Settings')}
-      </nav>
+      <div className="sb-nav">
+        <div className="sb-nav-groups">
+          <Group id="overview" label="Overview">
+            {navItem('dashboard','Dashboard')}
+            {navItem('alerts','Alerts', alertCount)}
+          </Group>
+          <Group id="providers" label="Providers">
+            {navItem('providers','All Providers')}
+            {navItem('add-provider','Add Provider')}
+            {navItem('provider-lookup','Provider Lookup')}
+          </Group>
+          <Group id="enrollments" label="Enrollments">
+            {navItem('enrollments','Payer Enrollments', pendingEnroll, 'amber')}
+            {navItem('payers','Payer Directory')}
+          </Group>
+          <Group id="compliance" label="Compliance">
+            {navItem('documents','Documents & Expiry', expDocs)}
+            {navItem('workflows','Workflows & Tasks')}
+            {navItem('psychology-today','Psychology Today')}
+          </Group>
+          <Group id="rcm" label="Revenue Cycle">
+            {navItem('eligibility','Eligibility Checks')}
+            {navItem('claims','Claims Tracker')}
+            {navItem('denials','Denial Log')}
+            {navItem('revenue','Revenue Analytics')}
+          </Group>
+          <Group id="analytics" label="Analytics">
+            {navItem('reports','Reports')}
+            {navItem('audit','Audit Trail')}
+          </Group>
+          <Group id="system" label="System">
+            {navItem('settings','Settings')}
+          </Group>
+        </div>
+      </div>
       <div className="sb-footer">
         <div className="sb-user">
           <div className="sb-avatar">{emailInitial}</div>
@@ -1191,7 +1057,7 @@ function Topbar({ page, setPage, openEnrollModal, openPayerModal, openDocModal, 
   return (
     <div className="topbar">
       <div className="topbar-left">
-        <span className="topbar-crumb">CredentialIQ</span>
+        <span className="topbar-crumb">CredFlow</span>
         <span className="topbar-sep"> / </span>
         <span className="topbar-title">{titles[page]||page}</span>
         <button className="topbar-search-btn" onClick={onOpenSearch} style={{marginLeft:20}}>
@@ -2125,7 +1991,7 @@ function GlobalSearch({ db, onClose, setPage, openProvDetail, openEnrollModal })
                   <div key={p.id} className={`gsearch-item ${focused===idx?'focused':''}`}
                     onMouseEnter={() => setFocused(idx)}
                     onClick={() => handleSelect({type:'provider',data:p})}>
-                    <div className="gsearch-item-icon" style={{background:(SPEC_COLORS[p.spec]||'#4f7ef8')+'25',color:SPEC_COLORS[p.spec]||'#4f7ef8',fontFamily:'DM Serif Display,serif',fontSize:15,fontWeight:600}}>
+                    <div className="gsearch-item-icon" style={{background:(SPEC_COLORS[p.spec]||'#4f7ef8')+'25',color:SPEC_COLORS[p.spec]||'#4f7ef8',fontFamily:'Poppins,sans-serif',fontSize:15,fontWeight:600}}>
                       {initials(p)}
                     </div>
                     <div className="gsearch-item-main">
@@ -2351,7 +2217,7 @@ function ProviderLookup({ db, setPage, setProvForm, setEditingId, setNpiInput, s
     {
       icon: '🎓',
       title: 'OBLPCT — LPCs & MFTs (Oregon Board of LPC & Therapists)',
-      desc: 'Verify licenses for Licensed Professional Counselors (LPC, LPCA), Licensed Marriage & Family Therapists (LMFT, LMFTA). Most common mental health credentials at Positive Inner Self.',
+      desc: 'Verify licenses for Licensed Professional Counselors (LPC, LPCA), Licensed Marriage & Family Therapists (LMFT, LMFTA). Most common mental health credentials at your practice.',
       bg: '#f0fdf4', color: '#16a34a',
       cta: 'Verify LPC / LMFT License →',
       href: 'https://oblpct.us.thentiacloud.net/webs/oblpct/register/#',
@@ -2405,7 +2271,7 @@ function ProviderLookup({ db, setPage, setProvForm, setEditingId, setNpiInput, s
     {
       icon: '📋',
       title: 'CAQH ProView',
-      desc: 'Access full provider credentialing profiles, attestation status, and document uploads. Requires a Participating Organization (PO) account — contact CAQH to set up API access for Positive Inner Self.',
+      desc: 'Access full provider credentialing profiles, attestation status, and document uploads. Requires a Participating Organization (PO) account — contact CAQH to set up API access for your practice.',
       bg: '#ecfeff', color: '#0891b2',
       cta: 'Open CAQH ProView →',
       href: 'https://proview.caqh.org',
@@ -2824,7 +2690,7 @@ function PsychologyToday({ db, setPage, editProvider }) {
                   <tr key={p.id}>
                     <td>
                       <div style={{display:'flex',alignItems:'center',gap:10}}>
-                        <div style={{width:32,height:32,borderRadius:8,background:SPEC_COLORS[p.spec]||'#4f7ef8',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,color:'white',fontFamily:'DM Serif Display,serif',flexShrink:0,overflow:'hidden'}}>
+                        <div style={{width:32,height:32,borderRadius:8,background:SPEC_COLORS[p.spec]||'#4f7ef8',display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,color:'white',fontFamily:'Poppins,sans-serif',flexShrink:0,overflow:'hidden'}}>
                           {p.avatarUrl ? <img src={p.avatarUrl} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}} /> : initials(p)}
                         </div>
                         <div>
@@ -2864,7 +2730,7 @@ function PsychologyToday({ db, setPage, editProvider }) {
       {activeTab === 'tips' && (
         <div>
           <div style={{background:'var(--navy)',borderRadius:'var(--r-lg)',padding:'20px 22px',marginBottom:20,color:'white'}}>
-            <div style={{fontFamily:'DM Serif Display,serif',fontSize:20,marginBottom:6}}>Psychology Today Profile Optimization</div>
+            <div style={{fontFamily:'Poppins,sans-serif',fontSize:20,marginBottom:6}}>Psychology Today Profile Optimization</div>
             <div style={{fontSize:13,opacity:.75,lineHeight:1.6}}>
               PT is the largest therapist directory in the US with 1.5M+ monthly visitors. A well-optimized profile is one of the highest-ROI marketing investments for a mental health practice. These tips are based on PT guidance and industry best practices.
             </div>
@@ -3121,17 +2987,6 @@ function ClaimsPage({ db, toast }) {
   const [fProv, setFProv] = useState('')
   const [activeTab, setActiveTab] = useState('list')
 
-  // ─── CSV Import state ─────────────────────────────────────────────────────
-  const [csvRows, setCsvRows] = useState(null)       // parsed rows ready for review
-  const [csvHeaders, setCsvHeaders] = useState([])   // CSV file headers
-  const [columnMap, setColumnMap] = useState({})     // header → our field
-  const [previewRows, setPreviewRows] = useState([]) // transformed claim objects
-  const [importStep, setImportStep] = useState('upload') // upload | map | preview | importing | done
-  const [importProgress, setImportProgress] = useState(0)
-  const [importResults, setImportResults] = useState({ imported:0, skipped:0, errors:[] })
-  const [isDragging, setIsDragging] = useState(false)
-  const fileInputRef = useRef(null)
-
   useEffect(() => { setClaims(db.claims || []) }, [db.claims])
 
   function openAdd() {
@@ -3159,76 +3014,6 @@ function ClaimsPage({ db, toast }) {
     if (!confirm('Delete this claim?')) return
     try { await deleteClaim(id); setClaims(c=>c.filter(x=>x.id!==id)); toast('Deleted.','warn') }
     catch(e) { toast(e.message,'error') }
-  }
-
-  // ─── CSV Import handlers ──────────────────────────────────────────────────
-  function handleFileSelect(file) {
-    if (!file || !file.name.endsWith('.csv')) { toast('Please select a .csv file','error'); return }
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      const text = e.target.result
-      const rows = parseCSV(text)
-      if (!rows.length) { toast('CSV is empty or could not be parsed','error'); return }
-      const headers = Object.keys(rows[0])
-      const detected = detectColumnMap(headers)
-      setCsvRows(rows)
-      setCsvHeaders(headers)
-      setColumnMap(detected)
-      // Build preview
-      const preview = rows.slice(0,5).map(r => rowToClaim(r, detected, providers, payers))
-      setPreviewRows(preview)
-      setImportStep('map')
-    }
-    reader.readAsText(file)
-  }
-
-  function handleDrop(e) {
-    e.preventDefault(); setIsDragging(false)
-    const file = e.dataTransfer.files[0]; handleFileSelect(file)
-  }
-
-  function updateColumnMap(csvCol, ourField) {
-    const next = { ...columnMap, [csvCol]: ourField }
-    // Remove old mapping for this ourField to avoid duplicates
-    Object.keys(next).forEach(k => { if (k !== csvCol && next[k] === ourField) delete next[k] })
-    setColumnMap(next)
-    const preview = (csvRows||[]).slice(0,5).map(r => rowToClaim(r, next, providers, payers))
-    setPreviewRows(preview)
-  }
-
-  function goToPreview() {
-    const all = (csvRows||[]).map(r => rowToClaim(r, columnMap, providers, payers))
-    setPreviewRows(all)
-    setImportStep('preview')
-  }
-
-  async function runImport() {
-    setImportStep('importing')
-    setImportProgress(0)
-    const valid = previewRows.filter(r => r._valid)
-    let imported = 0; const errors = []
-    for (let i = 0; i < valid.length; i++) {
-      const { _warnings, _valid, ...clean } = valid[i]
-      try {
-        const saved = await upsertClaim(clean)
-        setClaims(prev => { const idx=prev.findIndex(x=>x.id===saved.id); return idx>=0?prev.map(x=>x.id===saved.id?saved:x):[saved,...prev] })
-        imported++
-      } catch(e) {
-        errors.push(`Row ${i+1} (${clean.patient_name||'?'}): ${e.message}`)
-      }
-      setImportProgress(Math.round(((i+1)/valid.length)*100))
-      // Small yield to keep UI responsive
-      if (i % 5 === 0) await new Promise(r => setTimeout(r, 0))
-    }
-    setImportResults({ imported, skipped: previewRows.length - valid.length, errors })
-    setImportStep('done')
-    if (imported > 0) toast(`✅ Imported ${imported} claim${imported>1?'s':''}!`, 'success')
-  }
-
-  function resetImport() {
-    setCsvRows(null); setCsvHeaders([]); setColumnMap({}); setPreviewRows([])
-    setImportStep('upload'); setImportProgress(0); setImportResults({ imported:0, skipped:0, errors:[] })
-    if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
   const filtered = claims.filter(c => {
@@ -3264,7 +3049,7 @@ function ClaimsPage({ db, toast }) {
       </div>
 
       <div className="tabs">
-        {[['list','📋 All Claims'],['aging','📊 A/R Aging'],['import','⬆ CSV Import']].map(([t,l])=>(
+        {[['list','📋 All Claims'],['aging','📊 A/R Aging']].map(([t,l])=>(
           <div key={t} className={`tab ${activeTab===t?'active':''}`} onClick={()=>setActiveTab(t)}>{l}</div>
         ))}
       </div>
@@ -3277,7 +3062,7 @@ function ClaimsPage({ db, toast }) {
               {AGING_BUCKETS.map((b,i) => (
                 <div key={b} style={{textAlign:'center',padding:'16px 8px',borderRadius:'var(--r-lg)',background:'var(--surface-2)',border:'1px solid var(--border)'}}>
                   <div style={{fontSize:11,fontWeight:700,letterSpacing:.5,textTransform:'uppercase',color:'var(--ink-4)',marginBottom:6}}>{b} days</div>
-                  <div style={{fontFamily:'DM Serif Display,serif',fontSize:22,color:agingColor[i],marginBottom:4}}>{fmtMoney(aging[b])}</div>
+                  <div style={{fontFamily:'Poppins,sans-serif',fontSize:22,color:agingColor[i],marginBottom:4}}>{fmtMoney(aging[b])}</div>
                   <div style={{fontSize:10,color:'var(--ink-4)'}}>{totalAR>0?((aging[b]/totalAR)*100).toFixed(0):0}% of A/R</div>
                 </div>
               ))}
@@ -3316,8 +3101,8 @@ function ClaimsPage({ db, toast }) {
           </select>
           <div className="toolbar-right"><button className="btn btn-primary btn-sm" onClick={openAdd}>＋ Add Claim</button></div>
         </div>
-        <div style={{marginBottom:12,fontSize:12,color:'var(--ink-3)',padding:'8px 12px',background:'var(--blue-l)',border:'1px solid var(--blue-b)',borderRadius:'var(--r-md)'}}>
-          💡 <strong>SimplePractice users:</strong> Use the <button className="btn btn-ghost btn-sm" style={{display:'inline',padding:'0 4px',fontSize:12,color:'var(--primary)',textDecoration:'underline',border:'none',background:'none',cursor:'pointer'}} onClick={()=>setActiveTab('import')}>CSV Import tab ↑</button> to batch-import your billing export. Or add claims one at a time below.
+        <div style={{marginBottom:12,fontSize:12,color:'var(--ink-4)',padding:'8px 12px',background:'var(--amber-l)',border:'1px solid var(--amber-b)',borderRadius:'var(--r-md)'}}>
+          💡 <strong>SimplePractice users:</strong> Export claims from SP → Reports → Billing, then enter manually here. A CSV import tool is planned for a future update.
         </div>
         <div className="tbl-wrap">
           <table>
@@ -3359,187 +3144,6 @@ function ClaimsPage({ db, toast }) {
           </table>
         </div>
       </>}
-
-      {activeTab === 'import' && (
-        <div>
-          {importStep === 'upload' && (
-            <div>
-              <div style={{background:'var(--blue-l)',border:'1px solid var(--blue-b)',borderRadius:'var(--r-lg)',padding:'14px 18px',marginBottom:20,fontSize:13,color:'var(--blue)'}}>
-                <strong>SimplePractice CSV Import</strong> — Export your billing data from SP (Reports → Billing → Export CSV), then drop the file below. CredentialIQ will auto-detect columns and let you review before importing.
-              </div>
-              <div style={{display:'flex',gap:12,marginBottom:20}}>
-                <div className="card" style={{flex:1}}>
-                  <div className="card-header"><h3>How to export from SimplePractice</h3></div>
-                  <div className="card-body" style={{fontSize:13,color:'var(--ink-3)',lineHeight:1.9}}>
-                    <ol style={{paddingLeft:18}}>
-                      <li>In SimplePractice, go to <strong>Reports → Billing</strong></li>
-                      <li>Set your date range (e.g., last month or quarter)</li>
-                      <li>Click <strong>Export → Download CSV</strong></li>
-                      <li>Drop the downloaded file below ↓</li>
-                    </ol>
-                  </div>
-                </div>
-                <div className="card" style={{flex:1}}>
-                  <div className="card-header"><h3>Supported columns</h3><button className="btn btn-secondary btn-sm" onClick={downloadTemplate}>⬇ Download template</button></div>
-                  <div className="card-body">
-                    <div style={{marginBottom:6,fontSize:11.5,color:'var(--ink-4)'}}><span style={{color:'var(--primary)',fontWeight:600}}>Blue = required</span> · Gray = optional</div>
-                    <div style={{lineHeight:2}}>
-                      {[{h:'Client Name',req:true},{h:'Date of Service',req:true},{h:'Date of Birth',req:false},{h:'Claim Number',req:false},{h:'CPT Code',req:false},{h:'Diagnosis Code',req:false},{h:'Amount Billed',req:false},{h:'Amount Paid',req:false},{h:'Patient Paid',req:false},{h:'Claim Status',req:false},{h:'Date Submitted',req:false},{h:'Clinician',req:false},{h:'Insurance',req:false}]
-                        .map(({h,req})=><span key={h} className={`template-field ${req?'required':''}`}>{h}</span>)}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={`csv-drop-zone ${isDragging?'drag-over':''}`} onDragOver={e=>{e.preventDefault();setIsDragging(true)}} onDragLeave={()=>setIsDragging(false)} onDrop={handleDrop} onClick={()=>fileInputRef.current?.click()}>
-                <div className="csv-drop-zone-icon">📂</div>
-                <h4>Drop your SimplePractice CSV here</h4>
-                <p>or click to browse · .csv files only</p>
-                <input ref={fileInputRef} type="file" accept=".csv" style={{display:'none'}} onChange={e=>handleFileSelect(e.target.files[0])} />
-              </div>
-            </div>
-          )}
-
-          {importStep === 'map' && csvRows && (
-            <div>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
-                <div>
-                  <div style={{fontFamily:'DM Serif Display,serif',fontSize:18,color:'var(--ink)'}}>Column Mapping</div>
-                  <div style={{fontSize:12,color:'var(--ink-4)',marginTop:2}}>{csvRows.length} rows detected · Verify the mapping below then proceed</div>
-                </div>
-                <div style={{display:'flex',gap:8}}><button className="btn btn-secondary" onClick={resetImport}>← Start over</button><button className="btn btn-primary" onClick={goToPreview}>Preview import →</button></div>
-              </div>
-              <div className="card mb-16">
-                <div className="card-header"><h3>Auto-detected column mapping</h3><span className="ch-meta">{Object.keys(columnMap).length} of {csvHeaders.length} columns mapped</span></div>
-                <div className="card-body">
-                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}}>
-                    {csvHeaders.map(h => {
-                      const OUR_FIELDS = [{v:'patient_name',l:'Patient Name'},{v:'dob',l:'Date of Birth'},{v:'dos',l:'Date of Service'},{v:'claim_num',l:'Claim Number'},{v:'cpt_codes',l:'CPT Code(s)'},{v:'diagnosis_codes',l:'Diagnosis Code(s)'},{v:'billed_amount',l:'Billed Amount'},{v:'paid_amount',l:'Paid Amount'},{v:'patient_resp',l:'Patient Responsibility'},{v:'allowed_amount',l:'Allowed Amount'},{v:'status',l:'Status'},{v:'submitted_date',l:'Date Submitted'},{v:'paid_date',l:'Date Paid'},{v:'_provider_name',l:'Provider (name)'},{v:'_payer_name',l:'Payer (name)'},{v:'notes',l:'Notes'},{v:'_skip',l:'— Skip —'}]
-                      return (
-                        <div key={h} style={{display:'flex',alignItems:'center',gap:8,padding:'7px 10px',background:'var(--surface-2)',border:`1px solid ${columnMap[h]?'var(--blue-b)':'var(--border)'}`,borderRadius:'var(--r)',fontSize:12}}>
-                          <div style={{flex:1,fontWeight:500,color:'var(--ink-2)',minWidth:0,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}} title={h}>{h}</div>
-                          <div style={{color:'var(--ink-4)'}}>→</div>
-                          <select value={columnMap[h]||'_skip'} onChange={e=>updateColumnMap(h,e.target.value==='_skip'?undefined:e.target.value)} style={{flex:1,padding:'4px 6px',border:'1px solid var(--border)',borderRadius:'var(--r)',fontSize:11.5,color:'var(--primary)',background:'white',outline:'none'}}>
-                            {OUR_FIELDS.map(({v,l})=><option key={v} value={v}>{l}</option>)}
-                          </select>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              </div>
-              <div className="card">
-                <div className="card-header"><h3>Preview (first 5 rows)</h3></div>
-                <div style={{overflowX:'auto'}}>
-                  <table className="csv-preview-table">
-                    <thead><tr><th>Patient</th><th>DOS</th><th>CPT</th><th>Billed</th><th>Paid</th><th>Status</th><th>Provider</th><th>Payer</th><th>Warnings</th></tr></thead>
-                    <tbody>
-                      {previewRows.map((r,i)=>(
-                        <tr key={i} className={r._warnings?.length?'row-warn':r._valid?'row-ok':'row-error'}>
-                          <td>{r.patient_name||<span style={{color:'var(--red)'}}>Missing</span>}</td>
-                          <td>{r.dos||<span style={{color:'var(--red)'}}>Missing</span>}</td>
-                          <td style={{fontFamily:'monospace'}}>{(r.cpt_codes||[]).join(', ')||'—'}</td>
-                          <td>{r.billed_amount!=null?fmtMoney(r.billed_amount):'—'}</td>
-                          <td>{r.paid_amount!=null?fmtMoney(r.paid_amount):'—'}</td>
-                          <td><span className={`badge ${r.status==='Paid'?'b-green':r.status==='Denied'?'b-red':'b-amber'}`} style={{fontSize:10}}>{r.status||'Submitted'}</span></td>
-                          <td style={{fontSize:11}}>{r.prov_id?pNameShort(providers,r.prov_id):<span style={{color:'var(--amber)'}}>Unmatched</span>}</td>
-                          <td style={{fontSize:11}}>{r.payer_id?payName(payers,r.payer_id):<span style={{color:'var(--amber)'}}>Unmatched</span>}</td>
-                          <td style={{fontSize:10.5,color:'var(--amber)'}}>{(r._warnings||[]).join(' · ')||<span style={{color:'var(--green)'}}>✓ OK</span>}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {importStep === 'preview' && (
-            <div>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:16}}>
-                <div>
-                  <div style={{fontFamily:'DM Serif Display,serif',fontSize:18,color:'var(--ink)'}}>Review Before Import</div>
-                  <div style={{fontSize:12,color:'var(--ink-4)',marginTop:2}}>{previewRows.filter(r=>r._valid).length} valid · {previewRows.filter(r=>!r._valid).length} invalid (skipped) · {previewRows.length} total</div>
-                </div>
-                <div style={{display:'flex',gap:8}}><button className="btn btn-secondary" onClick={()=>setImportStep('map')}>← Back to mapping</button><button className="btn btn-primary" onClick={runImport}>⬆ Import {previewRows.filter(r=>r._valid).length} claims</button></div>
-              </div>
-              <div style={{display:'flex',gap:10,marginBottom:16,flexWrap:'wrap'}}>
-                <span className="badge b-green">✓ {previewRows.filter(r=>r._valid&&!r._warnings?.length).length} clean</span>
-                <span className="badge b-amber">⚠ {previewRows.filter(r=>r._valid&&r._warnings?.length>0).length} with warnings</span>
-                <span className="badge b-red">✕ {previewRows.filter(r=>!r._valid).length} invalid</span>
-              </div>
-              <div className="card">
-                <div style={{overflowX:'auto',maxHeight:480,overflowY:'auto'}}>
-                  <table className="csv-preview-table">
-                    <thead style={{position:'sticky',top:0,background:'var(--surface-2)',zIndex:1}}>
-                      <tr><th>#</th><th>Patient</th><th>DOS</th><th>Billed</th><th>Paid</th><th>Status</th><th>Provider</th><th>Payer</th><th>Warnings</th></tr>
-                    </thead>
-                    <tbody>
-                      {previewRows.map((r,i)=>(
-                        <tr key={i} className={!r._valid?'row-error':r._warnings?.length?'row-warn':'row-ok'}>
-                          <td style={{color:'var(--ink-4)',fontSize:11}}>{i+1}</td>
-                          <td style={{fontWeight:500}}>{r.patient_name||<span style={{color:'var(--red)'}}>Missing</span>}</td>
-                          <td style={{fontSize:11}}>{r.dos||<span style={{color:'var(--red)'}}>Missing</span>}</td>
-                          <td>{r.billed_amount!=null?fmtMoney(r.billed_amount):'—'}</td>
-                          <td style={{color:'var(--green)'}}>{r.paid_amount!=null?fmtMoney(r.paid_amount):'—'}</td>
-                          <td><span className={`badge ${r.status==='Paid'?'b-green':r.status==='Denied'?'b-red':'b-amber'}`} style={{fontSize:10}}>{r.status||'Submitted'}</span></td>
-                          <td style={{fontSize:11}}>{r.prov_id?pNameShort(providers,r.prov_id):<span style={{color:'var(--amber)',fontSize:10}}>Unmatched</span>}</td>
-                          <td style={{fontSize:11}}>{r.payer_id?payName(payers,r.payer_id):<span style={{color:'var(--amber)',fontSize:10}}>Unmatched</span>}</td>
-                          <td style={{fontSize:10.5,color:'var(--amber)'}}>{(r._warnings||[]).join(' · ')||<span style={{color:'var(--green)'}}>✓</span>}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {importStep === 'importing' && (
-            <div className="card" style={{maxWidth:480,margin:'40px auto'}}>
-              <div className="card-body" style={{textAlign:'center',padding:'36px 32px'}}>
-                <div style={{fontSize:40,marginBottom:16}}>⬆</div>
-                <div style={{fontFamily:'DM Serif Display,serif',fontSize:20,marginBottom:8}}>Importing claims…</div>
-                <div style={{fontSize:13,color:'var(--ink-4)',marginBottom:20}}>{importProgress}% complete</div>
-                <div className="import-progress-bar"><div className="import-progress-fill" style={{width:`${importProgress}%`}}/></div>
-                <div style={{fontSize:12,color:'var(--ink-4)',marginTop:12}}>Please don't close this tab</div>
-              </div>
-            </div>
-          )}
-
-          {importStep === 'done' && (
-            <div className="card" style={{maxWidth:520,margin:'40px auto'}}>
-              <div className="card-body" style={{padding:'32px'}}>
-                <div style={{textAlign:'center',marginBottom:24}}>
-                  <div style={{fontSize:48,marginBottom:12}}>✅</div>
-                  <div style={{fontFamily:'DM Serif Display,serif',fontSize:22}}>Import Complete</div>
-                </div>
-                <div style={{display:'flex',gap:12,marginBottom:20}}>
-                  <div style={{flex:1,textAlign:'center',padding:'16px',background:'var(--green-l)',border:'1px solid var(--green-b)',borderRadius:'var(--r-lg)'}}>
-                    <div style={{fontFamily:'DM Serif Display,serif',fontSize:32,color:'var(--green)'}}>{importResults.imported}</div>
-                    <div style={{fontSize:11,fontWeight:700,color:'var(--green)',textTransform:'uppercase',letterSpacing:.5}}>Imported</div>
-                  </div>
-                  <div style={{flex:1,textAlign:'center',padding:'16px',background:'var(--amber-l)',border:'1px solid var(--amber-b)',borderRadius:'var(--r-lg)'}}>
-                    <div style={{fontFamily:'DM Serif Display,serif',fontSize:32,color:'var(--amber)'}}>{importResults.skipped}</div>
-                    <div style={{fontSize:11,fontWeight:700,color:'var(--amber)',textTransform:'uppercase',letterSpacing:.5}}>Skipped</div>
-                  </div>
-                  {importResults.errors.length>0&&<div style={{flex:1,textAlign:'center',padding:'16px',background:'var(--red-l)',border:'1px solid var(--red-b)',borderRadius:'var(--r-lg)'}}>
-                    <div style={{fontFamily:'DM Serif Display,serif',fontSize:32,color:'var(--red)'}}>{importResults.errors.length}</div>
-                    <div style={{fontSize:11,fontWeight:700,color:'var(--red)',textTransform:'uppercase',letterSpacing:.5}}>Errors</div>
-                  </div>}
-                </div>
-                {importResults.errors.length>0&&<div style={{background:'var(--red-l)',border:'1px solid var(--red-b)',borderRadius:'var(--r-md)',padding:'12px 14px',marginBottom:16,fontSize:12,maxHeight:120,overflowY:'auto'}}>
-                  <div style={{fontWeight:700,color:'var(--red)',marginBottom:6}}>Errors:</div>
-                  {importResults.errors.map((e,i)=><div key={i} style={{color:'var(--ink-3)',borderBottom:'1px solid var(--red-b)',paddingBottom:4,marginBottom:4}}>{e}</div>)}
-                </div>}
-                <div style={{display:'flex',gap:8}}>
-                  <button className="btn btn-primary" style={{flex:1}} onClick={()=>{resetImport();setActiveTab('list')}}>View imported claims</button>
-                  <button className="btn btn-secondary" onClick={resetImport}>Import another file</button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      )}
 
       {modal && (
         <div className="overlay open" onClick={e=>e.target===e.currentTarget&&setModal(false)}>
@@ -3691,7 +3295,7 @@ function DenialLog({ db, toast }) {
               {Object.entries(byCat).sort((a,b)=>b[1]-a[1]).map(([cat, count]) => (
                 <div key={cat} style={{display:'flex',alignItems:'center',gap:8,padding:'8px 14px',background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:'var(--r-lg)'}}>
                   <span className={`badge ${catColor[cat]||'b-gray'}`} style={{fontSize:10}}>{cat}</span>
-                  <span style={{fontFamily:'DM Serif Display,serif',fontSize:20,color:'var(--ink)'}}>{count}</span>
+                  <span style={{fontFamily:'Poppins,sans-serif',fontSize:20,color:'var(--ink)'}}>{count}</span>
                 </div>
               ))}
             </div>
@@ -3884,7 +3488,7 @@ function RevenueAnalytics({ db }) {
   return (
     <div className="page">
       <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:20}}>
-        <div style={{flex:1,fontFamily:'DM Serif Display,serif',fontSize:18,color:'var(--ink)'}}>Revenue Overview</div>
+        <div style={{flex:1,fontFamily:'Poppins,sans-serif',fontSize:18,color:'var(--ink)'}}>Revenue Overview</div>
         <div style={{display:'flex',gap:4,background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:'var(--r-lg)',padding:4}}>
           {[['month','This Month'],['quarter','This Quarter'],['year','This Year'],['all','All Time']].map(([v,l])=>(
             <button key={v} className={`btn btn-sm ${period===v?'btn-primary':'btn-ghost'}`} style={{fontSize:11}} onClick={()=>setPeriod(v)}>{l}</button>
@@ -3986,25 +3590,21 @@ function RevenueAnalytics({ db }) {
       </div>
 
       <div className="card mt-12" style={{marginTop:16}}>
-        <div className="card-header"><h3>SimplePractice Data Import</h3></div>
+        <div className="card-header"><h3>SimplePractice Import Guide</h3></div>
         <div className="card-body">
-          <div style={{display:'flex',alignItems:'center',gap:20,flexWrap:'wrap'}}>
-            <div style={{flex:1,minWidth:220,fontSize:13,color:'var(--ink-3)',lineHeight:1.7}}>
-              Revenue data is sourced from the <strong>Claims Tracker</strong>. Since SimplePractice doesn't offer a direct API, use the CSV import tool to bulk-load your billing exports in one step.
-            </div>
-            <div style={{display:'flex',flexDirection:'column',gap:10,flexShrink:0}}>
-              <a href="#" onClick={e=>{e.preventDefault();}} className="btn btn-primary" style={{textDecoration:'none',textAlign:'center'}}>
-                ⬆ Go to CSV Import
-              </a>
-              <button className="btn btn-secondary btn-sm" onClick={downloadTemplate}>⬇ Download SP template</button>
-            </div>
+          <div style={{fontSize:13,color:'var(--ink-3)',lineHeight:1.7}}>
+            Since SimplePractice doesn't offer a direct API integration, revenue data must be imported manually. Here's the recommended workflow:
           </div>
-          <ol style={{marginTop:14,paddingLeft:18,fontSize:13,color:'var(--ink-3)',lineHeight:2}}>
-            <li>In SimplePractice → <strong>Reports → Billing</strong> → Export CSV</li>
-            <li>Go to <strong>Claims Tracker → CSV Import tab</strong> and drop the file</li>
-            <li>CredentialIQ auto-maps SP columns and previews before saving</li>
-            <li>Update payment status when EOBs / ERAs arrive — revenue charts update instantly</li>
+          <ol style={{marginTop:12,paddingLeft:20,fontSize:13,color:'var(--ink-3)',lineHeight:2}}>
+            <li>In SimplePractice, go to <strong>Reports → Billing</strong></li>
+            <li>Export to CSV for the desired date range</li>
+            <li>Enter each claim in the <strong>Claims Tracker</strong> (or use the upcoming CSV import feature)</li>
+            <li>Update payment status when EOBs / ERAs are received from payers</li>
+            <li>Log any denials in the <strong>Denial Log</strong> with the reason code from the ERA</li>
           </ol>
+          <div style={{marginTop:12,padding:'10px 14px',background:'var(--blue-l)',border:'1px solid var(--blue-b)',borderRadius:'var(--r-md)',fontSize:12,color:'var(--blue)'}}>
+            💡 <strong>Future:</strong> CSV batch import for SimplePractice billing exports is planned. Until then, entering claims manually ensures accurate A/R aging and denial tracking.
+          </div>
         </div>
       </div>
     </div>
