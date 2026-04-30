@@ -3386,7 +3386,7 @@ function PsychologyToday({ db, setPage, editProvider }) {
               <div className="kpi-icon">✅</div>
               <div className="kpi-label">Active PT Listings</div>
               <div className="kpi-value">{listed.length}</div>
-              <div className="kpi-sub">of {allProvs.length} active providers</div>
+              <div className="kpi-sub">of {mentalHealthProvs.length} mental health providers</div>
             </div>
             <div className="kpi kpi-red">
               <div className="kpi-icon">⚠️</div>
@@ -3521,7 +3521,7 @@ function PsychologyToday({ db, setPage, editProvider }) {
                 <th className="no-sort">Actions</th>
               </tr></thead>
               <tbody>
-                {allProvs.map(p => (
+                {mentalHealthProvs.map(p => (
                   <tr key={p.id}>
                     <td>
                       <div style={{display:'flex',alignItems:'center',gap:10}}>
