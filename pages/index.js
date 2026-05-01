@@ -2239,6 +2239,92 @@ export default function App() {
     setNpiLoading(false)
   }
 
+  // ─── SYNC PROVIDER FROM NPPES ─────────────────────────────────────────────────
+  // Fetches fresh NPPES data for a provider by their stored NPI, diffs it
+  // against what's in CredFlow, and opens a confirmation modal showing exactly
+  // what will change before saving anything.
+
+  const [npiSyncModal, setNpiSyncModal] = useState(null)
+  // npiSyncModal shape: { prov, diffs: [{field, label, npiValue, storedValue}], card }
+
+  async function syncFromNPPES(provId) {
+    const prov = db.providers.find(p => p.id === provId)
+    if (!prov) return
+    if (!prov.npi) { toast('This provider has no NPI on file — add it first.', 'error'); return }
+
+    toast('Fetching NPPES data…', 'success')
+    try {
+      const res = await fetch(`/api/npi?number=${prov.npi}`)
+      const data = await res.json()
+      const { mapNpiResponse, diffNpiVsProvider } = await import('../lib/npiMapper')
+      const card = mapNpiResponse(data)
+      if (!card) { toast('No NPPES record found for NPI ' + prov.npi, 'error'); return }
+
+      // Build diff — also include new fields not in diffNpiVsProvider's default list
+      const baseDiffs = diffNpiVsProvider(card, prov)
+
+      // Extra fields to check that aren't in the base diff
+      const EXTRA_FIELDS = [
+        { field: 'phone',   label: 'Phone',       npiVal: card.phone },
+        { field: 'license', label: 'License #',   npiVal: card.license },
+        { field: 'address', label: 'Address',     npiVal: card.address },
+        { field: 'city',    label: 'City',         npiVal: card.city },
+        { field: 'state',   label: 'State',        npiVal: card.state },
+        { field: 'zip',     label: 'ZIP',          npiVal: card.zip },
+        { field: 'medicaid',label: 'Medicaid ID',  npiVal: card.medicaid },
+      ]
+
+      const extraDiffs = EXTRA_FIELDS
+        .filter(f => {
+          const nv = (f.npiVal || '').trim().toLowerCase()
+          const sv = (prov[f.field] || '').trim().toLowerCase()
+          return nv && sv && nv !== sv
+        })
+        .map(f => ({ field: f.field, label: f.label, npiValue: f.npiVal, storedValue: prov[f.field] }))
+
+      // Also detect new fields NPPES has that we don't
+      const newFields = EXTRA_FIELDS
+        .filter(f => {
+          const nv = (f.npiVal || '').trim()
+          const sv = (prov[f.field] || '').trim()
+          return nv && !sv
+        })
+        .map(f => ({ field: f.field, label: f.label, npiValue: f.npiVal, storedValue: '(empty)', isNew: true }))
+
+      const allDiffs = [...baseDiffs, ...extraDiffs, ...newFields]
+        // dedupe by field
+        .filter((d, i, arr) => arr.findIndex(x => x.field === d.field) === i)
+
+      if (allDiffs.length === 0) {
+        toast(`✓ ${prov.fname} ${prov.lname} is already up to date with NPPES.`, 'success')
+        return
+      }
+
+      setNpiSyncModal({ prov, diffs: allDiffs, card })
+    } catch (err) {
+      toast('NPPES sync failed: ' + (err.message || 'Unknown error'), 'error')
+    }
+  }
+
+  async function applyNpiSync(selectedFields) {
+    if (!npiSyncModal) return
+    const { prov, card } = npiSyncModal
+    setSaving(true)
+    try {
+      const updates = {}
+      selectedFields.forEach(field => { updates[field] = card[field] })
+      const updated = { ...prov, ...updates }
+      const saved = await upsertProvider(updated)
+      setDb(prev => ({ ...prev, providers: prev.providers.map(p => p.id === saved.id ? saved : p) }))
+      await addAudit('Provider', 'NPPES Sync', `Synced ${selectedFields.join(', ')} from NPPES for NPI ${prov.npi}`, prov.id)
+      toast(`✓ ${prov.fname} ${prov.lname} updated from NPPES!`, 'success')
+      setNpiSyncModal(null)
+    } catch (err) {
+      toast('Save failed: ' + err.message, 'error')
+    }
+    setSaving(false)
+  }
+
   // ─── LOAD SAMPLE DATA ─────────────────────────────────────────────────────────
   async function loadSampleData() {
     if (!confirm('Load sample data? This will add sample providers and payers.')) return
@@ -2359,7 +2445,7 @@ export default function App() {
             <div className="pages">
               {page === 'dashboard' && <WorkflowDashboard db={db} setPage={setPage} openEnrollModal={openEnrollModal} openProvDetail={openProvDetail} />}
               {page === 'alerts' && <Alerts db={db} />}
-              {page === 'providers' && <Providers db={db} search={provSearch} setSearch={setProvSearch} fStatus={provFStatus} setFStatus={setProvFStatus} fSpec={provFSpec} setFSpec={setProvFSpec} openProvDetail={openProvDetail} editProvider={editProvider} setPage={setPage} setProvForm={setProvForm} setEditingId={setEditingId} setNpiInput={setNpiInput} setNpiResult={setNpiResult} />}
+              {page === 'providers' && <Providers db={db} search={provSearch} setSearch={setProvSearch} fStatus={provFStatus} setFStatus={setProvFStatus} fSpec={provFSpec} setFSpec={setProvFSpec} openProvDetail={openProvDetail} editProvider={editProvider} setPage={setPage} setProvForm={setProvForm} setEditingId={setEditingId} setNpiInput={setNpiInput} setNpiResult={setNpiResult} syncFromNPPES={syncFromNPPES} />}
               {page === 'provider-lookup' && <ProviderLookup db={db} setPage={setPage} setProvForm={setProvForm} setEditingId={setEditingId} setNpiInput={setNpiInput} setNpiResult={setNpiResult} />}
               {page === 'add-provider' && <AddProvider db={db} provForm={provForm} setProvForm={setProvForm} editingId={editingId} setEditingId={setEditingId} npiInput={npiInput} setNpiInput={setNpiInput} npiResult={npiResult} setNpiResult={setNpiResult} npiLoading={npiLoading} lookupNPI={lookupNPI} handleSaveProvider={handleSaveProvider} handleDeleteProvider={handleDeleteProvider} handlePhotoUpload={handlePhotoUpload} handleDeletePhoto={handleDeletePhoto} photoUploading={photoUploading} setPage={setPage} saving={saving} />}
               {page === 'pipeline' && <PayerHub db={db} initialTab="pipeline" openEnrollModal={openEnrollModal} openPayerModal={openPayerModal} search={enrSearch} setSearch={setEnrSearch} fStage={enrFStage} setFStage={setEnrFStage} fProv={enrFProv} setFProv={setEnrFProv} handleDeleteEnrollment={handleDeleteEnrollment} paySearch={paySearch} setPaySearch={setPaySearch} payFType={payFType} setPayFType={setPayFType} handleDeletePayer={handleDeletePayer} />}
@@ -2387,7 +2473,8 @@ export default function App() {
         {modal === 'payer' && <PayerModal payerForm={payerForm} setPayerForm={setPayerForm} editingId={editingId} handleSavePayer={handleSavePayer} onClose={()=>{setModal(null);setPayerForm({});setEditingId(e=>({...e,payer:null}))}} saving={saving} />}
         {modal === 'doc' && <DocModal db={db} docForm={docForm} setDocForm={setDocForm} editingId={editingId} handleSaveDocument={handleSaveDocument} onClose={()=>{setModal(null);setDocForm({});setEditingId(e=>({...e,doc:null}))}} saving={saving} />}
         {modal === 'task' && <TaskModal db={db} taskForm={taskForm} setTaskForm={setTaskForm} editingId={editingId} handleSaveTask={handleSaveTask} onClose={()=>{setModal(null);setTaskForm({});setEditingId(e=>({...e,task:null}))}} saving={saving} />}
-        {modal === 'provDetail' && provDetail && <ProvDetailModal prov={provDetail} db={db} tab={provDetailTab} setTab={setProvDetailTab} onClose={()=>setModal(null)} editProvider={editProvider} openEnrollModal={openEnrollModal} toast={toast} />}
+        {modal === 'provDetail' && provDetail && <ProvDetailModal prov={provDetail} db={db} tab={provDetailTab} setTab={setProvDetailTab} onClose={()=>setModal(null)} editProvider={editProvider} openEnrollModal={openEnrollModal} toast={toast} syncFromNPPES={syncFromNPPES} />}
+        {npiSyncModal && <NpiSyncModal data={npiSyncModal} onApply={applyNpiSync} onClose={()=>setNpiSyncModal(null)} saving={saving} />}
 
         {/* ─── TOASTS ─── */}
         {globalSearchOpen && <GlobalSearch db={db} onClose={()=>setGlobalSearchOpen(false)} setPage={setPage} openProvDetail={openProvDetail} openEnrollModal={openEnrollModal} />}
@@ -2759,7 +2846,7 @@ function Alerts({ db }) {
 }
 
 // ─── PROVIDERS PAGE ────────────────────────────────────────────────────────────
-function Providers({ db, search, setSearch, fStatus, setFStatus, fSpec, setFSpec, openProvDetail, editProvider, setPage, setProvForm, setEditingId, setNpiInput, setNpiResult }) {
+function Providers({ db, search, setSearch, fStatus, setFStatus, fSpec, setFSpec, openProvDetail, editProvider, setPage, setProvForm, setEditingId, setNpiInput, setNpiResult, syncFromNPPES }) {
   const [sortBy, setSortBy] = useState('name')
   const filtered = db.providers.filter(p => {
     const txt = `${p.fname} ${p.lname} ${p.cred} ${p.npi} ${p.focus} ${p.spec} ${p.email||''} ${p.phone||''} ${p.license||''} ${p.medicaid||''} ${p.caqh||''} ${p.dea||''} ${p.supervisor||''} ${p.notes||''}`.toLowerCase()
@@ -2797,6 +2884,7 @@ function Providers({ db, search, setSearch, fStatus, setFStatus, fSpec, setFSpec
         onOpen={openProvDetail}
         onEdit={editProvider}
         onEnroll={null}
+        onSync={syncFromNPPES}
       />
     ))}
   </div>
@@ -3879,7 +3967,108 @@ function TaskModal({ db, taskForm, setTaskForm, editingId, handleSaveTask, onClo
   </Modal>
 }
 
-function ProvDetailModal({ prov, db, tab, setTab, onClose, editProvider, openEnrollModal, toast }) {
+// ─── NPI SYNC MODAL ───────────────────────────────────────────────────────────
+// Shows a field-by-field diff between NPPES and CredFlow.
+// User can check/uncheck individual fields before applying.
+
+function NpiSyncModal({ data, onApply, onClose, saving }) {
+  const { prov, diffs, card } = data
+  const [selected, setSelected] = useState(() => new Set(diffs.map(d => d.field)))
+
+  function toggle(field) {
+    setSelected(prev => {
+      const next = new Set(prev)
+      next.has(field) ? next.delete(field) : next.add(field)
+      return next
+    })
+  }
+
+  return (
+    <div className="overlay open" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+      <div className="modal" style={{ maxWidth: 560 }}>
+        <div className="modal-header">
+          <div>
+            <h3>↻ Sync from NPPES</h3>
+            <div className="mh-sub">{prov.fname} {prov.lname} · NPI {prov.npi}</div>
+          </div>
+          <button className="modal-close" onClick={onClose}>✕</button>
+        </div>
+
+        <div className="modal-body">
+          <div style={{ background: 'var(--blue-l)', border: '1px solid var(--blue-b)', borderRadius: 'var(--r)', padding: '10px 14px', fontSize: 12.5, color: 'var(--blue)', marginBottom: 16 }}>
+            NPPES has newer data for <strong>{diffs.length} field{diffs.length !== 1 ? 's' : ''}</strong>. Check the ones you want to update, then click Apply.
+          </div>
+
+          <div style={{ marginBottom: 8, display: 'flex', gap: 8 }}>
+            <button className="btn btn-ghost btn-sm" onClick={() => setSelected(new Set(diffs.map(d => d.field)))}>Select all</button>
+            <button className="btn btn-ghost btn-sm" onClick={() => setSelected(new Set())}>Deselect all</button>
+          </div>
+
+          {diffs.map(d => (
+            <div
+              key={d.field}
+              onClick={() => toggle(d.field)}
+              style={{
+                display: 'grid', gridTemplateColumns: '20px 1fr', gap: 10,
+                padding: '10px 12px', borderRadius: 8, marginBottom: 6, cursor: 'pointer',
+                background: selected.has(d.field) ? 'var(--primary-ll)' : 'var(--surface)',
+                border: `1px solid ${selected.has(d.field) ? 'var(--primary)' : 'var(--border)'}`,
+                transition: 'all .12s',
+              }}
+            >
+              <div style={{
+                width: 18, height: 18, borderRadius: 4, marginTop: 2, flexShrink: 0,
+                background: selected.has(d.field) ? 'var(--primary)' : 'transparent',
+                border: `1.5px solid ${selected.has(d.field) ? 'var(--primary)' : 'var(--border)'}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'white', fontSize: 11, fontWeight: 700,
+              }}>
+                {selected.has(d.field) ? '✓' : ''}
+              </div>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)', marginBottom: 5 }}>
+                  {d.label}
+                  {d.isNew && <span className="badge b-green" style={{ fontSize: 10, marginLeft: 6 }}>New</span>}
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--red)', marginBottom: 2 }}>Current in CredFlow</div>
+                    <div style={{ fontSize: 12.5, color: 'var(--ink-3)', background: 'var(--surface-2)', padding: '4px 8px', borderRadius: 4 }}>
+                      {d.storedValue || <em style={{ opacity: 0.5 }}>empty</em>}
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--green-d)', marginBottom: 2 }}>From NPPES</div>
+                    <div style={{ fontSize: 12.5, color: 'var(--ink)', background: 'var(--green-ll, #f0fdf4)', padding: '4px 8px', borderRadius: 4, fontWeight: 500 }}>
+                      {d.npiValue}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          <div style={{ fontSize: 11.5, color: 'var(--ink-4)', marginTop: 12 }}>
+            Fields not checked will be left unchanged. This action is logged in the audit trail.
+          </div>
+        </div>
+
+        <div className="modal-footer">
+          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
+          <button
+            className="btn btn-primary"
+            disabled={selected.size === 0 || saving}
+            onClick={() => onApply([...selected])}
+          >
+            {saving ? 'Saving…' : `Apply ${selected.size} update${selected.size !== 1 ? 's' : ''}`}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ProvDetailModal({ prov, db, tab, setTab, onClose, editProvider, openEnrollModal, toast, syncFromNPPES }) {
   return (
     <div className="overlay open" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
       <div className="modal modal-lg" style={{ maxWidth: 860, maxHeight: '92vh', overflowY: 'auto' }}>
@@ -3898,6 +4087,7 @@ function ProvDetailModal({ prov, db, tab, setTab, onClose, editProvider, openEnr
             onEdit={(id) => { onClose(); editProvider(id) }}
             openEnrollModal={openEnrollModal}
             toast={toast}
+            onSync={syncFromNPPES}
           />
         </div>
         <div className="modal-footer">
