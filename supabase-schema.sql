@@ -15,6 +15,8 @@ create table if not exists providers (
   email        text,
   phone        text,
   focus        text,
+  taxonomy_code text,
+  taxonomy_desc text,
   npi          text,
   caqh         text,
   caqh_attest  date,
