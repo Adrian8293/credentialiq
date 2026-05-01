@@ -2349,11 +2349,12 @@ export default function App() {
               {page === 'providers' && <Providers db={db} search={provSearch} setSearch={setProvSearch} fStatus={provFStatus} setFStatus={setProvFStatus} fSpec={provFSpec} setFSpec={setProvFSpec} openProvDetail={openProvDetail} editProvider={editProvider} setPage={setPage} setProvForm={setProvForm} setEditingId={setEditingId} setNpiInput={setNpiInput} setNpiResult={setNpiResult} />}
               {page === 'provider-lookup' && <ProviderLookup db={db} setPage={setPage} setProvForm={setProvForm} setEditingId={setEditingId} setNpiInput={setNpiInput} setNpiResult={setNpiResult} />}
               {page === 'add-provider' && <AddProvider db={db} provForm={provForm} setProvForm={setProvForm} editingId={editingId} setEditingId={setEditingId} npiInput={npiInput} setNpiInput={setNpiInput} npiResult={npiResult} setNpiResult={setNpiResult} npiLoading={npiLoading} lookupNPI={lookupNPI} handleSaveProvider={handleSaveProvider} handleDeleteProvider={handleDeleteProvider} handlePhotoUpload={handlePhotoUpload} handleDeletePhoto={handleDeletePhoto} photoUploading={photoUploading} setPage={setPage} saving={saving} />}
-              {page === 'pipeline' && <KanbanPipeline db={db} openEnrollModal={openEnrollModal} />}
+              {page === 'pipeline' && <PayerHub db={db} initialTab="pipeline" openEnrollModal={openEnrollModal} openPayerModal={openPayerModal} search={enrSearch} setSearch={setEnrSearch} fStage={enrFStage} setFStage={setEnrFStage} fProv={enrFProv} setFProv={setEnrFProv} handleDeleteEnrollment={handleDeleteEnrollment} paySearch={paySearch} setPaySearch={setPaySearch} payFType={payFType} setPayFType={setPayFType} handleDeletePayer={handleDeletePayer} />}
+              {page === 'enrollments' && <PayerHub db={db} initialTab="enrollments" openEnrollModal={openEnrollModal} openPayerModal={openPayerModal} search={enrSearch} setSearch={setEnrSearch} fStage={enrFStage} setFStage={setEnrFStage} fProv={enrFProv} setFProv={setEnrFProv} handleDeleteEnrollment={handleDeleteEnrollment} paySearch={paySearch} setPaySearch={setPaySearch} payFType={payFType} setPayFType={setPayFType} handleDeletePayer={handleDeletePayer} />}
+              {page === 'payers' && <PayerHub db={db} initialTab="directory" openEnrollModal={openEnrollModal} openPayerModal={openPayerModal} search={enrSearch} setSearch={setEnrSearch} fStage={enrFStage} setFStage={setEnrFStage} fProv={enrFProv} setFProv={setEnrFProv} handleDeleteEnrollment={handleDeleteEnrollment} paySearch={paySearch} setPaySearch={setPaySearch} payFType={payFType} setPayFType={setPayFType} handleDeletePayer={handleDeletePayer} />}
+              {page === 'payer-requirements' && <PayerHub db={db} initialTab="library" openEnrollModal={openEnrollModal} openPayerModal={openPayerModal} search={enrSearch} setSearch={setEnrSearch} fStage={enrFStage} setFStage={setEnrFStage} fProv={enrFProv} setFProv={setEnrFProv} handleDeleteEnrollment={handleDeleteEnrollment} paySearch={paySearch} setPaySearch={setPaySearch} payFType={payFType} setPayFType={setPayFType} handleDeletePayer={handleDeletePayer} />}
+              {page === 'payer-hub' && <PayerHub db={db} initialTab="directory" openEnrollModal={openEnrollModal} openPayerModal={openPayerModal} search={enrSearch} setSearch={setEnrSearch} fStage={enrFStage} setFStage={setEnrFStage} fProv={enrFProv} setFProv={setEnrFProv} handleDeleteEnrollment={handleDeleteEnrollment} paySearch={paySearch} setPaySearch={setPaySearch} payFType={payFType} setPayFType={setPayFType} handleDeletePayer={handleDeletePayer} />}
               {page === 'missing-docs' && <MissingDocuments db={db} />}
-              {page === 'payer-requirements' && <PayerRequirements db={db} />}
-              {page === 'enrollments' && <Enrollments db={db} search={enrSearch} setSearch={setEnrSearch} fStage={enrFStage} setFStage={setEnrFStage} fProv={enrFProv} setFProv={setEnrFProv} openEnrollModal={openEnrollModal} handleDeleteEnrollment={handleDeleteEnrollment} />}
-              {page === 'payers' && <Payers db={db} search={paySearch} setSearch={setPaySearch} fType={payFType} setFType={setPayFType} openPayerModal={openPayerModal} handleDeletePayer={handleDeletePayer} />}
               {page === 'documents' && <Documents db={db} search={docSearch} setSearch={setDocSearch} fType={docFType} setFType={setDocFType} fStatus={docFStatus} setFStatus={setDocFStatus} openDocModal={openDocModal} handleDeleteDocument={handleDeleteDocument} />}
               {page === 'workflows' && <Workflows db={db} search={wfSearch} setSearch={setWfSearch} fPriority={wfFPriority} setFPriority={setWfFPriority} fStatus={wfFStatus} setFStatus={setWfFStatus} openTaskModal={openTaskModal} handleMarkDone={handleMarkDone} handleDeleteTask={handleDeleteTask} />}
               {page === 'reports' && <Reports db={db} exportJSON={exportJSON} />}
@@ -2409,6 +2410,7 @@ function Sidebar({ page, setPage, alertCount, pendingEnroll, expDocs, user, sign
     pipeline: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,opacity:.75}}><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="12" rx="1"/><rect x="17" y="3" width="5" height="8" rx="1"/></svg>,
     enrollments: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,opacity:.75}}><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>,
     payers: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,opacity:.75}}><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>,
+    'payer-hub': <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,opacity:.75}}><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>,
     'payer-requirements': <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,opacity:.75}}><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>,
     'missing-docs': <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,opacity:.75}}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
     documents: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink:0,opacity:.75}}><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>,
@@ -2463,10 +2465,7 @@ function Sidebar({ page, setPage, alertCount, pendingEnroll, expDocs, user, sign
             {navItem('provider-lookup','NPI Lookup')}
           </Group>
           <Group id="enrollments" label="Enrollments">
-            {navItem('pipeline','Pipeline (Kanban)')}
-            {navItem('enrollments','Payer Enrollments', pendingEnroll, 'amber')}
-            {navItem('payers','Payer Directory')}
-            {navItem('payer-requirements','Payer Requirements')}
+            {navItem('payer-hub','Payer Hub', pendingEnroll, 'amber')}
           </Group>
           <Group id="compliance" label="Compliance">
             {navItem('missing-docs','Missing Documents')}
@@ -2515,14 +2514,15 @@ function Topbar({ page, setPage, openEnrollModal, openPayerModal, openDocModal, 
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  const titles = { dashboard:'Dashboard', alerts:'Alerts', providers:'Providers', 'add-provider':'Add Provider', 'provider-lookup':'NPI Lookup', 'psychology-today':'Psychology Today', enrollments:'Payer Enrollments', pipeline:'Pipeline (Kanban)', 'payer-requirements':'Payer Requirements', 'missing-docs':'Missing Documents', payers:'Payer Directory', documents:'Documents & Expiry', workflows:'Workflows & Tasks', reports:'Reports & Analytics', audit:'Audit Trail', settings:'Settings', eligibility:'Eligibility Verification', claims:'Claims Tracker', denials:'Denial Log', revenue:'Revenue Analytics' }
+  const titles = { dashboard:'Dashboard', alerts:'Alerts', providers:'Providers', 'add-provider':'Add Provider', 'provider-lookup':'NPI Lookup', 'psychology-today':'Psychology Today', enrollments:'Payer Hub', pipeline:'Payer Hub', 'payer-requirements':'Payer Hub', payers:'Payer Hub', 'payer-hub':'Payer Hub', documents:'Documents & Expiry', workflows:'Workflows & Tasks', reports:'Reports & Analytics', audit:'Audit Trail', settings:'Settings', eligibility:'Eligibility Verification', claims:'Claims Tracker', denials:'Denial Log', revenue:'Revenue Analytics' }
   function topCTA() {
+    if (page==='payer-hub') return // handled inside PayerHub tabs
     if (page==='enrollments') openEnrollModal()
     else if (page==='payers') openPayerModal()
     else if (page==='documents') openDocModal()
     else if (page==='workflows') openTaskModal()
   }
-  const ctaLabel = page==='enrollments'?'＋ New Enrollment':page==='pipeline'?'＋ New Enrollment':page==='payers'?'＋ Add Payer':page==='documents'?'＋ Add Document':page==='workflows'?'＋ New Task':null
+  const ctaLabel = page==='documents'?'＋ Add Document':page==='workflows'?'＋ New Task':null
   const emailInitial = (user?.email||'A')[0].toUpperCase()
   const displayEmail = user?.email || 'admin@credflow.io'
   const displayName = 'Admin User'
@@ -3005,6 +3005,158 @@ function Enrollments({ db, search, setSearch, fStage, setFStage, fProv, setFProv
       </table>
     </div>
   </div>
+}
+
+// ─── PAYER HUB ─────────────────────────────────────────────────────────────────
+// Unified 4-tab hub: Directory | Enrollments | Pipeline | Library
+function PayerHub({ db, initialTab, openEnrollModal, openPayerModal, search, setSearch, fStage, setFStage, fProv, setFProv, handleDeleteEnrollment, paySearch, setPaySearch, payFType, setPayFType, handleDeletePayer }) {
+  const [tab, setTab] = useState(initialTab || 'directory')
+
+  const TABS = [
+    { id:'directory',   label:'🗂 Directory',   hint:'Your practice\'s payers' },
+    { id:'enrollments', label:'📋 Enrollments', hint:'Enrollment table' },
+    { id:'pipeline',    label:'📊 Pipeline',    hint:'Kanban board' },
+    { id:'library',     label:'🌐 Library',     hint:'National payer library' },
+  ]
+
+  return (
+    <div className="page" style={{paddingTop:0}}>
+      {/* Tab bar */}
+      <div style={{display:'flex',gap:4,marginBottom:22,background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:'var(--r-xl)',padding:5,position:'sticky',top:60,zIndex:50,backdropFilter:'blur(8px)'}}>
+        {TABS.map(t => (
+          <button key={t.id}
+            onClick={() => setTab(t.id)}
+            style={{
+              flex:1, padding:'9px 14px', border:'none', borderRadius:'var(--r-lg)', cursor:'pointer',
+              fontSize:13, fontWeight: tab===t.id ? 600 : 400,
+              background: tab===t.id ? 'var(--surface)' : 'transparent',
+              color: tab===t.id ? 'var(--primary)' : 'var(--ink-3)',
+              boxShadow: tab===t.id ? 'var(--shadow-sm)' : 'none',
+              transition:'all var(--t)',
+              borderTop: tab===t.id ? '2px solid var(--primary)' : '2px solid transparent',
+            }}
+          >{t.label}</button>
+        ))}
+      </div>
+
+      {/* Tab: Directory (practice's enrolled payers) */}
+      {tab === 'directory' && (
+        <PayersTab db={db} search={paySearch} setSearch={setPaySearch} fType={payFType} setFType={setPayFType} openPayerModal={openPayerModal} handleDeletePayer={handleDeletePayer} />
+      )}
+
+      {/* Tab: Enrollments */}
+      {tab === 'enrollments' && (
+        <EnrollmentsTab db={db} search={search} setSearch={setSearch} fStage={fStage} setFStage={setFStage} fProv={fProv} setFProv={setFProv} openEnrollModal={openEnrollModal} handleDeleteEnrollment={handleDeleteEnrollment} />
+      )}
+
+      {/* Tab: Pipeline (Kanban) */}
+      {tab === 'pipeline' && (
+        <KanbanPipeline db={db} openEnrollModal={openEnrollModal} />
+      )}
+
+      {/* Tab: Library (national payer reference) */}
+      {tab === 'library' && (
+        <PayerRequirements db={db} />
+      )}
+    </div>
+  )
+}
+
+// Extracted sub-tab components (so PayerHub can render them without the outer <div className="page">)
+function PayersTab({ db, search, setSearch, fType, setFType, openPayerModal, handleDeletePayer }) {
+  const rawPayers = db.payers.filter(p => `${p.name} ${p.payerId} ${p.type}`.toLowerCase().includes((search||'').toLowerCase()) && (!fType||p.type===fType))
+  const {sorted:list, thProps} = useSorted(rawPayers, 'name')
+  return <>
+    <div className="toolbar">
+      <div className="search-box"><span className="si">🔍</span><input type="text" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search payers…" /></div>
+      <select className="filter-select" value={fType} onChange={e=>setFType(e.target.value)}><option value="">All Types</option><option>Commercial</option><option>Medicaid</option><option>Medicare</option><option>Medicare Advantage</option><option>EAP</option><option>Other</option></select>
+      <div className="toolbar-right"><button className="btn btn-primary btn-sm" onClick={()=>openPayerModal()}>＋ Add Payer</button></div>
+    </div>
+    <div className="tbl-wrap">
+      <table><thead><tr>
+          <th {...thProps('name','Payer Name')} />
+          <th {...thProps('payerId','Payer ID')} />
+          <th {...thProps('type','Type')} />
+          <th className="no-sort">Phone</th>
+          <th className="no-sort">Portal</th>
+          <th {...thProps('timeline','Timeline')} />
+          <th className="no-sort">Notes</th>
+          <th className="no-sort">Actions</th>
+        </tr></thead>
+        <tbody>
+          {!list.length ? <tr><td colSpan={8}><div className="empty-state"><div className="ei">🗂</div><h4>No payers found</h4></div></td></tr> : list.map(p => (
+            <tr key={p.id}>
+              <td><strong>{p.name}</strong></td>
+              <td><code style={{ background:'var(--surface-2)', padding:'2px 6px', borderRadius:4, fontSize:'11.5px' }}>{p.payerId||'—'}</code></td>
+              <td><Badge cls="b-blue">{p.type}</Badge></td>
+              <td>{p.phone||'—'}</td>
+              <td>{p.portal?<a href={p.portal} target="_blank" rel="noreferrer" style={{ color:'var(--primary)', fontSize:'12px' }}>Portal ↗</a>:'—'}</td>
+              <td><Badge cls="b-gray">{p.timeline||'—'}</Badge></td>
+              <td style={{ maxWidth:180, fontSize:12, color:'var(--ink-4)' }}>{p.notes?p.notes.slice(0,70)+(p.notes.length>70?'…':''):'—'}</td>
+              <td><div style={{ display:'flex', gap:6 }}>
+                <button className="btn btn-secondary btn-sm" onClick={()=>openPayerModal(p.id)}>Edit</button>
+                <button className="btn btn-danger btn-sm" onClick={()=>handleDeletePayer(p.id)}>Del</button>
+              </div></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </>
+}
+
+function EnrollmentsTab({ db, search, setSearch, fStage, setFStage, fProv, setFProv, openEnrollModal, handleDeleteEnrollment }) {
+  const filtered = db.enrollments.filter(e => {
+    const txt = `${pName(db.providers,e.provId)} ${payName(db.payers,e.payId)} ${e.stage} ${e.notes}`.toLowerCase()
+    return (!(search)||txt.includes(search.toLowerCase())) && (!fStage||e.stage===fStage) && (!fProv||e.provId===fProv)
+  })
+  const {sorted:list, thProps} = useSorted(filtered, 'stage')
+  return <>
+    <div className="toolbar">
+      <div className="search-box"><span className="si">🔍</span><input type="text" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search enrollments…" /></div>
+      <select className="filter-select" value={fStage} onChange={e=>setFStage(e.target.value)}>
+        <option value="">All Stages</option>
+        {STAGES.map(s=><option key={s}>{s}</option>)}
+      </select>
+      <select className="filter-select" value={fProv} onChange={e=>setFProv(e.target.value)}>
+        <option value="">All Providers</option>
+        {db.providers.map(p=><option key={p.id} value={p.id}>{p.fname} {p.lname}</option>)}
+      </select>
+      <div className="toolbar-right"><button className="btn btn-primary btn-sm" onClick={()=>openEnrollModal()}>＋ New Enrollment</button></div>
+    </div>
+    <div className="tbl-wrap">
+      <table><thead><tr>
+          <th {...thProps('provId','Provider')} />
+          <th {...thProps('payId','Payer')} />
+          <th {...thProps('stage','Stage')} />
+          <th {...thProps('submitted','Submitted')} />
+          <th {...thProps('effective','Effective')} />
+          <th className="no-sort">EFT / ERA</th>
+          <th {...thProps('followup','Follow-up')} />
+          <th className="no-sort">Actions</th>
+        </tr></thead>
+        <tbody>
+          {!list.length ? <tr><td colSpan={8}><div className="empty-state"><div className="ei">🏥</div><h4>No enrollments found</h4></div></td></tr> : list.map(e => {
+            const fuD = daysUntil(e.followup)
+            const fuCls = fuD!==null&&fuD<=0?'b-red':fuD!==null&&fuD<=7?'b-amber':'b-blue'
+            return <tr key={e.id}>
+              <td><strong>{pNameShort(db.providers,e.provId)}</strong><div className="text-xs text-muted">{db.providers.find(x=>x.id===e.provId)?.cred||''}</div></td>
+              <td>{payName(db.payers,e.payId)}</td>
+              <td><StageBadge stage={e.stage} /></td>
+              <td style={{ whiteSpace:'nowrap' }}>{fmtDate(e.submitted)}</td>
+              <td style={{ whiteSpace:'nowrap' }}>{fmtDate(e.effective)}</td>
+              <td><div style={{ display:'flex', gap:4 }}><Badge cls={e.eft==='Active'?'b-green':'b-gray'}>EFT: {e.eft}</Badge><Badge cls={e.era==='Active'?'b-green':'b-gray'}>ERA: {e.era}</Badge></div></td>
+              <td style={{ whiteSpace:'nowrap' }}>{e.followup?<Badge cls={fuCls}>{fmtDate(e.followup)}</Badge>:'—'}</td>
+              <td><div style={{ display:'flex', gap:6 }}>
+                <button className="btn btn-secondary btn-sm" onClick={()=>openEnrollModal(e.id)}>Edit</button>
+                <button className="btn btn-danger btn-sm" onClick={()=>handleDeleteEnrollment(e.id)}>Del</button>
+              </div></td>
+            </tr>
+          })}
+        </tbody>
+      </table>
+    </div>
+  </>
 }
 
 // ─── PAYERS ────────────────────────────────────────────────────────────────────
@@ -3964,7 +4116,7 @@ function GlobalSearch({ db, onClose, setPage, openProvDetail, openEnrollModal })
   function handleSelect(item) {
     if (item.type === 'provider') { setPage('providers'); openProvDetail(item.data.id) }
     else if (item.type === 'enrollment') { setPage('enrollments'); openEnrollModal(item.data.id) }
-    else if (item.type === 'payer') { setPage('payers') }
+    else if (item.type === 'payer') { setPage('payer-hub') }
     else if (item.type === 'doc') { setPage('documents') }
     else if (item.type === 'task') { setPage('workflows') }
     onClose()
