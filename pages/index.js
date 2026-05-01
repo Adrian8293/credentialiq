@@ -2324,11 +2324,14 @@ export default function App() {
 
   async function applyNpiSync(selectedFields) {
     if (!npiSyncModal) return
-    const { prov, card } = npiSyncModal
+    const { prov, diffs, card } = npiSyncModal
     setSaving(true)
     try {
       const updates = {}
-      selectedFields.forEach(field => { updates[field] = card[field] })
+      selectedFields.forEach(field => {
+        const diff = diffs.find(d => d.field === field)
+        updates[field] = diff ? diff.npiValue : card[field]
+      })
       const updated = { ...prov, ...updates }
       const saved = await upsertProvider(updated)
       setDb(prev => ({ ...prev, providers: prev.providers.map(p => p.id === saved.id ? saved : p) }))
