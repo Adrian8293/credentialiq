@@ -534,12 +534,20 @@ export function ProviderCommandCenter({ prov, db, onClose, onEdit, openEnrollMod
           <div style={{ fontSize: 19, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.3px', marginBottom: 3 }}>
             {prov.fname} {prov.lname}, {prov.cred}
           </div>
-          <div style={{ fontSize: 12.5, color: 'var(--ink-3)', marginBottom: 8 }}>
+          <div style={{ fontSize: 12.5, color: 'var(--ink-3)', marginBottom: 4 }}>
             {prov.spec}{prov.focus ? ' · ' + prov.focus : ''}
           </div>
+          {(prov.taxonomyDesc || prov.taxonomyCode) && (
+            <div style={{ fontSize: 11.5, color: 'var(--ink-4)', marginBottom: 7 }}>
+              {prov.taxonomyDesc || prov.focus}
+              {prov.taxonomyCode && <span style={{ fontFamily: 'monospace', marginLeft: 6, opacity: 0.7 }}>· {prov.taxonomyCode}</span>}
+            </div>
+          )}
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             <span className={`badge ${prov.status === 'Active' ? 'b-green' : 'b-gray'}`}>{prov.status}</span>
             {prov.npi && <span className="info-chip">NPI {prov.npi}</span>}
+            {prov.caqh && <span className="info-chip">CAQH {prov.caqh}</span>}
+            {prov.ptan && <span className="info-chip">PTAN {prov.ptan}</span>}
             <span className="badge b-teal">{enrollments.filter(e => e.stage === 'Active').length} active panels</span>
             {tasks.length > 0 && <span className="badge b-red">{tasks.length} open tasks</span>}
           </div>
@@ -701,28 +709,90 @@ export function ProviderCommandCenter({ prov, db, onClose, onEdit, openEnrollMod
 
       {/* CREDENTIALS TAB */}
       {tab === 'credentials' && (
-        <div className="grid-2" style={{ gap: 12 }}>
-          {[
-            ['NPI Number', prov.npi, null],
-            ['State License', prov.licenseExp ? `Exp: ${fmtDateWF(prov.licenseExp)}` : 'Not set', prov.licenseExp],
-            ['Malpractice', prov.malExp ? `Exp: ${fmtDateWF(prov.malExp)}` : 'Not set', prov.malExp],
-            ['CAQH Attestation Due', prov.caqhDue ? fmtDateWF(prov.caqhDue) : 'Not set', prov.caqhDue],
-            ['Recredentialing Due', prov.recred ? fmtDateWF(prov.recred) : 'Not set', prov.recred],
-          ].map(([label, val, expDate]) => {
-            const d = expDate ? daysUntilWF(expDate) : null
-            const badgeCls = d === null ? 'b-gray' : d < 0 ? 'b-red' : d <= 30 ? 'b-red' : d <= 90 ? 'b-amber' : 'b-green'
-            return (
-              <div key={label} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8, padding: '12px 14px' }}>
-                <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.7px', textTransform: 'uppercase', color: 'var(--ink-4)', marginBottom: 4 }}>{label}</div>
-                <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--ink)', marginBottom: expDate ? 5 : 0 }}>{val || '—'}</div>
-                {expDate && d !== null && (
-                  <span className={`badge ${badgeCls}`}>
-                    {d < 0 ? `Expired ${Math.abs(d)}d ago` : `${d}d left`}
-                  </span>
-                )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+          {/* ── SECTION 1: Licenses & Expiry Dates ── */}
+          <div>
+            <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--ink-4)', marginBottom: 10 }}>
+              Licenses &amp; Expiry Dates
+            </div>
+            <div className="grid-2" style={{ gap: 10 }}>
+              {[
+                ['NPI Number',           prov.npi,        null],
+                ['State License #',      prov.license,    null],
+                ['License Expiry',       prov.licenseExp ? fmtDateWF(prov.licenseExp) : null, prov.licenseExp],
+                ['Malpractice Carrier',  prov.malCarrier, null],
+                ['Malpractice Policy #', prov.malPolicy,  null],
+                ['Malpractice Expiry',   prov.malExp ? fmtDateWF(prov.malExp) : null, prov.malExp],
+                ['DEA #',                prov.dea,        null],
+                ['DEA Expiry',           prov.deaExp ? fmtDateWF(prov.deaExp) : null, prov.deaExp],
+                ['Recredentialing Due',  prov.recred ? fmtDateWF(prov.recred) : null, prov.recred],
+              ].filter(([, val]) => val).map(([label, val, expDate]) => {
+                const d = expDate ? daysUntilWF(expDate) : null
+                const badgeCls = d === null ? null : d < 0 ? 'b-red' : d <= 30 ? 'b-red' : d <= 90 ? 'b-amber' : 'b-green'
+                return (
+                  <div key={label} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8, padding: '11px 13px' }}>
+                    <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.7px', textTransform: 'uppercase', color: 'var(--ink-4)', marginBottom: 3 }}>{label}</div>
+                    <div style={{ fontSize: 13.5, fontWeight: 500, color: 'var(--ink)', marginBottom: badgeCls ? 5 : 0, fontFamily: label.includes('#') || label === 'NPI Number' ? 'monospace' : 'inherit' }}>{val || '—'}</div>
+                    {badgeCls && d !== null && (
+                      <span className={`badge ${badgeCls}`}>{d < 0 ? `Expired ${Math.abs(d)}d ago` : `${d}d left`}</span>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* ── SECTION 2: IDs & Identifiers ── */}
+          <div>
+            <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--ink-4)', marginBottom: 10 }}>
+              IDs &amp; Identifiers
+            </div>
+            <div className="grid-2" style={{ gap: 10 }}>
+              {[
+                ['CAQH ID',         prov.caqh],
+                ['CAQH Attestation Due', prov.caqhDue ? fmtDateWF(prov.caqhDue) : null],
+                ['Medicaid / DMAP ID',   prov.medicaid],
+                ['Medicare PTAN',        prov.ptan],
+                ['Supervisor',           prov.supervisor],
+              ].filter(([, val]) => val).map(([label, val]) => (
+                <div key={label} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8, padding: '11px 13px' }}>
+                  <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.7px', textTransform: 'uppercase', color: 'var(--ink-4)', marginBottom: 3 }}>{label}</div>
+                  <div style={{ fontSize: 13.5, fontWeight: 500, color: 'var(--ink)', fontFamily: ['CAQH ID','Medicaid / DMAP ID','Medicare PTAN'].includes(label) ? 'monospace' : 'inherit' }}>{val}</div>
+                </div>
+              ))}
+            </div>
+            {!prov.caqh && !prov.medicaid && !prov.ptan && (
+              <div style={{ fontSize: 12.5, color: 'var(--ink-4)', padding: '10px 0' }}>
+                No IDs on file — add CAQH, Medicaid, or PTAN via Edit Provider or sync from NPPES.
               </div>
-            )
-          })}
+            )}
+          </div>
+
+          {/* ── SECTION 3: NPPES Taxonomy ── */}
+          {(prov.taxonomyDesc || prov.taxonomyCode || prov.focus) && (
+            <div>
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.8px', color: 'var(--ink-4)', marginBottom: 10 }}>
+                NPPES Taxonomy
+              </div>
+              <div className="grid-2" style={{ gap: 10 }}>
+                {[
+                  ['Taxonomy Code', prov.taxonomyCode],
+                  ['Taxonomy Description', prov.taxonomyDesc || prov.focus],
+                  ['Taxonomy License State', prov.licenseState],
+                ].filter(([, val]) => val).map(([label, val]) => (
+                  <div key={label} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8, padding: '11px 13px' }}>
+                    <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.7px', textTransform: 'uppercase', color: 'var(--ink-4)', marginBottom: 3 }}>{label}</div>
+                    <div style={{ fontSize: 13.5, fontWeight: 500, color: 'var(--ink)', fontFamily: label === 'Taxonomy Code' ? 'monospace' : 'inherit' }}>{val}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ fontSize: 11.5, color: 'var(--ink-4)', marginTop: 8, fontStyle: 'italic' }}>
+                Taxonomy data from NPPES. Specialty Category (<strong>{prov.spec}</strong>) is managed separately in CredFlow.
+              </div>
+            </div>
+          )}
+
         </div>
       )}
 
