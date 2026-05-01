@@ -2285,7 +2285,6 @@ export default function App() {
         { field: 'medicaid',     label: 'Medicaid ID',          npiVal: nppesMedicaid },
         { field: 'ptan',         label: 'Medicare PTAN',        npiVal: nppesPtan },
         { field: 'caqh',         label: 'CAQH ID',              npiVal: nppesCaqh },
-        { field: 'spec',         label: 'Specialty',            npiVal: card.spec },
         { field: 'focus',        label: 'Specialty Focus',      npiVal: card.taxonomyDesc },
         { field: 'taxonomyCode', label: 'Taxonomy Code',        npiVal: card.taxonomyCode },
         { field: 'taxonomyDesc', label: 'Taxonomy Description', npiVal: card.taxonomyDesc },
