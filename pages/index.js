@@ -4708,6 +4708,8 @@ function ProviderLookup({ db, setPage, setProvForm, setEditingId, setNpiInput, s
   // NPPES search state
   const [fname, setFname] = useState('')
   const [lname, setLname] = useState('')
+  const [orgName, setOrgName] = useState('')
+  const [npiNumber, setNpiNumber] = useState('')
   const [state, setState] = useState('OR')
   const [city, setCity] = useState('')
   const [zip, setZip] = useState('')
@@ -4731,17 +4733,25 @@ function ProviderLookup({ db, setPage, setProvForm, setEditingId, setNpiInput, s
 
   async function doSearch(e) {
     e && e.preventDefault()
-    if (!fname.trim() && !lname.trim()) { setError('Enter at least a first or last name.'); return }
+    if (!npiNumber.trim() && !fname.trim() && !lname.trim() && !orgName.trim()) {
+      setError('Enter an NPI number, a name, or an organization name.'); return
+    }
     setLoading(true); setError(''); setResults(null); setExpanded({}); setImporting(null)
     try {
       const params = new URLSearchParams()
-      if (fname.trim())    params.append('first_name', fname.trim())
-      if (lname.trim())    params.append('last_name',  lname.trim())
+      if (npiNumber.trim()) {
+        params.append('number', npiNumber.trim())
+      } else if (npiType === 'NPI-2') {
+        if (orgName.trim()) params.append('organization_name', orgName.trim())
+      } else {
+        if (fname.trim()) params.append('first_name', fname.trim())
+        if (lname.trim()) params.append('last_name',  lname.trim())
+      }
       if (state)           params.append('state', state)
       if (city.trim())     params.append('city', city.trim())
       if (zip.trim())      params.append('zip', zip.trim())
       if (specialty)       params.append('taxonomy', specialty)
-      if (npiType)         params.append('npi_type', npiType)
+      if (!npiNumber.trim()) params.append('npi_type', npiType)
       const res = await fetch(`/api/npi-search?${params}`)
       const data = await res.json()
       if (data.error) { setError(data.error); setLoading(false); return }
@@ -4832,8 +4842,20 @@ function ProviderLookup({ db, setPage, setProvForm, setEditingId, setNpiInput, s
             <div className="card-body">
               <form onSubmit={doSearch}>
                 <div className="form-grid" style={{ marginBottom: 14 }}>
-                  <div className="fg"><label>First Name</label><input type="text" value={fname} onChange={e=>setFname(e.target.value)} placeholder="Sarah" /></div>
-                  <div className="fg"><label>Last Name</label><input type="text" value={lname} onChange={e=>setLname(e.target.value)} placeholder="Chen" /></div>
+                  <div className="fg"><label>NPI Number</label><input type="text" value={npiNumber} onChange={e=>setNpiNumber(e.target.value)} placeholder="Direct NPI lookup" maxLength={10} /></div>
+                  <div className="fg"><label>Provider Type</label>
+                    <select value={npiType} onChange={e=>{ setNpiType(e.target.value); setFname(''); setLname(''); setOrgName('') }}>
+                      <option value="NPI-1">Individual (NPI-1)</option>
+                      <option value="NPI-2">Organization (NPI-2)</option>
+                    </select>
+                  </div>
+                  {npiType === 'NPI-2'
+                    ? <div className="fg full"><label>Organization Name</label><input type="text" value={orgName} onChange={e=>setOrgName(e.target.value)} placeholder="Positive Inner Self LLC" /></div>
+                    : <>
+                        <div className="fg"><label>First Name</label><input type="text" value={fname} onChange={e=>setFname(e.target.value)} placeholder="Sarah" /></div>
+                        <div className="fg"><label>Last Name</label><input type="text" value={lname} onChange={e=>setLname(e.target.value)} placeholder="Chen" /></div>
+                      </>
+                  }
                   <div className="fg"><label>State</label>
                     <select value={state} onChange={e=>setState(e.target.value)}>
                       <option value="">All States</option>
@@ -4846,12 +4868,6 @@ function ProviderLookup({ db, setPage, setProvForm, setEditingId, setNpiInput, s
                     <select value={specialty} onChange={e=>setSpecialty(e.target.value)}>
                       <option value="">All Specialties</option>
                       {SPECIALTIES.map(s=><option key={s} value={s}>{s}</option>)}
-                    </select>
-                  </div>
-                  <div className="fg"><label>Provider Type</label>
-                    <select value={npiType} onChange={e=>setNpiType(e.target.value)}>
-                      <option value="NPI-1">Individual (NPI-1)</option>
-                      <option value="NPI-2">Organization (NPI-2)</option>
                     </select>
                   </div>
                 </div>
@@ -4867,7 +4883,7 @@ function ProviderLookup({ db, setPage, setProvForm, setEditingId, setNpiInput, s
                     {loading ? <><span className="spinner"></span> Searching NPPES…</> : '🔍 Search Registry'}
                   </button>
                   {results && (
-                    <button type="button" className="btn btn-ghost btn-sm" onClick={()=>{setResults(null);setFname('');setLname('');setState('OR');setCity('');setZip('');setSpecialty('');setExpanded({})}}>
+                    <button type="button" className="btn btn-ghost btn-sm" onClick={()=>{setResults(null);setFname('');setLname('');setOrgName('');setNpiNumber('');setState('OR');setCity('');setZip('');setSpecialty('');setExpanded({})}}>
                       Clear
                     </button>
                   )}
