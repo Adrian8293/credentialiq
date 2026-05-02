@@ -4112,8 +4112,10 @@ function NpiSyncModal({ data, onApply, onClose, saving }) {
     </div>
   )
 }
-const [tab, setTab] = useState('profile');
-function ProvDetailModal({ prov, db, tab, setTab, onClose, editProvider, openEnrollModal, toast, syncFromNPPES }) {
+function ProvDetailModal({ prov, db, onClose, editProvider, openEnrollModal, toast, syncFromNPPES }) {
+  // MUST be inside the component!
+  const [tab, setTab] = useState('profile');
+
   return (
     <>
       <div className="drawer-overlay open" onClick={onClose} />
@@ -4127,36 +4129,36 @@ function ProvDetailModal({ prov, db, tab, setTab, onClose, editProvider, openEnr
         </div>
         <div className="drawer-body">
           <div>
-  <div className="tabs" style={{ marginBottom: 0 }}>
-    <div className={`tab ${tab === 'profile' ? 'active' : ''}`} onClick={() => setTab('profile')}>
-      Profile
-    </div>
-    <div className={`tab ${tab === 'opca' ? 'active' : ''}`} onClick={() => setTab('opca')}>
-      📄 OPCA Form
-    </div>
-  </div>
+            <div className="tabs" style={{ marginBottom: 0 }}>
+              <div className={`tab ${tab === 'profile' ? 'active' : ''}`} onClick={() => setTab('profile')}>
+                Profile
+              </div>
+              <div className={`tab ${tab === 'opca' ? 'active' : ''}`} onClick={() => setTab('opca')}>
+                📄 OPCA Form
+              </div>
+            </div>
 
-  {tab === 'profile' && (
-    <ProviderCommandCenter 
-      prov={prov} 
-      db={db} 
-      onClose={onClose} 
-      onEdit={onEdit}
-      openEnrollModal={openEnrollModal} 
-      toast={toast} 
-      onSync={onSync} 
-    />
-  )}
+            {tab === 'profile' && (
+              <ProviderCommandCenter 
+                prov={prov} 
+                db={db} 
+                onClose={onClose} 
+                onEdit={editProvider}       // <-- Fixed mismatch
+                openEnrollModal={openEnrollModal} 
+                toast={toast} 
+                onSync={syncFromNPPES}      // <-- Fixed mismatch
+              />
+            )}
 
-  {tab === 'opca' && (
-    <div style={{ padding: '20px 0' }}>
-      <OpcaUploadPanel
-        provider={{ id: prov.id, fname: prov.fname, lname: prov.lname }}
-        onComplete={() => toast('OPCA profile saved!', 'success')}
-      />
-    </div>
-  )}
-</div>
+            {tab === 'opca' && (
+              <div style={{ padding: '20px 0' }}>
+                <OpcaUploadPanel
+                  provider={{ id: prov.id, fname: prov.fname, lname: prov.lname }}
+                  onComplete={() => toast('OPCA profile saved!', 'success')}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
