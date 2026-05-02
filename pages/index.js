@@ -4128,13 +4128,26 @@ function ProvDetailModal({ prov, db, tab, setTab, onClose, editProvider, openEnr
         <div className="drawer-body">
           <div>
   <div className="tabs" style={{ marginBottom: 0 }}>
-    <div className={`tab ${tab === 'profile' ? 'active' : ''}`} onClick={() => setTab('profile')}>Profile</div>
-    <div className={`tab ${tab === 'opca' ? 'active' : ''}`} onClick={() => setTab('opca')}>📄 OPCA Form</div>
+    <div className={`tab ${tab === 'profile' ? 'active' : ''}`} onClick={() => setTab('profile')}>
+      Profile
+    </div>
+    <div className={`tab ${tab === 'opca' ? 'active' : ''}`} onClick={() => setTab('opca')}>
+      📄 OPCA Form
+    </div>
   </div>
+
   {tab === 'profile' && (
-    <ProviderCommandCenter prov={prov} db={db} onClose={onClose} onEdit={onEdit}
-      openEnrollModal={openEnrollModal} toast={toast} onSync={onSync} />
+    <ProviderCommandCenter 
+      prov={prov} 
+      db={db} 
+      onClose={onClose} 
+      onEdit={onEdit}
+      openEnrollModal={openEnrollModal} 
+      toast={toast} 
+      onSync={onSync} 
+    />
   )}
+
   {tab === 'opca' && (
     <div style={{ padding: '20px 0' }}>
       <OpcaUploadPanel
