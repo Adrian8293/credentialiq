@@ -4112,7 +4112,7 @@ function NpiSyncModal({ data, onApply, onClose, saving }) {
     </div>
   )
 }
-
+const [tab, setTab] = useState('profile');
 function ProvDetailModal({ prov, db, tab, setTab, onClose, editProvider, openEnrollModal, toast, syncFromNPPES }) {
   return (
     <>
