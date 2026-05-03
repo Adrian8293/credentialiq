@@ -7,8 +7,11 @@
  * Public routes (no session required):
  *   /login, /reset-password
  *
- * Protected API routes still get a second check inside each handler via
- * requireAuth() — defense in depth, in case middleware is bypassed locally.
+ * NOTE: We use getSession() here (cookie-only, no network call) rather than
+ * getUser() (validates JWT with Supabase server). getUser() in middleware
+ * causes a redirect loop on login because the session cookie isn't fully
+ * propagated before the next request fires. The API route handlers use
+ * requireAuth() → getUser() for the authoritative server-side check.
  */
 
 import { createServerClient } from '@supabase/ssr'
@@ -18,8 +21,6 @@ import { NextResponse } from 'next/server'
 const PUBLIC_PATHS = ['/login', '/reset-password']
 
 // API routes that are exempt (public data sources, cron jobs)
-// NPI registry lookups don't touch PHI — they hit the CMS public API.
-// Watchdog is protected by CRON_SECRET, not session auth.
 const PUBLIC_API_PATHS = [
   '/api/npi',
   '/api/npi-search',
@@ -72,11 +73,12 @@ export async function middleware(req) {
     }
   )
 
-  // getUser() validates the JWT with Supabase — safer than getSession()
-  // which only reads the local cookie without re-validating.
-  const { data: { user }, error } = await supabase.auth.getUser()
+  // getSession() reads the JWT from the cookie without a network round-trip.
+  // Sufficient for route protection — the API handlers do the authoritative
+  // getUser() check server-side on any request that touches PHI.
+  const { data: { session } } = await supabase.auth.getSession()
 
-  if (error || !user) {
+  if (!session) {
     // API routes return 401 JSON — pages redirect to /login
     if (pathname.startsWith('/api/')) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
