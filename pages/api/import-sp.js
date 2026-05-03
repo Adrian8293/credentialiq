@@ -1,10 +1,5 @@
 // pages/api/import-sp.js
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY  // use service role for server-side writes
-)
+import { requireAuth, supabaseAdmin } from '../../lib/supabase-server'
 
 // SimplePractice CSV column → your schema field mapping
 const SP_CLAIM_MAP = {
@@ -27,12 +22,15 @@ const SP_CLAIM_MAP = {
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
 
+  const user = await requireAuth(req, res)
+  if (!user) return
+
   const { rows } = req.body  // Parsed CSV rows from the frontend
 
   // Fetch lookup tables once
   const [{ data: providers }, { data: payers }] = await Promise.all([
-    supabase.from('providers').select('id, fname, lname'),
-    supabase.from('payers').select('id, name')
+    supabaseAdmin.from('providers').select('id, fname, lname'),
+    supabaseAdmin.from('payers').select('id, name')
   ])
 
   const claims = rows.map(row => {
@@ -65,7 +63,7 @@ export default async function handler(req, res) {
     return claim
   }).filter(c => c.patient_name && c.dos)
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('claims')
     .upsert(claims, { onConflict: 'claim_num', ignoreDuplicates: false })
     .select()
