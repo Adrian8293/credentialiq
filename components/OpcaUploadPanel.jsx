@@ -203,19 +203,21 @@ export default function OpcaUploadPanel({ provider, onComplete }) {
                       {' '}{f.label} (Section {f.section})
                     </div>
                   ))}
+                  {migrationSummary.newFieldsMissing.every(f => !f.required) && (
+                    <div style={{ fontSize: 12, color: '#16a34a', marginTop: 8, fontStyle: 'italic' }}>
+                      All missing fields are optional — you can generate the PDF now and fill them in manually if needed.
+                    </div>
+                  )}
                 </div>
               )}
               {migrationSummary.warnings?.filter(w => w.severity === 'warning').map((w, i) => (
                 <div key={i} style={styles.warningItem}>⚠ {w.message}</div>
               ))}
-              {migrationSummary.readyToExport && (
-                <div style={styles.readyBadge}>✓ Ready to generate 2025 PDF</div>
-              )}
             </div>
           )}
 
-          {/* Generate section */}
-          {(extractedProfile.formVersion === '2025') && (
+          {/* Generate section — show after migration (version is now 2025) or if already 2025 */}
+          {extractedProfile.formVersion === '2025' && (
             <div style={styles.generateSection}>
               <div style={styles.initialsRow}>
                 <label style={styles.label}>Provider Initials (for page headers):</label>
