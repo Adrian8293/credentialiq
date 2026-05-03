@@ -1,6 +1,11 @@
 // pages/api/eligibility.js
+import { requireAuth } from '../../lib/supabase-server'
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end()
+
+  const user = await requireAuth(req, res)
+  if (!user) return
 
   const { memberId, dob, payerId, npi, dos } = req.body
   if (!memberId || !dob || !payerId || !npi) {
@@ -37,7 +42,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        controlNumber: Date.now().toString(),
+        controlNumber: String(Date.now()).slice(-9),
         tradingPartnerId: payerId,
         provider: {
           organizationName: process.env.PRACTICE_NAME || 'Positive Inner Self',
