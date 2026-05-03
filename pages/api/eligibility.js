@@ -19,7 +19,15 @@ export default async function handler(req, res) {
         scope: 'hipaa'
       })
     })
-    const { access_token } = await tokenRes.json()
+    if (!tokenRes.ok) {
+      const errText = await tokenRes.text()
+      return res.status(502).json({ error: `Availity auth failed (${tokenRes.status}): ${errText}` })
+    }
+    const tokenData = await tokenRes.json()
+    const access_token = tokenData.access_token
+    if (!access_token) {
+      return res.status(502).json({ error: 'Availity did not return an access token. Check AVAILITY_CLIENT_ID and AVAILITY_CLIENT_SECRET.' })
+    }
 
     // 2. Submit eligibility inquiry (270/271 transaction)
     const eligRes = await fetch('https://api.availity.com/availity/v1/coverages', {
