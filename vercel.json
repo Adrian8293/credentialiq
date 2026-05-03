@@ -4,5 +4,16 @@
       "path": "/api/watchdog",
       "schedule": "0 14 * * *"
     }
+  ],
+  "headers": [
+    {
+      "source": "/api/watchdog",
+      "headers": [
+        {
+          "key": "x-cron-secret",
+          "value": "@cron_secret"
+        }
+      ]
+    }
   ]
 }
