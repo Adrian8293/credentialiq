@@ -25,7 +25,7 @@ import {
   fetchAuditLog, clearAuditLog as clearAuditLogDB,
   uploadProviderPhoto, deleteProviderPhoto,
   saveSettings as saveSettingsDB,
-  subscribeToAll, addAudit,
+  subscribeToAll, mergeRealtimeChange, addAudit,
   upsertEligibilityCheck, deleteEligibilityCheck,
   upsertClaim, deleteClaim,
   upsertDenial, deleteDenial,
@@ -1907,12 +1907,12 @@ export default function App() {
 
   // ─── AUTH ────────────────────────────────────────────────────────────────────
   useEffect(() => {
-    // onAuthStateChange fires immediately with INITIAL_SESSION — single source
-    // of truth. Avoids the race where getSession() briefly resolves null while
-    // the cookie-based session is being read, which caused the login loop.
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
       setAuthLoading(false)
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
     })
     return () => subscription.unsubscribe()
   }, [])
@@ -1945,10 +1945,13 @@ export default function App() {
   }, [user])
 
   // ─── REALTIME ────────────────────────────────────────────────────────────────
+  // Each table change merges directly into state — no full re-fetch.
+  // stateKey matches the db state object keys (e.g. 'providers', 'tasks').
+  // mappedRow is already transformed through the *FromDb mapper in db.js.
   useEffect(() => {
     if (!user) return
-    const unsub = subscribeToAll(() => {
-      loadAll().then(data => setDb(data))
+    const unsub = subscribeToAll((stateKey, mappedRow, eventType, oldId) => {
+      setDb(prev => mergeRealtimeChange(prev, stateKey, mappedRow, eventType, oldId))
     })
     return unsub
   }, [user])
@@ -1967,13 +1970,11 @@ export default function App() {
   }
 
   // ─── AUTH GUARD ───────────────────────────────────────────────────────────────
-  // Redirect in useEffect only — synchronous redirect during render races with
-  // session rehydration and causes an infinite login loop.
-  useEffect(() => {
-    if (!authLoading && !user) window.location.href = '/login'
-  }, [authLoading, user])
-
-  if (authLoading || !user) return <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Poppins,sans-serif', color:'#5a6e5a' }}>Loading…</div>
+  if (authLoading) return <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Poppins,sans-serif', color:'#5a6e5a' }}>Loading…</div>
+  if (!user) {
+    if (typeof window !== 'undefined') window.location.href = '/login'
+    return null
+  }
 
   // ─── COMPUTED ALERTS ──────────────────────────────────────────────────────────
   const alertDays = db.settings.alertDays || 90
