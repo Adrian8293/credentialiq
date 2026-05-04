@@ -27,7 +27,7 @@ const PUBLIC_API_PATHS = [
   '/api/watchdog',
 ]
 
-export async function middleware(req) {
+export async function proxy(req) {
   const { pathname } = req.nextUrl
 
   // Allow public pages

@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { daysUntil, fmtDate, pName, payName } from '../../lib/helpers.js'
 import { Badge } from '../../components/ui/Badge.jsx'
 import { Modal } from '../../components/ui/Modal.jsx'
 
-function EligibilityPage({ db, toast }) {
+export function EligibilityPage({ db, toast }) {
   const { providers, payers, eligibilityChecks: initChecks = [] } = db
   const [checks, setChecks] = useState(initChecks)
   const [modal, setModal] = useState(false)

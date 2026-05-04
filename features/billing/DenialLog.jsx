@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { daysUntil, fmtDate, pName, payName } from '../../lib/helpers.js'
 import { Badge } from '../../components/ui/Badge.jsx'
 import { Modal } from '../../components/ui/Modal.jsx'
 import { DENIAL_CODES } from '../../constants/rcm.js'
 
-function DenialLog({ db, toast }) {
+export function DenialLog({ db, toast }) {
   const { providers, payers, denials: initDenials = [], claims = [] } = db
   const [denials, setDenials] = useState(initDenials)
   const [modal, setModal] = useState(false)
