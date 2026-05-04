@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { Badge, ExpiryBadge } from './ui/Badge.jsx'
 
 function GlobalSearch({ db, onClose, setPage, openProvDetail, openEnrollModal }) {
