@@ -1,4 +1,4 @@
-import { Modal } from '../../components/ui/Modal.jsx'
+import { Modal, DrawerModal } from '../../components/ui/Modal.jsx'
 import { STAGES } from '../../constants/stages.js'
 
 export function EnrollModal({ db, enrollForm, setEnrollForm, editingId, handleSaveEnrollment, onClose, saving }) {

@@ -1,6 +1,8 @@
 import { Badge, ExpiryBadge, StageBadge } from '../../components/ui/Badge.jsx'
 import { Modal } from '../../components/ui/Modal.jsx'
 import { useState } from 'react'
+import { ProviderCommandCenter } from '../../components/WorkflowOverhaul'
+import OpcaUploadPanel from '../../components/OpcaUploadPanel'
 
 export function ProvDetailModal({ prov, db, onClose, editProvider, openEnrollModal, toast, syncFromNPPES }) {
   const [tab, setTab] = useState('profile')

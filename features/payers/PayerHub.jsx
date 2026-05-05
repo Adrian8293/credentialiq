@@ -3,6 +3,10 @@ import { useSorted } from '../../hooks/useSorted.js'
 import { Badge, StageBadge } from '../../components/ui/Badge.jsx'
 import { PAYER_REQUIREMENTS } from '../../constants/stages.js'
 import { PAYER_CATALOG } from '../../constants/payerRequirements.js'
+import { PayersTab } from './PayersTab.jsx'
+import { EnrollmentsTab } from '../enrollments/EnrollmentsTab.jsx'
+import { KanbanPipeline } from '../enrollments/KanbanPipeline.jsx'
+import { PayerRequirements } from './PayerRequirements.jsx'
 
 export function PayerHub({ db, initialTab, openEnrollModal, openPayerModal, search, setSearch, fStage, setFStage, fProv, setFProv, handleDeleteEnrollment, paySearch, setPaySearch, payFType, setPayFType, handleDeletePayer }) {
   const [tab, setTab] = useState(initialTab || 'directory')

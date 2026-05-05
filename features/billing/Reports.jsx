@@ -1,4 +1,6 @@
-import { daysUntil } from '../../lib/helpers.js'
+import { daysUntil, payName } from '../../lib/helpers.js'
+import { Badge, StageBadge } from '../../components/ui/Badge.jsx'
+import { STATUS_COLOR } from '../../constants/stages.js'
 
 export function Reports({ db, exportJSON }) {
   const stages = {}; db.enrollments.forEach(e => { stages[e.stage]=(stages[e.stage]||0)+1 })

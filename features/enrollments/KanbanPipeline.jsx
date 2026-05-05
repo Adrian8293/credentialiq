@@ -1,6 +1,7 @@
 import { StageBadge } from '../../components/ui/Badge.jsx'
 import { STAGES, KANBAN_COLUMNS } from '../../constants/stages.js'
 import { useState } from 'react'
+import EnrollmentKanban from '../../components/EnrollmentKanban'
 
 export function KanbanPipeline({ db, openEnrollModal }) {
   const [filterProv, setFilterProv] = useState('')

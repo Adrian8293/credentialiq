@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Modal } from '../../components/ui/Modal.jsx'
+import { Modal, DrawerModal } from '../../components/ui/Modal.jsx'
 import { PAYER_CATALOG } from '../../constants/payerRequirements.js'
 
 export function PayerModal({ payerForm, setPayerForm, editingId, handleSavePayer, onClose, saving }) {
