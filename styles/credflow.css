@@ -9,105 +9,121 @@
 
 /* ─── DESIGN TOKENS ──────────────────────────────────────────────────────────── */
 :root {
-  /* Brand */
-  --teal:       #00C9A7;
-  --teal-mid:   #00A88D;
-  --teal-dark:  #00876F;
-  --blue:       #3B82F6;
-  --blue-dark:  #2563EB;
+  /* Brand — unchanged in both themes */
+  --teal:       #009B82;        /* slightly deeper for contrast on light */
+  --teal-mid:   #007D6A;
+  --teal-dark:  #006657;
+  --blue:       #2563EB;
+  --blue-dark:  #1D4ED8;
 
-  /* Surface scale */
-  --navy:       #0B1628;
-  --navy-2:     #0F1E38;
-  --card:       #162038;
-  --elevated:   #1E2D4A;
-  --raised:     #243257;
+  /* Surface scale — light */
+  --navy:       #F8FAFC;        /* page background — very light slate */
+  --navy-2:     #F1F5F9;
+  --card:       #FFFFFF;        /* cards, sidebar, topbar */
+  --elevated:   #F1F5F9;        /* input backgrounds, table headers */
+  --raised:     #E9EFF5;        /* focused inputs, hover states */
 
-  /* Borders */
-  --border:     rgba(255,255,255,.07);
-  --border-mid: rgba(255,255,255,.12);
-  --border-hi:  rgba(255,255,255,.18);
+  /* Borders — light */
+  --border:     rgba(0,0,0,.07);
+  --border-mid: rgba(0,0,0,.12);
+  --border-hi:  rgba(0,0,0,.18);
 
-  /* Sidebar-specific legacy aliases (Sidebar.jsx compat) */
-  --navy-hover:    rgba(255,255,255,.05);
-  --navy-border:   rgba(255,255,255,.07);
-  --sidebar-text:  rgba(255,255,255,.52);
-  --sidebar-active:#ffffff;
-  --sidebar-accent:#00C9A7;
+  /* Sidebar legacy aliases */
+  --navy-hover:    rgba(0,0,0,.04);
+  --navy-border:   rgba(0,0,0,.07);
+  --sidebar-text:  rgba(0,0,0,.5);
+  --sidebar-active:#0F172A;
+  --sidebar-accent:#009B82;
 
-  /* Text */
-  --text-1:     #F1F5F9;
-  --text-2:     #94A3B8;
-  --text-3:     #64748B;
-  --text-4:     #475569;
-  --text-5:     #334155;
+  /* Text — light (inverted from dark) */
+  --text-1:     #0F172A;        /* headings, primary content */
+  --text-2:     #334155;        /* body text */
+  --text-3:     #64748B;        /* secondary / captions */
+  --text-4:     #94A3B8;        /* disabled, placeholders */
+  --text-5:     #CBD5E1;        /* very subtle */
 
   /* Legacy ink aliases */
-  --ink:        #F1F5F9;
-  --ink-2:      #CBD5E1;
-  --ink-3:      #94A3B8;
+  --ink:        #0F172A;
+  --ink-2:      #1E293B;
+  --ink-3:      #334155;
   --ink-4:      #64748B;
-  --ink-5:      #475569;
+  --ink-5:      #94A3B8;
 
-  /* Semantic */
-  --success:    #10B981;
-  --warning:    #F59E0B;
-  --danger:     #F43F5E;
-  --info:       #3B82F6;
+  /* Semantic colors — same in both themes */
+  --success:    #059669;
+  --warning:    #D97706;
+  --danger:     #E11D48;
+  --info:       #2563EB;
 
-  /* Legacy color aliases (components reference these) */
-  --primary:    #00C9A7;
-  --primary-h:  #00A88D;
-  --primary-l:  rgba(0,201,167,.08);
-  --primary-ll: rgba(0,201,167,.04);
-  --accent:     #00C9A7;
-  --accent-l:   rgba(0,201,167,.08);
-  --green:      #10B981;  --green-l:rgba(16,185,129,.1);  --green-b:rgba(16,185,129,.3);  --green-d:#059669;
-  --red:        #F43F5E;  --red-l:rgba(244,63,94,.1);     --red-b:rgba(244,63,94,.3);     --red-d:#E11D48;
-  --amber:      #F59E0B;  --amber-l:rgba(245,158,11,.1);  --amber-b:rgba(245,158,11,.3);  --amber-d:#D97706;
-  --teal-l:     rgba(0,201,167,.1); --teal-b:rgba(0,201,167,.3);
-  --purple:     #A78BFA;  --purple-l:rgba(167,139,250,.1);--purple-b:rgba(167,139,250,.3);
-  --gold:       #F59E0B;  --gold-l:rgba(245,158,11,.1);   --gold-b:rgba(245,158,11,.3);
-  --cyan:       #06B6D4;  --cyan-l:rgba(6,182,212,.1);    --cyan-b:rgba(6,182,212,.3);
-  --rose:       #F43F5E;  --rose-l:rgba(244,63,94,.1);    --rose-b:rgba(244,63,94,.3);
+  /* Legacy color aliases */
+  --primary:    #009B82;
+  --primary-h:  #007D6A;
+  --primary-l:  rgba(0,155,130,.08);
+  --primary-ll: rgba(0,155,130,.04);
+  --accent:     #009B82;
+  --accent-l:   rgba(0,155,130,.08);
+  --green:      #059669;  --green-l:rgba(5,150,105,.08);  --green-b:rgba(5,150,105,.25);  --green-d:#047857;
+  --red:        #E11D48;  --red-l:rgba(225,29,72,.08);    --red-b:rgba(225,29,72,.25);    --red-d:#BE123C;
+  --amber:      #D97706;  --amber-l:rgba(217,119,6,.08);  --amber-b:rgba(217,119,6,.25);  --amber-d:#B45309;
+  --teal-l:     rgba(0,155,130,.08); --teal-b:rgba(0,155,130,.25);
+  --purple:     #7C3AED;  --purple-l:rgba(124,58,237,.08);--purple-b:rgba(124,58,237,.25);
+  --gold:       #D97706;  --gold-l:rgba(217,119,6,.08);   --gold-b:rgba(217,119,6,.25);
+  --cyan:       #0891B2;  --cyan-l:rgba(8,145,178,.08);   --cyan-b:rgba(8,145,178,.25);
+  --rose:       #E11D48;  --rose-l:rgba(225,29,72,.08);   --rose-b:rgba(225,29,72,.25);
 
-  /* Legacy bg/surface (components reference these) */
+  /* Legacy bg/surface aliases */
   --bg:         var(--navy);
   --surface:    var(--card);
   --surface-2:  var(--elevated);
   --surface-3:  var(--raised);
-  --border-2:   rgba(255,255,255,.05);
-  --border-3:   rgba(255,255,255,.14);
+  --border-2:   rgba(0,0,0,.04);
+  --border-3:   rgba(0,0,0,.1);
 
-  /* Gradients */
-  --grad:         linear-gradient(90deg, #00C9A7, #3B82F6);
-  --grad-135:     linear-gradient(135deg, #00C9A7, #3B82F6);
-  --grad-vertical:linear-gradient(180deg, #162038 0%, #0B1628 100%);
+  /* Gradients — teal stays, just slightly adjusted */
+  --grad:         linear-gradient(90deg, #009B82, #2563EB);
+  --grad-135:     linear-gradient(135deg, #009B82, #2563EB);
+  --grad-vertical:linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 100%);
 
-  /* Shadows */
-  --shadow-xs:  0 1px 2px rgba(0,0,0,.4);
-  --shadow-sm:  0 1px 4px rgba(0,0,0,.45), 0 1px 2px rgba(0,0,0,.3);
-  --shadow:     0 4px 12px rgba(0,0,0,.4),  0 2px 4px rgba(0,0,0,.3);
-  --shadow-md:  0 8px 24px rgba(0,0,0,.45), 0 3px 8px rgba(0,0,0,.3);
-  --shadow-lg:  0 16px 40px rgba(0,0,0,.5), 0 6px 16px rgba(0,0,0,.3);
-  --shadow-xl:  0 24px 56px rgba(0,0,0,.55),0 8px 24px rgba(0,0,0,.35);
+  /* Shadows — lighter for light theme */
+  --shadow-xs:  0 1px 2px rgba(0,0,0,.06);
+  --shadow-sm:  0 1px 4px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+  --shadow:     0 4px 12px rgba(0,0,0,.1),  0 2px 4px rgba(0,0,0,.06);
+  --shadow-md:  0 8px 24px rgba(0,0,0,.12), 0 3px 8px rgba(0,0,0,.07);
+  --shadow-lg:  0 16px 40px rgba(0,0,0,.14),0 6px 16px rgba(0,0,0,.08);
+  --shadow-xl:  0 24px 56px rgba(0,0,0,.16),0 8px 24px rgba(0,0,0,.08);
 
-  /* Shape */
+  /* Shape, transitions, layout — identical */
   --r:     4px;
   --r-md:  8px;
   --r-lg:  12px;
   --r-xl:  16px;
   --r-2xl: 20px;
   --r-pill:999px;
-
-  /* Transitions */
   --t:      0.15s ease;
   --t-slow: 0.25s ease;
-
-  /* Layout */
   --sidebar-w: 248px;
   --topbar-h:  60px;
 }
+
+/* ── Two small overrides that reference colors not covered by tokens ────────── */
+
+/* Sidebar active item: border-left hover needs a dark-friendly color */
+.sb-item:hover { border-left-color: rgba(0,0,0,.08) !important; }
+
+/* Sidebar logo mark background */
+.sb-logo-icon {
+  background: rgba(0,155,130,.08) !important;
+  border-color: rgba(0,155,130,.18) !important;
+}
+
+/* KPI cards: teal icon bg on light */
+.kpi.kpi-teal   { --kpi-bg: rgba(0,155,130,.08);  }
+.kpi.kpi-blue   { --kpi-bg: rgba(37,99,235,.08);  }
+.kpi.kpi-red    { --kpi-bg: rgba(225,29,72,.08);   }
+.kpi.kpi-amber  { --kpi-bg: rgba(217,119,6,.08);   }
+.kpi.kpi-green  { --kpi-bg: rgba(5,150,105,.08);   }
+.kpi.kpi-purple { --kpi-bg: rgba(124,58,237,.08);  }
+.kpi.kpi-cyan   { --kpi-bg: rgba(8,145,178,.08);   }
 
 /* ─── RESET + BASE ───────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
