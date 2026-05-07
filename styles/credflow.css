@@ -413,3 +413,38 @@ tbody tr:hover td { color: var(--text-1); }
 /* ─── READINESS RING ────────────────────────────────────────────────────── */
 .readiness-ring-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
 .readiness-pct { position: absolute; font-size: 14px; font-weight: 700; color: var(--text-1); font-family: var(--fn); }
+
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+ 
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--elevated) 25%,
+    rgba(255,255,255,.04) 37%,
+    var(--elevated) 63%
+  );
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: var(--r);
+}
+ 
+.skeleton-text      { height: 12px; margin-bottom: 6px; }
+.skeleton-text.sm   { height: 10px; width: 60%; }
+.skeleton-text.lg   { height: 16px; }
+.skeleton-avatar    { width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0; }
+.skeleton-badge     { width: 60px; height: 20px; border-radius: var(--r-pill); }
+.skeleton-btn       { width: 80px; height: 28px; border-radius: var(--r); }
+.skeleton-kpi       { height: 80px; border-radius: var(--r-lg); }
+ 
+-- Provider table skeleton row
+.skeleton-table-row {
+  display: grid;
+  grid-template-columns: 32px 1fr 100px 80px 80px 100px;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}

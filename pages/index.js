@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { daysUntil, fmtDate, fmtTS, initials, pName, pNameShort, payName } from '../lib/helpers.js'
-import { Dashboard } from '../features/billing/Dashboard.jsx'
+
+// ─── PAGE IMPORTS ─────────────────────────────────────────────────────────────
+import { Dashboard } from '../features/billing/Dashboard.jsx'      // ← upgraded Dashboard
 import { Alerts } from '../features/billing/Alerts.jsx'
 import { Reports } from '../features/billing/Reports.jsx'
 import { Audit } from '../features/billing/Audit.jsx'
@@ -23,7 +25,7 @@ import { LicenseVerification } from '../features/providers/LicenseVerification.j
 import { PsychologyToday } from '../features/providers/PsychologyToday.jsx'
 import { Providers } from '../features/providers/index.jsx'
 import { NpiLookupPanel } from '../features/providers/NpiLookupPanel.jsx'
-import { AddProvider } from '../features/providers/AddProvider.jsx'
+import { AddProviderWizard } from '../features/providers/AddProviderWizard.jsx'  // ← NEW wizard
 import { NpiSyncModal } from '../features/providers/NpiSyncModal.jsx'
 import { ProvDetailModal } from '../features/providers/ProvDetailModal.jsx'
 import { ProviderLookup } from '../features/providers/ProviderLookup.jsx'
@@ -36,13 +38,14 @@ import { useAuth } from '../hooks/useAuth.js'
 import { useToast } from '../hooks/useToast.js'
 import { Modal, DrawerModal } from '../components/ui/Modal.jsx'
 import { Badge, ExpiryBadge, StageBadge } from '../components/ui/Badge.jsx'
-import { Sidebar } from '../components/ui/Sidebar.jsx'
+import { Sidebar } from '../components/ui/Sidebar.jsx'                // ← upgraded Sidebar
 import { Topbar } from '../components/ui/Topbar.jsx'
 import { ProvidersPage } from '../features/providers/ProvidersPage.jsx'
 import { DocumentsPage } from '../features/documents/DocumentsPage.jsx'
 import { MarketingPage } from '../features/marketing/MarketingPage.jsx'
 import { ApplicationsPage } from '../features/enrollments/ApplicationsPage.jsx'
 import { GlobalSearch } from '../components/GlobalSearch.jsx'
+import { AiFollowupModal } from '../components/AiFollowupModal.jsx'   // ← NEW AI modal
 import { STAGES, KANBAN_COLUMNS, PAYER_REQUIREMENTS, STAGE_COLOR, SPEC_COLORS, PRIORITY_COLOR, STATUS_COLOR, BADGE_CLASS } from '../constants/stages.js'
 import { DENIAL_CODES, AGING_BUCKETS, getAgingBucket } from '../constants/rcm.js'
 import { PAYER_CATALOG, REQUIRED_DOCS } from '../constants/payerRequirements.js'
@@ -98,15 +101,14 @@ const SAMPLE_PAYERS = [
   { name:'OHP / Medicaid (OHA)', payerId:'OROHP', type:'Medicaid', phone:'1-800-273-0557', email:'', portal:'https://www.oregon.gov/oha/hsd/ohp', timeline:'45–60 days', notes:'DMAP enrollment.' },
 ]
 
-
-// ─── SORT HOOK ────────────────────────────────────────────────────────────────
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
   const { user, authLoading, signOut } = useAuth()
   const [page, setPage] = useState('dashboard')
   const [db, setDb] = useState({ providers:[], payers:[], enrollments:[], documents:[], tasks:[], auditLog:[], settings:{} })
   const [loading, setLoading] = useState(true)
   const { toasts, toast } = useToast()
-  const [modal, setModal] = useState(null) // null | 'enroll' | 'payer' | 'doc' | 'task' | 'provDetail'
+  const [modal, setModal] = useState(null)
   const [editingId, setEditingId] = useState({})
   const [provDetailId, setProvDetailId] = useState(null)
   const [provDetailTab, setProvDetailTab] = useState('profile')
@@ -132,6 +134,16 @@ export default function App() {
   const [npiSyncModal, setNpiSyncModal] = useState(null)
   const [globalSearchOpen, setGlobalSearchOpen] = useState(false)
 
+  // ── NEW: AI Follow-up modal state ─────────────────────────────────────────
+  const [aiModalOpen, setAiModalOpen] = useState(false)
+  const [aiModalEnrollment, setAiModalEnrollment] = useState(null)
+
+  // Helper: open AI follow-up modal from any page
+  function openAiFollowup(enrollment) {
+    setAiModalEnrollment(enrollment)
+    setAiModalOpen(true)
+  }
+
   // ─── GLOBAL SEARCH SHORTCUT
   useEffect(() => {
     function onKey(e) {
@@ -139,7 +151,10 @@ export default function App() {
         e.preventDefault()
         setGlobalSearchOpen(o => !o)
       }
-      if (e.key === 'Escape') setGlobalSearchOpen(false)
+      if (e.key === 'Escape') {
+        setGlobalSearchOpen(false)
+        setAiModalOpen(false)
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -160,9 +175,6 @@ export default function App() {
   }, [user])
 
   // ─── REALTIME ────────────────────────────────────────────────────────────────
-  // Each table change merges directly into state — no full re-fetch.
-  // stateKey matches the db state object keys (e.g. 'providers', 'tasks').
-  // mappedRow is already transformed through the *FromDb mapper in db.js.
   useEffect(() => {
     if (!user) return
     const unsub = subscribeToAll((stateKey, mappedRow, eventType, oldId) => {
@@ -219,16 +231,13 @@ export default function App() {
   async function handleSaveProvider() {
     if (!provForm.fname?.trim() || !provForm.lname?.trim()) { toast('First and last name required.', 'error'); return }
 
-    // ── Duplicate detection (skip when editing an existing provider) ───────────
     if (!editingId.provider) {
       const fname = provForm.fname.trim().toLowerCase()
       const lname = provForm.lname.trim().toLowerCase()
       const npi   = provForm.npi?.trim()
 
       const duplicate = db.providers.find(p => {
-        // NPI match is definitive (NPIs are unique per provider)
         if (npi && p.npi && p.npi === npi) return true
-        // Name match as fallback (case-insensitive)
         const sameName = p.fname.trim().toLowerCase() === fname &&
                          p.lname.trim().toLowerCase() === lname
         return sameName
@@ -267,7 +276,7 @@ export default function App() {
       await deleteProvider(id)
       setDb(prev => ({
         ...prev,
-        providers: prev.providers.filter(x => x.id !== id),
+        providers: prev.enrollments.filter(x => x.id !== id),
         enrollments: prev.enrollments.filter(e => e.provId !== id),
         documents: prev.documents.filter(d => d.provId !== id),
         tasks: prev.tasks.filter(t => t.provId !== id),
@@ -427,16 +436,13 @@ export default function App() {
       const data = await res.json()
       if (!data.results?.length) { setNpiResult({ error: 'No provider found for this NPI.' }); return }
 
-      // ── Use npiMapper for richer, taxonomy-aware data ──────────────────────
       const { mapNpiResponse, npiCardToProviderDefaults } = await import('../lib/npiMapper')
       const card = mapNpiResponse(data)
       if (!card) { setNpiResult({ error: 'No provider found for this NPI.' }); return }
 
-      // addr string for the result box
       const addr = [card.address, card.city, card.state, card.zip].filter(Boolean).join(', ')
       setNpiResult({ ...card, addr, npi: npiInput })
 
-      // Pre-fill form with mapped defaults (only fills empty fields)
       const defaults = npiCardToProviderDefaults(card)
       setProvForm(f => ({
         ...f,
@@ -452,12 +458,7 @@ export default function App() {
     setNpiLoading(false)
   }
 
-  // ─── SYNC PROVIDER FROM NPPES ─────────────────────────────────────────────────
-  // Fetches fresh NPPES data for a provider by their stored NPI, diffs it
-  // against what's in CredFlow, and opens a confirmation modal showing exactly
-  // what will change before saving anything.
-  // npiSyncModal shape: { prov, diffs: [{field, label, npiValue, storedValue}], card }
-
+  // ─── SYNC FROM NPPES ─────────────────────────────────────────────────────────
   async function syncFromNPPES(provId) {
     const prov = db.providers.find(p => p.id === provId)
     if (!prov) return
@@ -471,10 +472,8 @@ export default function App() {
       const card = mapNpiResponse(data)
       if (!card) { toast('No NPPES record found for NPI ' + prov.npi, 'error'); return }
 
-      // Build diff — also include new fields not in diffNpiVsProvider's default list
       const baseDiffs = diffNpiVsProvider(card, prov)
 
-      // Pull specific identifiers from the NPPES identifiers array
       const npiIdentifiers = card.identifiers || []
       const findId = (...keywords) => {
         const match = npiIdentifiers.find(i =>
@@ -486,7 +485,6 @@ export default function App() {
       const nppesPtan     = findId('medicare', 'ptan', 'part b')
       const nppesCaqh     = findId('caqh')
 
-      // Extra fields to check that aren't in the base diff
       const EXTRA_FIELDS = [
         { field: 'phone',        label: 'Phone',                npiVal: card.phone },
         { field: 'license',      label: 'License #',            npiVal: card.license },
@@ -510,7 +508,6 @@ export default function App() {
         })
         .map(f => ({ field: f.field, label: f.label, npiValue: f.npiVal, storedValue: prov[f.field] }))
 
-      // Also detect new fields NPPES has that we don't
       const newFields = EXTRA_FIELDS
         .filter(f => {
           const nv = (f.npiVal || '').trim()
@@ -520,7 +517,6 @@ export default function App() {
         .map(f => ({ field: f.field, label: f.label, npiValue: f.npiVal, storedValue: '(empty)', isNew: true }))
 
       const allDiffs = [...baseDiffs, ...extraDiffs, ...newFields]
-        // dedupe by field
         .filter((d, i, arr) => arr.findIndex(x => x.field === d.field) === i)
 
       if (allDiffs.length === 0) {
@@ -652,19 +648,54 @@ export default function App() {
   // ─── RENDER ───────────────────────────────────────────────────────────────────
   const provDetail = provDetailId ? db.providers.find(x => x.id === provDetailId) : null
 
+  // Shared props for provider wizard
+  const providerWizardProps = {
+    db, provForm, setProvForm,
+    editingId, setEditingId,
+    npiInput, setNpiInput,
+    npiResult, setNpiResult,
+    npiLoading, lookupNPI,
+    handleSaveProvider,
+    handleDeleteProvider,
+    handlePhotoUpload,
+    handleDeletePhoto,
+    photoUploading,
+    setPage,
+    saving,
+  }
+
   return (
     <>
       <Head>
         <title>CredFlow — Credentialing. Simplified. Accelerated.</title>
-        {/* Fonts loaded globally via _app.js — Plus Jakarta Sans + Geist Mono */}
       </Head>
       <div className="app-root">
-        {/* ─── SIDEBAR ─── */}
-        <Sidebar page={page} setPage={setPage} alertCount={alertCount} expDocs={expDocs} user={user} signOut={signOut} />
+
+        {/* ─── SIDEBAR (upgraded: grouped nav + billing section) ─── */}
+        <Sidebar
+          page={page}
+          setPage={setPage}
+          alertCount={alertCount}
+          expDocs={expDocs}
+          user={user}
+          signOut={signOut}
+        />
 
         {/* ─── MAIN ─── */}
         <div className="main">
-          <Topbar page={page} setPage={setPage} openEnrollModal={openEnrollModal} openPayerModal={openPayerModal} openDocModal={openDocModal} openTaskModal={openTaskModal} exportJSON={exportJSON} saving={saving} onOpenSearch={()=>setGlobalSearchOpen(true)} alertCount={alertCount} user={user} signOut={signOut} />
+          <Topbar
+            page={page} setPage={setPage}
+            openEnrollModal={openEnrollModal}
+            openPayerModal={openPayerModal}
+            openDocModal={openDocModal}
+            openTaskModal={openTaskModal}
+            exportJSON={exportJSON}
+            saving={saving}
+            onOpenSearch={() => setGlobalSearchOpen(true)}
+            alertCount={alertCount}
+            user={user}
+            signOut={signOut}
+          />
 
           {loading ? (
             <div className="loading-screen">
@@ -673,83 +704,194 @@ export default function App() {
             </div>
           ) : (
             <div className="pages">
-              {/* ── 11 CORE PAGES ── */}
-              {page === 'dashboard'    && <WorkflowDashboard db={db} setPage={setPage} openEnrollModal={openEnrollModal} openProvDetail={openProvDetail} />}
 
-              {page === 'providers'    && <ProvidersPage
-                db={db}
-                provSearch={provSearch} setProvSearch={setProvSearch}
-                provFStatus={provFStatus} setProvFStatus={setProvFStatus}
-                provFSpec={provFSpec} setProvFSpec={setProvFSpec}
-                openProvDetail={openProvDetail} editProvider={editProvider}
-                setPage={setPage} setProvForm={setProvForm} setEditingId={setEditingId}
-                setNpiInput={setNpiInput} setNpiResult={setNpiResult}
-                syncFromNPPES={syncFromNPPES}
-                provForm={provForm} editingId={editingId}
-                npiInput={npiInput} npiResult={npiResult} npiLoading={npiLoading}
-                lookupNPI={lookupNPI} handleSaveProvider={handleSaveProvider}
-                handleDeleteProvider={handleDeleteProvider}
-                handlePhotoUpload={handlePhotoUpload} handleDeletePhoto={handleDeletePhoto}
-                photoUploading={photoUploading} saving={saving}
-              />}
+              {/* ── DASHBOARD (upgraded: SVG icons, AI insights, interactive donut) ── */}
+              {page === 'dashboard' && (
+                <Dashboard
+                  db={db}
+                  setPage={setPage}
+                  openEnrollModal={openEnrollModal}
+                  onDraftEmail={openAiFollowup}
+                />
+              )}
 
-              {page === 'applications' && <ApplicationsPage
-                db={db} openEnrollModal={openEnrollModal}
-                search={enrSearch} setSearch={setEnrSearch}
-                fStage={enrFStage} setFStage={setEnrFStage}
-                fProv={enrFProv} setFProv={setEnrFProv}
-                handleDeleteEnrollment={handleDeleteEnrollment}
-              />}
+              {/* ── PROVIDERS ── */}
+              {page === 'providers' && (
+                <ProvidersPage
+                  db={db}
+                  provSearch={provSearch} setProvSearch={setProvSearch}
+                  provFStatus={provFStatus} setProvFStatus={setProvFStatus}
+                  provFSpec={provFSpec} setProvFSpec={setProvFSpec}
+                  openProvDetail={openProvDetail} editProvider={editProvider}
+                  setPage={setPage} setProvForm={setProvForm} setEditingId={setEditingId}
+                  setNpiInput={setNpiInput} setNpiResult={setNpiResult}
+                  syncFromNPPES={syncFromNPPES}
+                  provForm={provForm} editingId={editingId}
+                  npiInput={npiInput} npiResult={npiResult} npiLoading={npiLoading}
+                  lookupNPI={lookupNPI} handleSaveProvider={handleSaveProvider}
+                  handleDeleteProvider={handleDeleteProvider}
+                  handlePhotoUpload={handlePhotoUpload} handleDeletePhoto={handleDeletePhoto}
+                  photoUploading={photoUploading} saving={saving}
+                />
+              )}
 
-              {page === 'payers'       && <PayerHub
-                db={db} initialTab="directory"
-                openEnrollModal={openEnrollModal} openPayerModal={openPayerModal}
-                search={enrSearch} setSearch={setEnrSearch}
-                fStage={enrFStage} setFStage={setEnrFStage}
-                fProv={enrFProv} setFProv={setEnrFProv}
-                handleDeleteEnrollment={handleDeleteEnrollment}
-                paySearch={paySearch} setPaySearch={setPaySearch}
-                payFType={payFType} setPayFType={setPayFType}
-                handleDeletePayer={handleDeletePayer}
-              />}
+              {/* ── ADD / EDIT PROVIDER (upgraded: 4-step wizard) ── */}
+              {page === 'add-provider' && (
+                <AddProviderWizard {...providerWizardProps} />
+              )}
 
-              {page === 'documents'    && <DocumentsPage
-                db={db}
-                docSearch={docSearch} setDocSearch={setDocSearch}
-                docFType={docFType} setDocFType={setDocFType}
-                docFStatus={docFStatus} setDocFStatus={setDocFStatus}
-                openDocModal={openDocModal} handleDeleteDocument={handleDeleteDocument}
-              />}
+              {/* ── APPLICATIONS / ENROLLMENTS ── */}
+              {page === 'applications' && (
+                <ApplicationsPage
+                  db={db}
+                  openEnrollModal={openEnrollModal}
+                  search={enrSearch} setSearch={setEnrSearch}
+                  fStage={enrFStage} setFStage={setEnrFStage}
+                  fProv={enrFProv} setFProv={setEnrFProv}
+                  handleDeleteEnrollment={handleDeleteEnrollment}
+                  onDraftEmail={openAiFollowup}
+                />
+              )}
 
-              {page === 'tasks'        && <WorkflowTasks db={db} openTaskModal={openTaskModal} handleMarkDone={handleMarkDone} handleDeleteTask={handleDeleteTask} />}
+              {/* ── PAYERS ── */}
+              {page === 'payers' && (
+                <PayerHub
+                  db={db} initialTab="directory"
+                  openEnrollModal={openEnrollModal} openPayerModal={openPayerModal}
+                  search={enrSearch} setSearch={setEnrSearch}
+                  fStage={enrFStage} setFStage={setEnrFStage}
+                  fProv={enrFProv} setFProv={setEnrFProv}
+                  handleDeleteEnrollment={handleDeleteEnrollment}
+                  paySearch={paySearch} setPaySearch={setPaySearch}
+                  payFType={payFType} setPayFType={setPayFType}
+                  handleDeletePayer={handleDeletePayer}
+                />
+              )}
 
-              {page === 'alerts'       && <Alerts db={db} />}
+              {/* ── DOCUMENTS ── */}
+              {page === 'documents' && (
+                <DocumentsPage
+                  db={db}
+                  docSearch={docSearch} setDocSearch={setDocSearch}
+                  docFType={docFType} setDocFType={setDocFType}
+                  docFStatus={docFStatus} setDocFStatus={setDocFStatus}
+                  openDocModal={openDocModal} handleDeleteDocument={handleDeleteDocument}
+                />
+              )}
 
-              {page === 'marketing'    && <MarketingPage db={db} setPage={setPage} editProvider={editProvider} />}
+              {/* ── TASKS ── */}
+              {page === 'tasks' && (
+                <WorkflowTasks
+                  db={db}
+                  openTaskModal={openTaskModal}
+                  handleMarkDone={handleMarkDone}
+                  handleDeleteTask={handleDeleteTask}
+                />
+              )}
 
-              {page === 'reports'      && <Reports db={db} exportJSON={exportJSON} />}
+              {/* ── ALERTS ── */}
+              {page === 'alerts' && <Alerts db={db} />}
 
-              {page === 'audit'        && <Audit db={db} search={auditSearch} setSearch={setAuditSearch} fType={auditFType} setFType={setAuditFType} handleClearAudit={handleClearAudit} />}
+              {/* ── BILLING SECTION (these were built but unreachable — now wired) ── */}
+              {page === 'claims'      && <ClaimsPage db={db} toast={toast} />}
+              {page === 'eligibility' && <EligibilityPage db={db} toast={toast} />}
+              {page === 'denials'     && <DenialLog db={db} toast={toast} onDraftAppeal={openAiFollowup} />}
+              {page === 'revenue'     && <RevenueAnalytics db={db} />}
 
-              {page === 'settings'     && <Settings settingsForm={settingsForm} setSettingsForm={setSettingsForm} handleSaveSettings={handleSaveSettings} exportJSON={exportJSON} />}
+              {/* ── ADMIN SECTION ── */}
+              {page === 'marketing'   && <MarketingPage db={db} setPage={setPage} editProvider={editProvider} />}
+              {page === 'reports'     && <Reports db={db} exportJSON={exportJSON} />}
+              {page === 'audit'       && <Audit db={db} search={auditSearch} setSearch={setAuditSearch} fType={auditFType} setFType={setAuditFType} handleClearAudit={handleClearAudit} />}
+              {page === 'settings'    && <Settings settingsForm={settingsForm} setSettingsForm={setSettingsForm} handleSaveSettings={handleSaveSettings} exportJSON={exportJSON} />}
 
-              {/* ── Legacy page aliases — keep working if navigated to directly ── */}
-              {page === 'add-provider' && <AddProvider db={db} provForm={provForm} setProvForm={setProvForm} editingId={editingId} setEditingId={setEditingId} npiInput={npiInput} setNpiInput={setNpiInput} npiResult={npiResult} setNpiResult={setNpiResult} npiLoading={npiLoading} lookupNPI={lookupNPI} handleSaveProvider={handleSaveProvider} handleDeleteProvider={handleDeleteProvider} handlePhotoUpload={handlePhotoUpload} handleDeletePhoto={handleDeletePhoto} photoUploading={photoUploading} setPage={setPage} saving={saving} />}
             </div>
           )}
         </div>
 
         {/* ─── MODALS ─── */}
-        {modal === 'enroll' && <EnrollModal db={db} enrollForm={enrollForm} setEnrollForm={setEnrollForm} editingId={editingId} handleSaveEnrollment={handleSaveEnrollment} onClose={()=>{setModal(null);setEnrollForm({});setEditingId(e=>({...e,enrollment:null}))}} saving={saving} />}
-        {modal === 'payer' && <PayerModal payerForm={payerForm} setPayerForm={setPayerForm} editingId={editingId} handleSavePayer={handleSavePayer} onClose={()=>{setModal(null);setPayerForm({});setEditingId(e=>({...e,payer:null}))}} saving={saving} />}
-        {modal === 'doc' && <DocModal db={db} docForm={docForm} setDocForm={setDocForm} editingId={editingId} handleSaveDocument={handleSaveDocument} onClose={()=>{setModal(null);setDocForm({});setEditingId(e=>({...e,doc:null}))}} saving={saving} />}
-        {modal === 'task' && <TaskModal db={db} taskForm={taskForm} setTaskForm={setTaskForm} editingId={editingId} handleSaveTask={handleSaveTask} onClose={()=>{setModal(null);setTaskForm({});setEditingId(e=>({...e,task:null}))}} saving={saving} />}
-        {modal === 'provDetail' && provDetail && <ProvDetailModal prov={provDetail} db={db} onClose={()=>setModal(null)} editProvider={editProvider} openEnrollModal={openEnrollModal} toast={toast} syncFromNPPES={syncFromNPPES} />}
-        {npiSyncModal && <NpiSyncModal data={npiSyncModal} onApply={applyNpiSync} onClose={()=>setNpiSyncModal(null)} saving={saving} />}
+        {modal === 'enroll' && (
+          <EnrollModal
+            db={db}
+            enrollForm={enrollForm} setEnrollForm={setEnrollForm}
+            editingId={editingId}
+            handleSaveEnrollment={handleSaveEnrollment}
+            onClose={() => { setModal(null); setEnrollForm({}); setEditingId(e => ({ ...e, enrollment: null })) }}
+            saving={saving}
+          />
+        )}
+        {modal === 'payer' && (
+          <PayerModal
+            payerForm={payerForm} setPayerForm={setPayerForm}
+            editingId={editingId}
+            handleSavePayer={handleSavePayer}
+            onClose={() => { setModal(null); setPayerForm({}); setEditingId(e => ({ ...e, payer: null })) }}
+            saving={saving}
+          />
+        )}
+        {modal === 'doc' && (
+          <DocModal
+            db={db}
+            docForm={docForm} setDocForm={setDocForm}
+            editingId={editingId}
+            handleSaveDocument={handleSaveDocument}
+            onClose={() => { setModal(null); setDocForm({}); setEditingId(e => ({ ...e, doc: null })) }}
+            saving={saving}
+          />
+        )}
+        {modal === 'task' && (
+          <TaskModal
+            db={db}
+            taskForm={taskForm} setTaskForm={setTaskForm}
+            editingId={editingId}
+            handleSaveTask={handleSaveTask}
+            onClose={() => { setModal(null); setTaskForm({}); setEditingId(e => ({ ...e, task: null })) }}
+            saving={saving}
+          />
+        )}
+        {modal === 'provDetail' && provDetail && (
+          <ProvDetailModal
+            prov={provDetail} db={db}
+            onClose={() => setModal(null)}
+            editProvider={editProvider}
+            openEnrollModal={openEnrollModal}
+            toast={toast}
+            syncFromNPPES={syncFromNPPES}
+          />
+        )}
+        {npiSyncModal && (
+          <NpiSyncModal
+            data={npiSyncModal}
+            onApply={applyNpiSync}
+            onClose={() => setNpiSyncModal(null)}
+            saving={saving}
+          />
+        )}
+
+        {/* ─── AI FOLLOW-UP MODAL (new) ─── */}
+        {aiModalOpen && aiModalEnrollment && (
+          <AiFollowupModal
+            enrollment={aiModalEnrollment}
+            provider={db.providers.find(p => p.id === aiModalEnrollment.provId) || {}}
+            payer={db.payers.find(p => p.id === aiModalEnrollment.payId) || {}}
+            onClose={() => {
+              setAiModalOpen(false)
+              setAiModalEnrollment(null)
+            }}
+          />
+        )}
+
+        {/* ─── GLOBAL SEARCH ─── */}
+        {globalSearchOpen && (
+          <GlobalSearch
+            db={db}
+            onClose={() => setGlobalSearchOpen(false)}
+            setPage={setPage}
+            openProvDetail={openProvDetail}
+            openEnrollModal={openEnrollModal}
+          />
+        )}
 
         {/* ─── TOASTS ─── */}
-        {globalSearchOpen && <GlobalSearch db={db} onClose={()=>setGlobalSearchOpen(false)} setPage={setPage} openProvDetail={openProvDetail} openEnrollModal={openEnrollModal} />}
-
         <div className="toast-wrap">
           {toasts.map(t => (
             <div key={t.id} className={`toast t-${t.type}`}>
@@ -758,6 +900,7 @@ export default function App() {
             </div>
           ))}
         </div>
+
       </div>
     </>
   )
@@ -766,4 +909,3 @@ export default function App() {
 // ═══════════════════════════════════════════════════════════════════════════════
 // COMPONENTS
 // ═══════════════════════════════════════════════════════════════════════════════
-
