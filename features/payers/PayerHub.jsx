@@ -21,19 +21,11 @@ export function PayerHub({ db, initialTab, openEnrollModal, openPayerModal, sear
   return (
     <div className="page" style={{paddingTop:0}}>
       {/* Tab bar */}
-      <div style={{display:'flex',gap:4,marginBottom:22,background:'var(--surface-2)',border:'1px solid var(--border)',borderRadius:'var(--r-xl)',padding:5,position:'sticky',top:60,zIndex:50,backdropFilter:'blur(8px)'}}>
+      <div className="tab-pills">
         {TABS.map(t => (
           <button key={t.id}
+            className={`tab-pill${tab === t.id ? ' active' : ''}`}
             onClick={() => setTab(t.id)}
-            style={{
-              flex:1, padding:'9px 14px', border:'none', borderRadius:'var(--r-lg)', cursor:'pointer',
-              fontSize:13, fontWeight: tab===t.id ? 600 : 400,
-              background: tab===t.id ? 'var(--surface)' : 'transparent',
-              color: tab===t.id ? 'var(--primary)' : 'var(--ink-3)',
-              boxShadow: tab===t.id ? 'var(--shadow-sm)' : 'none',
-              transition:'all var(--t)',
-              borderTop: tab===t.id ? '2px solid var(--primary)' : '2px solid transparent',
-            }}
           >{t.label}</button>
         ))}
       </div>

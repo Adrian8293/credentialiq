@@ -103,7 +103,7 @@ export default function Login() {
     <>
       <Head>
         <title>PrimeCredential — {mode === 'login' ? 'Sign In' : mode === 'signup' ? 'Create Account' : 'Reset Password'}</title>
-        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
         <style dangerouslySetInnerHTML={{ __html: LOGIN_CSS }} />
       </Head>
 
@@ -381,7 +381,7 @@ const EyeOffIcon = () => <svg width="15" height="15" viewBox="0 0 24 24" fill="n
 const LOGIN_CSS = `
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;}
-body{font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;background:#0B1628;color:#F1F5F9;font-size:14px;}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;background:#0B1628;color:#F1F5F9;font-size:14px;}
 button{font-family:inherit;cursor:pointer;border:none;background:none;}
 input{font-family:inherit;}
 
@@ -440,7 +440,7 @@ input{font-family:inherit;}
 .pc-input-wrap input{
   width:100%;padding:10px 40px 10px 38px;
   border:1px solid rgba(255,255,255,.07);border-radius:8px;
-  font-family:'DM Sans',sans-serif;font-size:13.5px;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:13.5px;
   color:#F1F5F9;background:#1E2D4A;outline:none;
   transition:border-color .15s,box-shadow .15s,background .15s;
 }
@@ -489,7 +489,7 @@ input{font-family:inherit;}
   padding:12px 20px;width:100%;
   background:linear-gradient(90deg,#00C9A7,#3B82F6);
   color:#fff;border:none;border-radius:8px;
-  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;
+  font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;
   transition:opacity .15s,transform .15s;
   box-shadow:0 3px 14px rgba(0,201,167,.3);
   margin-top:2px;cursor:pointer;

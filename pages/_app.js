@@ -6,7 +6,7 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        {/* DM Sans: 300 (light) + 600 (semibold) = the "Prime/Credential" weight tension */}
+        {/* Plus Jakarta Sans + Geist Mono — PrimeCredential design system v2 */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

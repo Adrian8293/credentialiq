@@ -652,7 +652,7 @@ export default function App() {
     <>
       <Head>
         <title>CredFlow — Credentialing. Simplified. Accelerated.</title>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+        {/* Fonts loaded globally via _app.js — Plus Jakarta Sans + Geist Mono */}
       </Head>
       <div className="app-root">
         {/* ─── SIDEBAR ─── */}
