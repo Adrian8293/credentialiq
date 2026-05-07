@@ -1,4 +1,4 @@
-import { daysUntil, pName, payName } from '../../lib/helpers.js'
+import { daysUntil, pName, pNameShort, payName } from '../../lib/helpers.js'
 import { useState } from 'react'
 import { fmtMoney } from "../../constants/rcm.js"
 

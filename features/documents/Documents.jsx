@@ -1,5 +1,5 @@
 import { useSorted } from '../../hooks/useSorted.js'
-import { daysUntil, fmtDate, pName } from '../../lib/helpers.js'
+import { daysUntil, fmtDate, pName, pNameShort } from '../../lib/helpers.js'
 import { Badge, ExpiryBadge } from '../../components/ui/Badge.jsx'
 
 export function Documents({ db, search, setSearch, fType, setFType, fStatus, setFStatus, openDocModal, handleDeleteDocument }) {

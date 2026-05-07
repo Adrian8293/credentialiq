@@ -1,6 +1,7 @@
 import { useSorted } from '../../hooks/useSorted.js'
-import { daysUntil, fmtDate, pName, payName } from '../../lib/helpers.js'
+import { daysUntil, fmtDate, pName, pNameShort, payName } from '../../lib/helpers.js'
 import { Badge } from '../../components/ui/Badge.jsx'
+import { PRIORITY_COLOR, STATUS_COLOR } from '../../constants/stages.js'
 
 export function Workflows({ db, search, setSearch, fPriority, setFPriority, fStatus, setFStatus, openTaskModal, handleMarkDone, handleDeleteTask }) {
   const rawTasks = db.tasks.filter(t => {

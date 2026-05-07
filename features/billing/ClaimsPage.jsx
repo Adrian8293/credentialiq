@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { daysUntil, fmtDate, pName, payName } from '../../lib/helpers.js'
+import { daysUntil, fmtDate, pName, pNameShort, payName } from '../../lib/helpers.js'
 import { Badge } from '../../components/ui/Badge.jsx'
 import { Modal } from '../../components/ui/Modal.jsx'
 import { AGING_BUCKETS, getAgingBucket, fmtMoney } from "../../constants/rcm.js"
