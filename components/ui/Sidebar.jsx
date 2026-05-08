@@ -42,6 +42,8 @@ const I = {
   reports:     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
   audit:       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
   settings:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M5.34 18.66l-1.41 1.41M20.49 12H22M2 12h1.51M19.07 19.07l-1.41-1.41M5.34 5.34L3.93 3.93M12 20.49V22M12 2v1.51"/></svg>,
+  analytics:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>,
+  recredentialing: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>,
   chevron:     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>,
   collapse:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>,
   expand:      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>,
@@ -49,17 +51,18 @@ const I = {
 
 // ─── NAV ITEMS (flat, no categories) ─────────────────────────────────────────
 const NAV_ITEMS = [
-  { pg: 'dashboard',    label: 'Dashboard' },
-  { pg: 'providers',    label: 'Providers' },
-  { pg: 'applications', label: 'Applications' },
-  { pg: 'payers',       label: 'Payers' },
-  { pg: 'documents',    label: 'Documents',   badgeKey: 'expDocs', badgeCls: 'amber' },
-  { pg: 'tasks',        label: 'Tasks' },
-  { pg: 'alerts',       label: 'Alerts',      badgeKey: 'alerts' },
-  { pg: 'claims',       label: 'Claims' },
-  { pg: 'reports',      label: 'Reports' },
-  { pg: 'audit',        label: 'Audit Trail' },
-  { pg: 'settings',     label: 'Settings' },
+  { pg: 'dashboard',       label: 'Dashboard' },
+  { pg: 'analytics',       label: 'Analytics' },
+  { pg: 'providers',       label: 'Providers' },
+  { pg: 'applications',    label: 'Applications' },
+  { pg: 'recredentialing', label: 'Recredentialing', badgeKey: 'recred', badgeCls: 'amber' },
+  { pg: 'payers',          label: 'Payers' },
+  { pg: 'documents',       label: 'Documents',   badgeKey: 'expDocs', badgeCls: 'amber' },
+  { pg: 'tasks',           label: 'Tasks' },
+  { pg: 'alerts',          label: 'Alerts',      badgeKey: 'alerts' },
+  { pg: 'reports',         label: 'Reports' },
+  { pg: 'audit',           label: 'Audit Trail' },
+  { pg: 'settings',        label: 'Settings' },
 ]
 
 // ─── COMPONENT ───────────────────────────────────────────────────────────────

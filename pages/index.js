@@ -45,6 +45,11 @@ import { MarketingPage } from '../features/marketing/MarketingPage.jsx'
 import { ApplicationsPage } from '../features/enrollments/ApplicationsPage.jsx'
 import { GlobalSearch } from '../components/GlobalSearch.jsx'
 import { AiFollowupModal } from '../components/AiFollowupModal.jsx'   // ← NEW AI modal
+import { AiCredentialingAssistant } from '../components/AiCredentialingAssistant.jsx'
+import { DocumentUpload } from '../components/DocumentUpload.jsx'
+import { PayerPacketGenerator } from '../components/PayerPacketGenerator.jsx'
+import { RecredentialingCenter } from '../components/RecredentialingCenter.jsx'
+import { AnalyticsDashboard } from '../components/AnalyticsDashboard.jsx'
 import { STAGES, KANBAN_COLUMNS, PAYER_REQUIREMENTS, STAGE_COLOR, SPEC_COLORS, PRIORITY_COLOR, STATUS_COLOR, BADGE_CLASS } from '../constants/stages.js'
 import { DENIAL_CODES, AGING_BUCKETS, getAgingBucket } from '../constants/rcm.js'
 import { PAYER_CATALOG, REQUIRED_DOCS } from '../constants/payerRequirements.js'
@@ -136,11 +141,22 @@ export default function App() {
   // ── NEW: AI Follow-up modal state ─────────────────────────────────────────
   const [aiModalOpen, setAiModalOpen] = useState(false)
   const [aiModalEnrollment, setAiModalEnrollment] = useState(null)
+  const [aiAssistantOpen, setAiAssistantOpen] = useState(false)
+  const [docUploadOpen, setDocUploadOpen] = useState(false)
+  const [docUploadProvider, setDocUploadProvider] = useState(null)
+  const [docUploadType, setDocUploadType] = useState(null)
 
   // Helper: open AI follow-up modal from any page
   function openAiFollowup(enrollment) {
     setAiModalEnrollment(enrollment)
     setAiModalOpen(true)
+  }
+
+  // Helper: open document upload modal
+  function openDocUpload(providerId, docType) {
+    setDocUploadProvider(providerId)
+    setDocUploadType(docType)
+    setDocUploadOpen(true)
   }
 
   // ─── GLOBAL SEARCH SHORTCUT
@@ -150,9 +166,15 @@ export default function App() {
         e.preventDefault()
         setGlobalSearchOpen(o => !o)
       }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
+        e.preventDefault()
+        setAiAssistantOpen(o => !o)
+      }
       if (e.key === 'Escape') {
         setGlobalSearchOpen(false)
         setAiModalOpen(false)
+        setAiAssistantOpen(false)
+        setDocUploadOpen(false)
       }
     }
     window.addEventListener('keydown', onKey)
@@ -928,6 +950,45 @@ export default function App() {
               setAiModalEnrollment(null)
             }}
           />
+        )}
+
+        {/* ─── AI CREDENTIALING ASSISTANT ─── */}
+        <AiCredentialingAssistant
+          db={db}
+          isOpen={aiAssistantOpen}
+          onClose={() => setAiAssistantOpen(false)}
+        />
+
+        {/* ─── DOCUMENT UPLOAD MODAL ─── */}
+        {docUploadOpen && (
+          <div
+            style={{ position: 'fixed', inset: 0, zIndex: 900, background: 'rgba(0,0,0,.45)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            onClick={(e) => e.target === e.currentTarget && setDocUploadOpen(false)}
+          >
+            <div style={{ maxWidth: 500, width: '100%', margin: '0 16px' }}>
+              <DocumentUpload
+                providerId={docUploadProvider}
+                providerName={docUploadProvider ? pName(db.providers, docUploadProvider) : null}
+                docType={docUploadType}
+                onUploadComplete={async (result) => {
+                  // Save document reference to database
+                  const prov = db.providers.find(p => p.id === docUploadProvider)
+                  const saved = await upsertDocument({
+                    provId: docUploadProvider,
+                    type: result.category || 'Other',
+                    issuer: result.filename,
+                    notes: `File: ${result.url}`,
+                    exp: null,
+                    fileUrl: result.url,
+                  }, prov ? `${prov.fname} ${prov.lname}` : 'Unknown')
+                  setDb(prev => ({ ...prev, documents: [...prev.documents, saved] }))
+                  toast('Document uploaded successfully!', 'success')
+                  setDocUploadOpen(false)
+                }}
+                onCancel={() => setDocUploadOpen(false)}
+              />
+            </div>
+          </div>
         )}
 
         {/* ─── GLOBAL SEARCH ─── */}
