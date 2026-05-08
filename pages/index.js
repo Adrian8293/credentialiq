@@ -317,6 +317,31 @@ export default function App() {
     } catch(err) { toast(err.message, 'error') }
   }
 
+  // ─── KANBAN DRAG-DROP STAGE CHANGE ───────────────────────────────────────────
+  // Called by EnrollmentKanban (in both ProvidersPage kanban and ApplicationsPage kanban)
+  // when a card is dragged to a new column. Persists the stage change to Supabase.
+  async function handleStageChange(enrollmentId, newStage) {
+    const enr = db.enrollments.find(e => e.id === enrollmentId)
+    if (!enr) return
+    try {
+      const prov = db.providers.find(p => p.id === enr.provId)
+      const payer = db.payers.find(p => p.id === enr.payId)
+      const provName = prov ? `${prov.fname} ${prov.lname}` : ''
+      const payerName = payer?.name || ''
+      const updated = { ...enr, stage: newStage }
+      const saved = await upsertEnrollment(updated, provName, payerName)
+      setDb(prev => ({
+        ...prev,
+        enrollments: prev.enrollments.map(e => e.id === saved.id ? saved : e)
+      }))
+      toast(`Moved to ${newStage}`, 'success')
+    } catch(err) {
+      toast('Stage update failed: ' + err.message, 'error')
+      // Revert optimistic update by reloading — EnrollmentKanban's local state
+      // will resync on next render since it watches the enrollments prop
+    }
+  }
+
   // ─── SAVE PAYER ───────────────────────────────────────────────────────────────
   async function handleSavePayer() {
     if (!payerForm.name?.trim()) { toast('Payer name required.', 'error'); return }
@@ -732,6 +757,8 @@ export default function App() {
                   handleDeleteProvider={handleDeleteProvider}
                   handlePhotoUpload={handlePhotoUpload} handleDeletePhoto={handleDeletePhoto}
                   photoUploading={photoUploading} saving={saving}
+                  onStageChange={handleStageChange}
+                  openEnrollModal={openEnrollModal}
                 />
               )}
 
@@ -750,6 +777,7 @@ export default function App() {
                   fProv={enrFProv} setFProv={setEnrFProv}
                   handleDeleteEnrollment={handleDeleteEnrollment}
                   onDraftEmail={openAiFollowup}
+                  onStageChange={handleStageChange}
                 />
               )}
 
