@@ -56,7 +56,7 @@ export default function ReviewPage() {
   return (
     <>
       <Head>
-        <title>{provider.fname} {provider.lname} — OPCA Review | CredFlow</title>
+        <title>{provider.fname} {provider.lname} — OPCA Review | PrimeCredential</title>
       </Head>
       <OpcaReviewPanel
         provider={provider}

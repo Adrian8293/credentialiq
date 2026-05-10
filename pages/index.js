@@ -11,14 +11,12 @@ import { usePayerActions } from '../hooks/usePayerActions.js'
 import { useDocumentActions } from '../hooks/useDocumentActions.js'
 import { useTaskActions } from '../hooks/useTaskActions.js'
 
-// ─── UI ───────────────────────────────────────────────────────────────────────
 import { Modal } from '../components/ui/Modal.jsx'
 import { Sidebar } from '../components/ui/Sidebar.jsx'
 import { Topbar } from '../components/ui/Topbar.jsx'
 import { GlobalSearch } from '../components/GlobalSearch.jsx'
 import { AiFollowupModal } from '../components/AiFollowupModal.jsx'
 
-// ─── MODALS ───────────────────────────────────────────────────────────────────
 import { EnrollModal } from '../features/enrollments/EnrollModal.jsx'
 import { PayerModal } from '../features/payers/PayerModal.jsx'
 import { DocModal } from '../features/documents/DocModal.jsx'
@@ -27,7 +25,6 @@ import { ProvDetailModal } from '../features/providers/ProvDetailModal.jsx'
 import { NpiSyncModal } from '../features/providers/NpiSyncModal.jsx'
 import { AddProviderWizard } from '../features/providers/AddProviderWizard.jsx'
 
-// ─── PAGES ────────────────────────────────────────────────────────────────────
 import { Dashboard } from '../features/billing/Dashboard.jsx'
 import { Alerts } from '../features/billing/Alerts.jsx'
 import { Reports } from '../features/billing/Reports.jsx'
@@ -44,10 +41,8 @@ import { ApplicationsPage } from '../features/enrollments/ApplicationsPage.jsx'
 import { MarketingPage } from '../features/marketing/MarketingPage.jsx'
 import { WorkflowTasks } from '../components/WorkflowOverhaul'
 
-// ─── DB ───────────────────────────────────────────────────────────────────────
 import { clearAuditLog as clearAuditLogDB, saveSettings as saveSettingsDB, loadAll, upsertProvider, upsertPayer } from '../lib/db'
 
-// ─── SAMPLE DATA (dev only) ───────────────────────────────────────────────────
 const CAN_LOAD_SAMPLE_DATA = process.env.NODE_ENV !== 'production'
 const d = n => { const x=new Date(); x.setDate(x.getDate()+n); return x.toISOString().split('T')[0] }
 const p = n => { const x=new Date(); x.setDate(x.getDate()-n); return x.toISOString().split('T')[0] }
@@ -64,7 +59,6 @@ const SAMPLE_PAYERS = [
   { name:'OHP / Medicaid (OHA)', payerId:'OROHP', type:'Medicaid', phone:'1-800-273-0557', email:'', portal:'https://www.oregon.gov/oha/hsd/ohp', timeline:'45–60 days', notes:'DMAP enrollment.' },
 ]
 
-// ─── APP ──────────────────────────────────────────────────────────────────────
 export default function App() {
   const { user, authLoading, signOut } = useAuth()
   const { toasts, toast } = useToast()
@@ -77,7 +71,6 @@ export default function App() {
   const documents  = useDocumentActions({ db, setDb, toast, requestConfirm })
   const tasks      = useTaskActions({ db, setDb, toast, requestConfirm })
 
-  // ─── UI STATE ──────────────────────────────────────────────────────────────
   const [page, setPage]                   = useState('dashboard')
   const [modal, setModal]                 = useState(null)
   const [provDetailId, setProvDetailId]   = useState(null)
@@ -85,14 +78,12 @@ export default function App() {
   const [aiModalOpen, setAiModalOpen]     = useState(false)
   const [aiModalEnrollment, setAiModalEnrollment] = useState(null)
 
-  // Filter states
   const [provSearch, setProvSearch] = useState(''); const [provFStatus, setProvFStatus] = useState(''); const [provFSpec, setProvFSpec] = useState('')
   const [enrSearch, setEnrSearch]   = useState(''); const [enrFStage, setEnrFStage]     = useState(''); const [enrFProv, setEnrFProv]   = useState('')
   const [paySearch, setPaySearch]   = useState(''); const [payFType, setPayFType]       = useState('')
   const [docSearch, setDocSearch]   = useState(''); const [docFType, setDocFType]       = useState(''); const [docFStatus, setDocFStatus] = useState('')
   const [auditSearch, setAuditSearch] = useState(''); const [auditFType, setAuditFType] = useState('')
 
-  // ─── KEYBOARD SHORTCUTS ────────────────────────────────────────────────────
   useEffect(() => {
     function onKey(e) {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setGlobalSearchOpen(o => !o) }
@@ -102,10 +93,10 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  // ─── AUTH GUARD ────────────────────────────────────────────────────────────
   if (authLoading) return (
-    <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Poppins,sans-serif', color:'#5a6e5a' }}>
-      Loading…
+    <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Inter,sans-serif', color:'#6B7280', flexDirection:'column', gap:12 }}>
+      <div style={{ width:36,height:36,border:'3px solid #E5E7EB',borderTopColor:'#1E56F0',borderRadius:'50%',animation:'spin .65s linear infinite' }} />
+      <span style={{ fontSize:13 }}>Loading PrimeCredential…</span>
     </div>
   )
   if (!user) {
@@ -113,7 +104,6 @@ export default function App() {
     return null
   }
 
-  // ─── COMPUTED ──────────────────────────────────────────────────────────────
   const alertDays   = db.settings.alertDays || 90
   const alertCount  = db.providers.reduce((n, prov) => {
     ;['licenseExp','malExp','deaExp','caqhDue','recred'].forEach(f => { const days=daysUntil(prov[f]); if(days!==null && days<=alertDays) n++ })
@@ -122,34 +112,19 @@ export default function App() {
   const expDocs     = db.documents.filter(d => { const days=daysUntil(d.exp); return days!==null && days<=90 }).length
   const provDetail  = provDetailId ? db.providers.find(x => x.id === provDetailId) : null
 
-  // ─── MODAL OPENERS ─────────────────────────────────────────────────────────
   function openProvDetail(id) { setProvDetailId(id); setModal('provDetail') }
   function openAiFollowup(enrollment) { setAiModalEnrollment(enrollment); setAiModalOpen(true) }
 
-  function openEnrollModal(id, preProvId) {
-    enrollments.openEnrollModal(id, preProvId)
-    setModal('enroll')
-  }
-  function openPayerModal(id) {
-    payers.openPayerModal(id)
-    setModal('payer')
-  }
-  function openDocModal(id) {
-    documents.openDocModal(id)
-    setModal('doc')
-  }
-  function openTaskModal(id) {
-    tasks.openTaskModal(id)
-    setModal('task')
-  }
+  function openEnrollModal(id, preProvId) { enrollments.openEnrollModal(id, preProvId); setModal('enroll') }
+  function openPayerModal(id) { payers.openPayerModal(id); setModal('payer') }
+  function openDocModal(id) { documents.openDocModal(id); setModal('doc') }
+  function openTaskModal(id) { tasks.openTaskModal(id); setModal('task') }
 
-  // Wrap enroll/payer/doc/task saves so they close the shared modal
   async function handleSaveEnrollment() { await enrollments.handleSaveEnrollment(); setModal(null) }
   async function handleSavePayer()      { await payers.handleSavePayer();           setModal(null) }
   async function handleSaveDocument()   { await documents.handleSaveDocument();     setModal(null) }
   async function handleSaveTask()       { await tasks.handleSaveTask();             setModal(null) }
 
-  // ─── SETTINGS & AUDIT ──────────────────────────────────────────────────────
   async function handleSaveSettings() {
     try {
       await saveSettingsDB(settingsForm)
@@ -172,17 +147,15 @@ export default function App() {
     } catch(err) { toast(err.message, 'error') }
   }
 
-  // ─── EXPORT ────────────────────────────────────────────────────────────────
   function exportJSON() {
     const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' })
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
-    a.download = `credflow-backup-${new Date().toISOString().split('T')[0]}.json`
+    a.download = `primecredential-backup-${new Date().toISOString().split('T')[0]}.json`
     a.click()
     toast('Backup exported!', 'success')
   }
 
-  // ─── SAMPLE DATA ───────────────────────────────────────────────────────────
   async function loadSampleData() {
     if (!CAN_LOAD_SAMPLE_DATA) { toast('Sample data is disabled in production.', 'error'); return }
     if (!(await requestConfirm({
@@ -201,7 +174,6 @@ export default function App() {
     } catch(err) { toast('Error loading sample data: ' + err.message, 'error') }
   }
 
-  // ─── SHARED PROPS ──────────────────────────────────────────────────────────
   const providerWizardProps = {
     db,
     provForm: providers.provForm, setProvForm: providers.setProvForm,
@@ -219,15 +191,15 @@ export default function App() {
     saving: providers.saving,
   }
 
-  // ─── RENDER ────────────────────────────────────────────────────────────────
   return (
     <>
       <Head>
-        <title>CredFlow — Credentialing. Simplified. Accelerated.</title>
+        <title>PrimeCredential — Provider Credentialing Platform</title>
+        <meta name="description" content="PrimeCredential — Enterprise-grade provider credentialing management" />
       </Head>
       <div className="app-root">
 
-        <Sidebar page={page} setPage={setPage} alertCount={alertCount} expDocs={expDocs} user={user} signOut={signOut} />
+        <Sidebar page={page} setPage={setPage} alertCount={alertCount} expDocs={expDocs} user={user} signOut={signOut} db={db} />
 
         <div className="main">
           <Topbar
@@ -350,7 +322,6 @@ export default function App() {
           )}
         </div>
 
-        {/* ─── MODALS ──────────────────────────────────────────────────────── */}
         {modal === 'enroll' && (
           <EnrollModal
             db={db}
@@ -426,7 +397,6 @@ export default function App() {
           />
         )}
 
-        {/* ─── CONFIRM DIALOG ──────────────────────────────────────────────── */}
         {confirmDialog && (
           <Modal
             title={confirmDialog.title}
@@ -448,7 +418,6 @@ export default function App() {
           </Modal>
         )}
 
-        {/* ─── TOASTS ──────────────────────────────────────────────────────── */}
         <div className="toast-wrap">
           {toasts.map(t => (
             <div key={t.id} className={`toast t-${t.type}`}>

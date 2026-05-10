@@ -1,5 +1,5 @@
 /**
- * EnrollmentKanban.jsx — CredFlow Payer Enrollment Board
+ * EnrollmentKanban.jsx — PrimeCredential Payer Enrollment Board
  * Light theme, one column per stage, horizontal scroll.
  * Optimistic drag-drop: cards move instantly, Supabase syncs in background.
  */

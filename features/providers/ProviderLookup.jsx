@@ -213,7 +213,7 @@ export function ProviderLookup({ db, setPage, setProvForm, setEditingId, setNpiI
                           {r.phone && <span className="info-chip">📞 {r.phone}</span>}
                           {r.taxonomyLicense && <span className="info-chip">Lic: {r.taxonomyLicense}</span>}
                           {r.gender && <span className="badge b-gray">{r.gender === 'M' ? 'Male' : r.gender === 'F' ? 'Female' : r.gender}</span>}
-                          {inSystem && <span className="badge b-green">✓ In CredFlow</span>}
+                          {inSystem && <span className="badge b-green">✓ In PrimeCredential</span>}
                         </div>
 
                       </div>
@@ -284,7 +284,7 @@ export function ProviderLookup({ db, setPage, setProvForm, setEditingId, setNpiI
               <p style={{ maxWidth: 440, margin: '0 auto', lineHeight: 1.6 }}>
                 Search 8M+ providers in the CMS NPPES database. Click <strong>Full NPPES Record</strong> on any result to view
                 all taxonomies, addresses, identifiers, and enumeration dates.
-                Import directly into CredFlow with one click.
+                Import directly into PrimeCredential with one click.
               </p>
             </div>
           )}

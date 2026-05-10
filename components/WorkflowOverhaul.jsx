@@ -1,7 +1,7 @@
 /**
- * WorkflowOverhaul.jsx — CredFlow Workflow-Driven UI Components
+ * WorkflowOverhaul.jsx — PrimeCredential Workflow-Driven UI Components
  *
- * Implements the "what do I do next?" philosophy from CredFlow_WorkflowOverhaul.jsx:
+ * Implements the "what do I do next?" philosophy from PrimeCredential_WorkflowOverhaul.jsx:
  *  - NextActionBanner: surfaces the single most urgent task at the top of Dashboard
  *  - ReadinessRing: circular score indicator for Provider Command Center header
  *  - ProviderReadinessBar: inline readiness bar on every provider list card
@@ -797,7 +797,7 @@ export function ProviderCommandCenter({ prov, db, onClose, onEdit, openEnrollMod
                 ))}
               </div>
               <div style={{ fontSize: 11.5, color: 'var(--ink-4)', marginTop: 8, fontStyle: 'italic' }}>
-                Taxonomy data from NPPES. Specialty Category (<strong>{prov.spec}</strong>) is managed separately in CredFlow.
+                Taxonomy data from NPPES. Specialty Category (<strong>{prov.spec}</strong>) is managed separately in PrimeCredential.
               </div>
             </div>
           )}

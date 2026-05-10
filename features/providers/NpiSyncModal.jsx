@@ -62,7 +62,7 @@ export function NpiSyncModal({ data, onApply, onClose, saving }) {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
                   <div>
-                    <div style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--red)', marginBottom: 2 }}>Current in CredFlow</div>
+                    <div style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--red)', marginBottom: 2 }}>Current in PrimeCredential</div>
                     <div style={{ fontSize: 12.5, color: 'var(--ink-3)', background: 'var(--surface-2)', padding: '4px 8px', borderRadius: 4 }}>
                       {d.storedValue || <em style={{ opacity: 0.5 }}>empty</em>}
                     </div>

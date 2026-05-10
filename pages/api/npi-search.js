@@ -40,7 +40,7 @@ export default async function handler(req, res) {
 
     const url = `https://npiregistry.cms.hhs.gov/api/?${params.toString()}`
     const response = await fetch(url, {
-      headers: { 'User-Agent': 'CredFlow/1.0 (Positive Inner Self, LLC)' }
+      headers: { 'User-Agent': 'PrimeCredential/1.0 (Positive Inner Self, LLC)' }
     })
 
     if (!response.ok) {

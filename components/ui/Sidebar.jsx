@@ -1,5 +1,5 @@
 /**
- * Sidebar.jsx — CredFlow v2
+ * Sidebar.jsx — PrimeCredential v2
  *
  * CHANGES FROM v1:
  *  - Grouped navigation: Operations / Providers / Credentialing / Billing / Admin
@@ -48,24 +48,55 @@ const I = {
 }
 
 // ─── NAV ITEMS (flat, no categories) ─────────────────────────────────────────
-const NAV_ITEMS = [
-  { pg: 'dashboard',    label: 'Dashboard' },
-  { pg: 'providers',    label: 'Providers' },
-  { pg: 'applications', label: 'Applications' },
-  { pg: 'payers',       label: 'Payers' },
-  { pg: 'documents',    label: 'Documents',   badgeKey: 'expDocs', badgeCls: 'amber' },
-  { pg: 'tasks',        label: 'Tasks' },
-  { pg: 'alerts',       label: 'Alerts',      badgeKey: 'alerts' },
-  { pg: 'claims',       label: 'Claims' },
-  { pg: 'reports',      label: 'Reports' },
-  { pg: 'audit',        label: 'Audit Trail' },
-  { pg: 'settings',     label: 'Settings' },
+const NAV_GROUPS = [
+  {
+    group: 'Overview',
+    items: [
+      { pg: 'dashboard',    label: 'Dashboard' },
+    ]
+  },
+  {
+    group: 'Credentialing',
+    items: [
+      { pg: 'providers',    label: 'Providers' },
+      { pg: 'applications', label: 'Applications' },
+      { pg: 'payers',       label: 'Payers' },
+      { pg: 'documents',    label: 'Documents',  badgeKey: 'expDocs', badgeCls: 'amber' },
+      { pg: 'tasks',        label: 'Tasks',      badgeKey: 'tasks' },
+      { pg: 'alerts',       label: 'Alerts',     badgeKey: 'alerts' },
+    ]
+  },
+  {
+    group: 'Billing',
+    items: [
+      { pg: 'claims',       label: 'Claims' },
+      { pg: 'eligibility',  label: 'Eligibility' },
+      { pg: 'denials',      label: 'Denial Log' },
+      { pg: 'revenue',      label: 'Revenue' },
+    ]
+  },
+  {
+    group: 'Growth',
+    items: [
+      { pg: 'marketing',    label: 'Marketing' },
+    ]
+  },
+  {
+    group: 'Admin',
+    items: [
+      { pg: 'reports',      label: 'Reports' },
+      { pg: 'audit',        label: 'Audit Trail' },
+      { pg: 'settings',     label: 'Settings' },
+    ]
+  },
 ]
+// Flat list for badge lookups
+const NAV_ITEMS = NAV_GROUPS.flatMap(g => g.items)
 
 // ─── COMPONENT ───────────────────────────────────────────────────────────────
-export function Sidebar({ page, setPage, alertCount, expDocs, user, signOut }) {
+export function Sidebar({ page, setPage, alertCount, expDocs, user, signOut, db }) {
   const [collapsed, setCollapsed] = useState(false)
-  const badges = { alerts: alertCount, expDocs }
+  const badges = { alerts: alertCount, expDocs, tasks: db?.tasks?.filter(t=>t.status!=='Done').length||0 }
   const meta = user?.user_metadata || {}
   const displayName = (meta.first_name && meta.last_name)
     ? `${meta.first_name} ${meta.last_name}`
@@ -87,32 +118,49 @@ export function Sidebar({ page, setPage, alertCount, expDocs, user, signOut }) {
         </div>
       </div>
 
-      {/* Nav (flat list, non-scrollable) */}
+      {/* Nav — grouped */}
       <div className="sb-nav">
-        {NAV_ITEMS.map(({ pg, label, badgeKey, badgeCls }) => {
-          const count = badgeKey ? (badges[badgeKey] || 0) : 0
-          return (
-            <div
-              key={pg}
-              className={`sb-item${page === pg ? ' active' : ''}`}
-              onClick={() => setPage(pg)}
-              title={collapsed ? label : undefined}
-            >
-              {I[pg] || I.dashboard}
-              {!collapsed && <span style={{ marginLeft: 6 }}>{label}</span>}
-              {count > 0 && !collapsed && (
-                <span className={`sb-badge${badgeCls ? ' ' + badgeCls : ''}`}>{count}</span>
-              )}
-              {count > 0 && collapsed && (
-                <span className="sb-badge-dot" />
-              )}
-            </div>
-          )
-        })}
+        {NAV_GROUPS.map(({ group, items }) => (
+          <div key={group}>
+            {!collapsed && (
+              <div className="sb-group-label">{group}</div>
+            )}
+            {items.map(({ pg, label, badgeKey, badgeCls }) => {
+              const count = badgeKey ? (badges[badgeKey] || 0) : 0
+              return (
+                <div
+                  key={pg}
+                  className={`sb-item${page === pg ? ' active' : ''}`}
+                  onClick={() => setPage(pg)}
+                  title={collapsed ? label : undefined}
+                >
+                  {I[pg] || I.dashboard}
+                  {!collapsed && <span style={{ marginLeft: 6 }}>{label}</span>}
+                  {count > 0 && !collapsed && (
+                    <span className={`sb-badge${badgeCls ? ' ' + badgeCls : ''}`}>{count}</span>
+                  )}
+                  {count > 0 && collapsed && (
+                    <span className="sb-badge-dot" />
+                  )}
+                </div>
+              )
+            })}
+            {!collapsed && <div className="sb-group-divider" />}
+          </div>
+        ))}
       </div>
 
-      {/* Footer: user + collapse toggle */}
+      {/* Footer: support card + user + collapse toggle */}
       <div className="sb-footer">
+        {!collapsed && (
+          <div className="sb-support">
+            <div className="sb-support-title">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Need Help?
+            </div>
+            <div className="sb-support-sub">Contact Support</div>
+          </div>
+        )}
         {!collapsed && (
           <div className="sb-user">
             <div className="sb-avatar">{emailInitial}</div>
