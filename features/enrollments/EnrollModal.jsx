@@ -1,13 +1,40 @@
+import { useState, useEffect } from 'react'
 import { pNameShort, payName } from '../../lib/helpers.js'
 import { Modal, DrawerModal } from '../../components/ui/Modal.jsx'
 import { STAGES } from '../../constants/stages.js'
+import { PAYER_CATALOG } from '../../constants/payerRequirements.js'
 
 export function EnrollModal({ db, enrollForm, setEnrollForm, editingId, handleSaveEnrollment, onClose, saving }) {
   const f = k => enrollForm[k] ?? ''
   const set = (k, v) => setEnrollForm(prev => ({ ...prev, [k]: v }))
   const stageIdx = STAGES.indexOf(f('stage'))
-  return <DrawerModal title={editingId.enrollment?'Edit Enrollment':'New Payer Enrollment'} sub={editingId.enrollment?`${pNameShort(db.providers,f('provId'))} × ${payName(db.payers,f('payId'))}`:''}
-    onClose={onClose}
+
+  // Feature 5: payer auto-suggest
+  const [payerHints, setPayerHints] = useState([])
+  const [showHints, setShowHints]   = useState(true)
+  const selectedPayerId = f('payId')
+
+  useEffect(() => {
+    if (!selectedPayerId) { setPayerHints([]); return }
+    const payer = db.payers.find(p => p.id === selectedPayerId)
+    if (!payer) { setPayerHints([]); return }
+    const catalog = PAYER_CATALOG.find(c => c.name.toLowerCase() === (payer.name || '').toLowerCase())
+    if (catalog?.guidelines?.length) {
+      setPayerHints(catalog.guidelines)
+      setShowHints(true)
+    } else {
+      setPayerHints([])
+    }
+  }, [selectedPayerId]) // eslint-disable-line
+
+  const catalogWarn = (() => {
+    if (!selectedPayerId) return null
+    const payer = db.payers.find(p => p.id === selectedPayerId)
+    if (!payer) return null
+    return PAYER_CATALOG.find(c => c.name.toLowerCase() === (payer.name || '').toLowerCase())?.warn || null
+  })()
+
+  return <DrawerModal title={editingId.enrollment?'Edit Enrollment':'New Payer Enrollment'} sub={editingId.enrollment?`${pNameShort(db.providers,f('provId'))} × ${payName(db.payers,f('payId'))}`:''} onClose={onClose}
     footer={<><button className="btn btn-ghost" onClick={onClose}>Cancel</button><button className="btn btn-primary" onClick={handleSaveEnrollment} disabled={saving}>{saving?'Saving…':'Save Enrollment'}</button></>}>
     <div className="mb-16">
       <div className="text-xs text-muted mb-8" style={{ fontWeight:600, letterSpacing:'.6px', textTransform:'uppercase' }}>Enrollment Stage</div>
@@ -23,6 +50,35 @@ export function EnrollModal({ db, enrollForm, setEnrollForm, editingId, handleSa
     <div className="form-grid">
       <div className="fg"><label>Provider *</label><select value={f('provId')} onChange={e=>set('provId',e.target.value)}><option value="">— Select —</option>{db.providers.map(p=><option key={p.id} value={p.id}>{p.fname} {p.lname}, {p.cred}</option>)}</select></div>
       <div className="fg"><label>Payer *</label><select value={f('payId')} onChange={e=>set('payId',e.target.value)}><option value="">— Select —</option>{db.payers.map(p=><option key={p.id} value={p.id}>{p.name}</option>)}</select></div>
+
+      {/* ── Payer requirements auto-suggest (Feature 5) ── */}
+      {payerHints.length > 0 && showHints && (
+        <div className="fg full">
+          <div style={{ background: 'rgba(30,86,240,.05)', border: '1.5px solid rgba(30,86,240,.18)', borderRadius: 'var(--r-lg)', padding: '12px 14px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--pr)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Required documents for {db.payers.find(p=>p.id===selectedPayerId)?.name}
+              </span>
+              <button onClick={() => setShowHints(false)} style={{ fontSize: 11, color: 'var(--text-4)', background: 'none', border: 'none', cursor: 'pointer' }}>Dismiss ×</button>
+            </div>
+            <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 3 }}>
+              {payerHints.map((hint, i) => (
+                <li key={i} style={{ fontSize: 12, color: 'var(--text-2)', display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+                  <span style={{ color: 'var(--success)', flexShrink: 0, marginTop: 1 }}>•</span>
+                  {hint}
+                </li>
+              ))}
+            </ul>
+            {catalogWarn && (
+              <div style={{ marginTop: 10, padding: '6px 10px', background: 'rgba(245,158,11,.08)', border: '1px solid rgba(245,158,11,.3)', borderRadius: 'var(--r)', fontSize: 11.5, color: 'var(--warning)', fontWeight: 500, lineHeight: 1.4 }}>
+                ⚠ {catalogWarn}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <div className="fg"><label>Stage</label><select value={f('stage')} onChange={e=>set('stage',e.target.value)}>{STAGES.map(s=><option key={s}>{s}</option>)}</select></div>
       <div className="fg"><label>Date Submitted</label><input type="date" value={f('submitted')} onChange={e=>set('submitted',e.target.value)} /></div>
       <div className="fg"><label>Effective Date</label><input type="date" value={f('effective')} onChange={e=>set('effective',e.target.value)} /></div>

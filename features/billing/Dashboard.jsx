@@ -24,6 +24,109 @@ const Icon = {
   plus:     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
 }
 
+// ─── ONBOARDING EMPTY STATE ───────────────────────────────────────────────────
+function OnboardingChecklist({ db, setPage, openEnrollModal, openPayerModal }) {
+  const hasProviders  = db.providers.length > 0
+  const hasPayers     = db.payers.length > 0
+  const hasEnrollment = db.enrollments.length > 0
+
+  const steps = [
+    {
+      done: hasProviders,
+      title: 'Add your first provider',
+      desc: 'Enter provider details, NPI, license, and credentialing info.',
+      action: () => setPage('add-provider'),
+      label: 'Add Provider',
+      icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>,
+    },
+    {
+      done: hasPayers,
+      title: 'Add insurance payers',
+      desc: 'Set up the payers you\'ll be credentialing with (Aetna, BCBS, etc.).',
+      action: () => openPayerModal?.(),
+      label: 'Add Payer',
+      icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>,
+    },
+    {
+      done: hasEnrollment,
+      title: 'Create your first application',
+      desc: 'Track a provider\'s credentialing application with a specific payer.',
+      action: () => openEnrollModal?.(),
+      label: 'New Application',
+      disabled: !hasProviders || !hasPayers,
+      icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>,
+    },
+  ]
+
+  const doneCount = steps.filter(s => s.done).length
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 420, padding: '40px 20px' }}>
+      {/* Logo/welcome */}
+      <div style={{ marginBottom: 24, textAlign: 'center' }}>
+        <div style={{ width: 56, height: 56, borderRadius: 16, background: '#1E56F0', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 8px 24px rgba(30,86,240,.25)' }}>
+          <svg width="28" height="28" viewBox="0 0 48 48" fill="none"><text x="8" y="36" fontFamily="Inter,sans-serif" fontWeight="800" fontSize="30" fill="#fff">P</text></svg>
+        </div>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-1)', letterSpacing: '-.04em', margin: '0 0 8px' }}>Welcome to PrimeCredential</h2>
+        <p style={{ fontSize: 14, color: 'var(--text-4)', maxWidth: 380, margin: '0 auto' }}>
+          Get started by completing these setup steps. Your dashboard will populate as you add data.
+        </p>
+      </div>
+
+      {/* Progress bar */}
+      <div style={{ width: '100%', maxWidth: 520, marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-2)' }}>Setup Progress</span>
+          <span style={{ fontSize: 12, color: 'var(--pr)', fontWeight: 700 }}>{doneCount}/{steps.length} complete</span>
+        </div>
+        <div style={{ height: 6, background: 'var(--elevated)', borderRadius: 999, overflow: 'hidden', border: '1px solid var(--border-l)' }}>
+          <div style={{ height: '100%', width: `${(doneCount / steps.length) * 100}%`, background: 'var(--pr)', borderRadius: 999, transition: 'width .4s ease' }} />
+        </div>
+      </div>
+
+      {/* Steps */}
+      <div style={{ width: '100%', maxWidth: 520, display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {steps.map((step, i) => (
+          <div key={i} style={{
+            display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px',
+            background: 'var(--card)', border: `1.5px solid ${step.done ? 'var(--success)' : 'var(--border)'}`,
+            borderRadius: 'var(--r-lg)', opacity: step.disabled ? 0.5 : 1,
+            transition: 'border-color .2s',
+          }}>
+            {/* Step icon/check */}
+            <div style={{
+              width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
+              background: step.done ? 'rgba(16,185,129,.12)' : 'var(--elevated)',
+              border: `2px solid ${step.done ? 'var(--success)' : 'var(--border)'}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: step.done ? 'var(--success)' : 'var(--text-3)',
+            }}>
+              {step.done
+                ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                : step.icon}
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: step.done ? 'var(--text-3)' : 'var(--text-1)', marginBottom: 2, textDecoration: step.done ? 'line-through' : 'none' }}>{step.title}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-4)' }}>{step.desc}</div>
+            </div>
+            {!step.done && (
+              <button className="btn btn-primary btn-sm" onClick={step.action} disabled={step.disabled}
+                style={{ fontSize: 12, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                {step.label}
+              </button>
+            )}
+            {step.done && <span style={{ fontSize: 11, color: 'var(--success)', fontWeight: 600, whiteSpace: 'nowrap' }}>✓ Done</span>}
+          </div>
+        ))}
+      </div>
+
+      <p style={{ marginTop: 20, fontSize: 12, color: 'var(--text-4)' }}>
+        Need help? <span style={{ color: 'var(--pr)', cursor: 'pointer', fontWeight: 500 }} onClick={() => window.open('mailto:support@primecredential.com')}>Contact support →</span>
+      </p>
+    </div>
+  )
+}
+
 // ─── KPI CARD ─────────────────────────────────────────────────────────────────
 function KpiCard({ label, value, sub, accent = 'kpi-blue', icon, trend, trendUp, insight, onClick }) {
   return (
@@ -304,11 +407,27 @@ function UpcomingExpirations({ db, setPage }) {
 }
 
 // ─── MAIN COMPONENT ───────────────────────────────────────────────────────────
-export function Dashboard({ db, setPage, openEnrollModal, onDraftEmail }) {
+export function Dashboard({ db, setPage, openEnrollModal, onDraftEmail, openPayerModal }) {
   const alertDays = db.settings.alertDays || 90
   const meta = {}
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo]     = useState('')
+
+  // Show onboarding empty state when no providers AND no enrollments
+  const isEmpty = db.providers.length === 0 && db.enrollments.length === 0
+  if (isEmpty) {
+    return (
+      <div className="page">
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
+          <div>
+            <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)', letterSpacing: '-.03em', marginBottom: 3 }}>Dashboard</h2>
+            <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Your credentialing command center.</p>
+          </div>
+        </div>
+        <OnboardingChecklist db={db} setPage={setPage} openEnrollModal={openEnrollModal} openPayerModal={openPayerModal} />
+      </div>
+    )
+  }
 
   const activeProvs   = db.providers.filter(p => p.status === 'Active').length
   const activeEnr     = db.enrollments.filter(e => e.stage === 'Active').length

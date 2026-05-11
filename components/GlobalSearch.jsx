@@ -240,6 +240,11 @@ export function GlobalSearch({ db, onClose, setPage, openProvDetail, openEnrollM
             <span><kbd>↑↓</kbd> navigate</span>
             <span><kbd>↵</kbd> select</span>
             <span><kbd>Esc</kbd> close</span>
+            <span style={{ marginLeft: 'auto', borderLeft: '1px solid var(--border-l)', paddingLeft: 12, display: 'flex', gap: 10 }}>
+              <span><kbd>G</kbd><kbd>P</kbd> Providers</span>
+              <span><kbd>G</kbd><kbd>A</kbd> Applications</span>
+              <span><kbd>N</kbd> New App</span>
+            </span>
           </div>
         </div>
       )}

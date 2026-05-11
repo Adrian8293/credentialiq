@@ -51,6 +51,11 @@ export function Sidebar({ page, setPage, alertCount, expDocs, user, signOut, db 
   const [marketingOpen, setMarketingOpen] = useState(MARKETING_PAGES.includes(page))
 
   const taskCount = db?.tasks?.filter(t => t.status !== 'Done').length || 0
+  const overdueTaskCount = db?.tasks?.filter(t => {
+    if (t.status === 'Done') return false
+    if (!t.due) return false
+    return new Date(t.due + 'T00:00:00') < new Date(new Date().toDateString())
+  }).length || 0
   const meta = user?.user_metadata || {}
   const displayName = (meta.first_name && meta.last_name)
     ? `${meta.first_name} ${meta.last_name}`
@@ -62,6 +67,7 @@ export function Sidebar({ page, setPage, alertCount, expDocs, user, signOut, db 
 
   function navItem(pg, label, icon, badge, badgeCls) {
     const active = page === pg
+    const isDanger = badgeCls === 'danger'
     return (
       <div key={pg} className={`sb-item${active ? ' active' : ''}`}
         onClick={() => setPage(pg)}
@@ -69,9 +75,12 @@ export function Sidebar({ page, setPage, alertCount, expDocs, user, signOut, db 
         <span className="sb-item-icon">{icon}</span>
         {!collapsed && <span className="sb-item-label">{label}</span>}
         {!collapsed && badge > 0 && (
-          <span className={`sb-badge${badgeCls ? ' ' + badgeCls : ''}`}>{badge > 99 ? '99+' : badge}</span>
+          <span className={`sb-badge${isDanger ? '' : badgeCls ? ' ' + badgeCls : ''}`}
+            style={isDanger ? { background: 'var(--danger)', color: '#fff', animation: 'pulse 2s infinite' } : undefined}>
+            {badge > 99 ? '99+' : badge}
+          </span>
         )}
-        {collapsed && badge > 0 && <span className="sb-badge-dot" />}
+        {collapsed && badge > 0 && <span className="sb-badge-dot" style={isDanger ? { background: 'var(--danger)' } : undefined} />}
       </div>
     )
   }
@@ -126,7 +135,7 @@ export function Sidebar({ page, setPage, alertCount, expDocs, user, signOut, db 
         {navItem('applications', 'Applications', I.applications)}
         {navItem('payers',       'Payers',       I.payers)}
         {navItem('documents',    'Documents',    I.documents, expDocs, 'amber')}
-        {navItem('tasks',        'Tasks',        I.tasks,     taskCount)}
+        {navItem('tasks',        'Tasks',        I.tasks,     taskCount, overdueTaskCount > 0 ? 'danger' : undefined)}
         {navItem('alerts',       'Alerts',       I.alerts,    alertCount)}
 
         {navItem('claims',      'Claims',      I.claims)}

@@ -1,10 +1,11 @@
 import { daysUntil, fmtDate, pName, pNameShort, payName } from '../../lib/helpers.js'
 import { useSorted } from '../../hooks/useSorted.js'
 import { Badge, StageBadge } from '../../components/ui/Badge.jsx'
+import { STAGES } from '../../constants/stages.js'
 
 export function Enrollments({ db, search, setSearch, fStage, setFStage, fProv, setFProv, openEnrollModal, handleDeleteEnrollment }) {
   const filtered = db.enrollments.filter(e => {
-    const txt = `${pName(db.providers,e.provId)} ${payName(db.payers,e.payId)} ${e.stage} ${e.notes}`.toLowerCase()
+    const txt = `${pName(db.providers,e.provId)} ${payName(db.payers,e.payId)} ${e.stage} ${e.notes||''}`.toLowerCase()
     return (!search||txt.includes(search.toLowerCase())) && (!fStage||e.stage===fStage) && (!fProv||e.provId===fProv)
   })
   const {sorted:list, thProps} = useSorted(filtered, 'stage')

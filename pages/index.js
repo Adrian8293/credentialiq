@@ -85,13 +85,53 @@ export default function App() {
   const [auditSearch, setAuditSearch] = useState(''); const [auditFType, setAuditFType] = useState('')
 
   useEffect(() => {
+    let gPressed = false
+    let gTimer = null
+
     function onKey(e) {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setGlobalSearchOpen(o => !o) }
-      if (e.key === 'Escape') { setGlobalSearchOpen(false); setAiModalOpen(false) }
+      // Cmd/Ctrl+K: global search
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setGlobalSearchOpen(o => !o); return }
+      // Escape: close modals/search
+      if (e.key === 'Escape') { setGlobalSearchOpen(false); setAiModalOpen(false); return }
+
+      // Don't fire nav shortcuts if user is typing in an input/textarea/select
+      const tag = document.activeElement?.tagName
+      if (['INPUT','TEXTAREA','SELECT'].includes(tag)) return
+
+      // G+<key> combos: G then another key within 600ms
+      if (e.key === 'g' || e.key === 'G') {
+        gPressed = true
+        clearTimeout(gTimer)
+        gTimer = setTimeout(() => { gPressed = false }, 600)
+        return
+      }
+      if (gPressed) {
+        gPressed = false
+        clearTimeout(gTimer)
+        const map = {
+          'd': 'dashboard', 'p': 'providers', 'a': 'applications',
+          'y': 'payers',    'o': 'documents', 't': 'tasks',
+          'l': 'alerts',    'r': 'reports',   's': 'settings',
+        }
+        const dest = map[e.key.toLowerCase()]
+        if (dest) { e.preventDefault(); setPage(dest) }
+        return
+      }
+
+      // N: new enrollment (when not in G+combo)
+      if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault()
+        openEnrollModal()
+      }
+      // ?: show keyboard shortcuts (toggle search as a proxy)
+      if (e.key === '?') {
+        e.preventDefault()
+        setGlobalSearchOpen(o => !o)
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [])
+  }, []) // eslint-disable-line
 
   if (authLoading) return (
     <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Inter,sans-serif', color:'#6B7280', flexDirection:'column', gap:12 }}>
@@ -113,7 +153,11 @@ export default function App() {
   const provDetail  = provDetailId ? db.providers.find(x => x.id === provDetailId) : null
 
   function openProvDetail(id) { setProvDetailId(id); setModal('provDetail') }
-  function openAiFollowup(enrollment) { setAiModalEnrollment(enrollment); setAiModalOpen(true) }
+  function openAiFollowup(enrollment) {
+    // Feature 6: support standalone alert drafts (no payId)
+    setAiModalEnrollment(enrollment)
+    setAiModalOpen(true)
+  }
 
   function openEnrollModal(id, preProvId) { enrollments.openEnrollModal(id, preProvId); setModal('enroll') }
   function openPayerModal(id) { payers.openPayerModal(id); setModal('payer') }
@@ -226,7 +270,7 @@ export default function App() {
             </div>
           ) : (
             <div className="pages">
-              {page === 'dashboard'    && <Dashboard db={db} setPage={setPage} openEnrollModal={openEnrollModal} onDraftEmail={openAiFollowup} />}
+              {page === 'dashboard'    && <Dashboard db={db} setPage={setPage} openEnrollModal={openEnrollModal} onDraftEmail={openAiFollowup} openPayerModal={openPayerModal} />}
 
               {page === 'providers'    && (
                 <ProvidersPage
@@ -265,6 +309,7 @@ export default function App() {
                   fProv={enrFProv} setFProv={setEnrFProv}
                   handleDeleteEnrollment={enrollments.handleDeleteEnrollment}
                   onDraftEmail={openAiFollowup}
+                  handleStageChange={enrollments.handleStageChange}
                 />
               )}
 
@@ -385,6 +430,9 @@ export default function App() {
             enrollment={aiModalEnrollment}
             provider={db.providers.find(p => p.id === aiModalEnrollment.provId) || {}}
             payer={db.payers.find(p => p.id === aiModalEnrollment.payId) || {}}
+            alertLabel={aiModalEnrollment.alertLabel}
+            alertDays={aiModalEnrollment.alertDays}
+            alertDate={aiModalEnrollment.alertDate}
             onClose={() => { setAiModalOpen(false); setAiModalEnrollment(null) }}
           />
         )}

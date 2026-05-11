@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { Providers } from './index.jsx'
 import { AddProviderDrawer } from './AddProviderDrawer.jsx'
 import EnrollmentKanban from '../../components/EnrollmentKanban'
+import { CredentialTimeline } from './CredentialTimeline.jsx'
 
 export function ProvidersPage({
   db,
@@ -87,6 +88,8 @@ export function ProvidersPage({
                 icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="17" width="18" height="4" rx="1"/></svg> },
               { id:'kanban', label:'Kanban',
                 icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="3" y="3" width="5" height="18" rx="1"/><rect x="10" y="3" width="5" height="13" rx="1"/><rect x="17" y="3" width="5" height="15" rx="1"/></svg> },
+              { id:'timeline', label:'Timeline',
+                icon:<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg> },
             ].map(v => (
               <button key={v.id} onClick={() => setView(v.id)} style={{
                 display:'flex', alignItems:'center', gap:5, padding:'5px 12px',
@@ -154,6 +157,25 @@ export function ProvidersPage({
             onStageChange={onStageChange}
             onOpen={enr => openEnrollModal(enr.id)}
           />
+        </div>
+      )}
+
+      {/* ── TIMELINE VIEW (Feature 8) ── */}
+      {view === 'timeline' && (
+        <div className="card">
+          <div className="card-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--pr)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+              <h3 style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text-1)', margin: 0 }}>Credential Expiry Timeline</h3>
+              <span style={{ fontSize: 11.5, color: 'var(--text-4)' }}>— {new Date().getFullYear()}–{new Date().getFullYear() + 1}</span>
+            </div>
+          </div>
+          <div className="card-body">
+            <CredentialTimeline
+              providers={db.providers}
+              onOpenProvider={openProvDetail}
+            />
+          </div>
         </div>
       )}
 

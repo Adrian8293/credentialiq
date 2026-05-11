@@ -101,6 +101,112 @@ export function Reports({ db, exportJSON }) {
   const [dateRange, setDateRange] = useState('May 12 – Jun 10, 2024')
   const [groupBy, setGroupBy] = useState('Week')
 
+  // Feature 9: Excel export
+  async function exportXLSX() {
+    try {
+      const XLSX = await import('xlsx')
+      const wb = XLSX.utils.book_new()
+
+      // Sheet 1: Providers
+      const provRows = db.providers.map(p => ({
+        'First Name':    p.fname || '',
+        'Last Name':     p.lname || '',
+        'Credential':    p.cred || '',
+        'Specialty':     p.spec || '',
+        'Status':        p.status || '',
+        'NPI':           p.npi || '',
+        'CAQH':          p.caqh || '',
+        'License #':     p.license || '',
+        'License Exp':   p.licenseExp || '',
+        'Mal Carrier':   p.malCarrier || '',
+        'Mal Exp':       p.malExp || '',
+        'DEA #':         p.dea || '',
+        'DEA Exp':       p.deaExp || '',
+        'CAQH Due':      p.caqhDue || '',
+        'Recred Due':    p.recred || '',
+        'Sup Exp':       p.supExp || '',
+        'Phone':         p.phone || '',
+        'Email':         p.email || '',
+        'Notes':         p.notes || '',
+      }))
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(provRows), 'Providers')
+
+      // Sheet 2: Enrollments
+      const enrRows = db.enrollments.map(e => {
+        const prov = db.providers.find(p => p.id === e.provId)
+        const payer = db.payers.find(p => p.id === e.payId)
+        return {
+          'App ID':        e.appId || `APP-${String(e.id||'').slice(-8).toUpperCase()}`,
+          'Provider':      prov ? `${prov.fname} ${prov.lname}` : '—',
+          'Credential':    prov?.cred || '',
+          'Payer':         payer?.name || '—',
+          'Payer ID':      payer?.payerId || '',
+          'Stage':         e.stage || '',
+          'Submitted':     e.submitted || '',
+          'Effective':     e.effective || '',
+          'Follow-up':     e.followup || '',
+          'EFT':           e.eft || '',
+          'ERA':           e.era || '',
+          'Contract':      e.contract || '',
+          'Notes':         e.notes || '',
+          'Last Updated':  e.updated || '',
+        }
+      })
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(enrRows), 'Enrollments')
+
+      // Sheet 3: Alerts
+      const alertRows = []
+      const ALERT_FIELDS = [
+        { f: 'licenseExp', l: 'License' },
+        { f: 'malExp',     l: 'Malpractice Insurance' },
+        { f: 'deaExp',     l: 'DEA Certificate' },
+        { f: 'caqhDue',   l: 'CAQH Attestation' },
+        { f: 'recred',    l: 'Recredentialing' },
+        { f: 'supExp',    l: 'Supervision Agreement' },
+      ]
+      db.providers.forEach(p => {
+        ALERT_FIELDS.forEach(c => {
+          if (!p[c.f]) return
+          const d = (() => {
+            const now = new Date(); now.setHours(0,0,0,0)
+            return Math.round((new Date(p[c.f]+'T00:00:00') - now) / 86400000)
+          })()
+          alertRows.push({
+            'Provider':    `${p.fname} ${p.lname}`,
+            'Credential':  p.cred || '',
+            'Alert Type':  c.l,
+            'Expiry Date': p[c.f],
+            'Days':        d,
+            'Status':      d < 0 ? 'Expired' : d <= 30 ? 'Critical' : d <= 60 ? 'Warning' : 'Notice',
+          })
+        })
+      })
+      alertRows.sort((a, b) => a.Days - b.Days)
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(alertRows), 'Alerts')
+
+      // Sheet 4: Tasks
+      const taskRows = db.tasks.map(t => {
+        const prov = db.providers.find(p => p.id === t.provId)
+        return {
+          'Task':      t.title || '',
+          'Provider':  prov ? `${prov.fname} ${prov.lname}` : '—',
+          'Status':    t.status || '',
+          'Priority':  t.priority || '',
+          'Due Date':  t.due || '',
+          'Notes':     t.notes || '',
+        }
+      })
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(taskRows), 'Tasks')
+
+      const date = new Date().toISOString().split('T')[0]
+      XLSX.writeFile(wb, `primecredential-report-${date}.xlsx`)
+    } catch (err) {
+      console.error('XLSX export error:', err)
+      // Fallback to JSON export
+      exportJSON()
+    }
+  }
+
   // Computed metrics
   const total = db.providers.length || 1
   const compliant = db.providers.filter(p => {
@@ -147,9 +253,14 @@ export function Reports({ db, exportJSON }) {
           <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)', letterSpacing: '-.03em', marginBottom: 3 }}>Reports</h2>
           <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Analyze performance and credentialing metrics across PrimeCredential.</p>
         </div>
-        <button className="btn btn-secondary btn-sm" onClick={exportJSON} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-          {Icon.download} Export Report
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button className="btn btn-secondary btn-sm" onClick={exportXLSX} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            {Icon.download} Export Excel (.xlsx)
+          </button>
+          <button className="btn btn-ghost btn-sm" onClick={exportJSON} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            Export JSON
+          </button>
+        </div>
       </div>
 
       {/* Date + filters */}

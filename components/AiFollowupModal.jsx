@@ -45,7 +45,7 @@ function CopyButton({ text }) {
 }
 
 // ─── MODAL ───────────────────────────────────────────────────────────────────
-export function AiFollowupModal({ enrollment, provider, payer, onClose }) {
+export function AiFollowupModal({ enrollment, provider, payer, alertLabel, alertDays, alertDate, onClose }) {
   const [draft, setDraft] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -55,6 +55,13 @@ export function AiFollowupModal({ enrollment, provider, payer, onClose }) {
   const submittedDaysAgo = daysAgo(enrollment?.submitted)
   const followupDaysAgo  = daysAgo(enrollment?.followup)
 
+  // Feature 6: alert-only mode (no enrollment/payer — just a provider credential alert)
+  const isAlertMode = !!alertLabel && !enrollment?.stage
+
+  const modalTitle = isAlertMode
+    ? `Draft Renewal Reminder — ${alertLabel}`
+    : 'Draft Follow-up Email'
+
   async function generate() {
     setLoading(true)
     setError(null)
@@ -63,7 +70,7 @@ export function AiFollowupModal({ enrollment, provider, payer, onClose }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          providerName:  `${provider.fname} ${provider.lname}, ${provider.cred}`,
+          providerName:  `${provider.fname || ''} ${provider.lname || ''}${provider.cred ? ', '+provider.cred : ''}`.trim(),
           providerNpi:   provider.npi,
           providerSpec:  provider.spec,
           payerName:     payer.name,
@@ -103,13 +110,38 @@ export function AiFollowupModal({ enrollment, provider, payer, onClose }) {
       friendly: 'I hope you are having a great week!',
     }[tone] || 'I hope this message finds you well.'
 
-    const submittedLine = enrollment?.submitted
-      ? `Our application was submitted on ${fmtDate(enrollment.submitted)}${submittedDaysAgo != null ? ` (${submittedDaysAgo} days ago)` : ''}`
-      : 'Our application was submitted previously'
+    let template
+    if (isAlertMode) {
+      // Feature 6: standalone alert renewal reminder template
+      const provName = `${provider.fname || ''} ${provider.lname || ''}${provider.cred ? ', '+provider.cred : ''}`.trim() || 'Provider'
+      const daysText = alertDays !== undefined
+        ? alertDays < 0
+          ? `expired ${Math.abs(alertDays)} day${Math.abs(alertDays) !== 1 ? 's' : ''} ago`
+          : `expiring in ${alertDays} day${alertDays !== 1 ? 's' : ''}`
+        : 'expiring soon'
+      template = `${toneOpener}
 
-    const template = `${toneOpener}
+This is a reminder that the ${alertLabel} for ${provName} (NPI: ${provider.npi || 'N/A'}) is ${daysText}${alertDate ? ` (${fmtDate(alertDate)})` : ''}.
 
-I am reaching out regarding the credentialing application for ${provider.fname} ${provider.lname}, ${provider.cred} (NPI: ${provider.npi || 'Pending'}) with ${payer.name}${payer.payerId ? ` (Payer ID: ${payer.payerId})` : ''}.
+Please take the following action as soon as possible:
+- Gather the renewal documentation for the ${alertLabel}
+- Submit the updated information to the relevant credentialing body
+- Upload the renewed document to the provider's file in our system
+
+If you have any questions or need assistance, please do not hesitate to reach out.
+
+Thank you for your prompt attention to this matter.
+
+Credentialing Department
+Positive Inner Self, LLC`
+    } else {
+      const submittedLine = enrollment?.submitted
+        ? `Our application was submitted on ${fmtDate(enrollment.submitted)}${submittedDaysAgo != null ? ` (${submittedDaysAgo} days ago)` : ''}`
+        : 'Our application was submitted previously'
+
+      template = `${toneOpener}
+
+I am reaching out regarding the credentialing application for ${provider.fname || ''} ${provider.lname || ''}${provider.cred ? ', '+provider.cred : ''} (NPI: ${provider.npi || 'Pending'}) with ${payer.name || 'your organization'}${payer.payerId ? ` (Payer ID: ${payer.payerId})` : ''}.
 
 ${submittedLine}, and the application is currently in the "${enrollment?.stage || 'In Progress'}" stage. We would greatly appreciate a status update at your earliest convenience.
 
@@ -119,6 +151,7 @@ Thank you for your time and assistance. We look forward to hearing from you.
 
 Credentialing Department
 Positive Inner Self, LLC`
+    }
 
     setDraft(template)
     setGenerated(true)
