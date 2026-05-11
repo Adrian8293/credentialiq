@@ -89,6 +89,7 @@ export function EligibilityPage({ db, toast, requestConfirm }) {
         </div>
       </div>
       <div className="kpi-grid">
+        {[
           ['Eligible', checks.filter(c=>c.status==='Eligible').length, 'kpi-teal'],
           ['Ineligible', checks.filter(c=>c.status==='Ineligible').length, 'kpi-red'],
           ['Pending', checks.filter(c=>c.status==='Pending').length, 'kpi-amber'],

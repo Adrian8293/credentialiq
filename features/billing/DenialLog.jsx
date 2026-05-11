@@ -82,9 +82,10 @@ export function DenialLog({ db, toast, requestConfirm }) {
           <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Track claim denials, manage appeals, and monitor win rates.</p>
         </div>
       </div>
-      <div className="kpi-grid"><div className="kpi-value">{totalDenied}</div></div>
+      <div className="kpi-grid">
+        <div className="kpi kpi-blue"><div className="kpi-label">Total Denials</div><div className="kpi-value">{totalDenied}</div><div className="kpi-sub">All denial records</div></div>
         <div className="kpi kpi-red"><div className="kpi-label">Overdue Appeals</div><div className="kpi-value">{overdue}</div><div className="kpi-sub">Deadline passed</div></div>
-        <div className="kpi kpi-amber"><div className="kpi-label">Pending Appeals</div><div className="kpi-value">{pending}</div></div>
+        <div className="kpi kpi-amber"><div className="kpi-label">Pending Appeals</div><div className="kpi-value">{pending}</div><div className="kpi-sub">In progress</div></div>
         <div className="kpi kpi-teal"><div className="kpi-label">Appeals Won</div><div className="kpi-value">{won}</div><div className="kpi-sub">{totalDenied>0?((won/totalDenied)*100).toFixed(0):0}% win rate</div></div>
       </div>
 
