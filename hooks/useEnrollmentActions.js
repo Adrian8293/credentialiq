@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { upsertEnrollment, deleteEnrollment } from '../lib/db'
+import { upsertEnrollment, deleteEnrollment, addAudit } from '../lib/db'
 import { pNameShort, payName } from '../lib/helpers'
 
 export function useEnrollmentActions({ db, setDb, toast, requestConfirm }) {
@@ -50,18 +50,33 @@ export function useEnrollmentActions({ db, setDb, toast, requestConfirm }) {
   async function handleStageChange(enrollmentId, newStage) {
     const enr = db.enrollments.find(e => e.id === enrollmentId)
     if (!enr) return
+    const prevStage = enr.stage
     try {
       const prov    = db.providers.find(p => p.id === enr.provId)
       const payer   = db.payers.find(p => p.id === enr.payId)
+      const provName = prov ? `${prov.fname} ${prov.lname}` : ''
+      const payerName = payer?.name || ''
       const saved   = await upsertEnrollment(
         { ...enr, stage: newStage },
-        prov ? `${prov.fname} ${prov.lname}` : '',
-        payer?.name || ''
+        provName,
+        payerName
       )
       setDb(prev => ({
         ...prev,
         enrollments: prev.enrollments.map(e => e.id === saved.id ? saved : e),
       }))
+      // ── Compliance audit trail (NCQA/URAC) ──────────────────────────────
+      // Every stage transition is recorded as its own audit entry so reviewers
+      // can reconstruct the full credentialing timeline for any enrollment.
+      try {
+        await addAudit(
+          'Enrollment',
+          'Stage Changed',
+          `${provName} / ${payerName}: "${prevStage}" → "${newStage}"`,
+          enrollmentId
+        )
+      } catch (_) { /* audit failure should not block stage transition */ }
+
       toast(`Moved to ${newStage}`, 'success')
     } catch(err) { toast('Stage update failed: ' + err.message, 'error') }
   }

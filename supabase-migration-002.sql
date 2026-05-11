@@ -213,3 +213,15 @@ CREATE POLICY "org_audit_insert" ON audit_log
 -- Then store tax IDs as vault secrets and save only the secret UUID on the row.
 -- See: https://supabase.com/docs/guides/database/vault
 -- ─────────────────────────────────────────────────────────────────────────────
+
+-- ─── Migration: Document file attachments ─────────────────────────────────────
+-- Adds file_url column to documents table for Supabase Storage attachment URLs.
+-- Run this in your Supabase SQL editor.
+alter table documents
+  add column if not exists file_url text,
+  add column if not exists file_name text,
+  add column if not exists deleted_at timestamptz;
+
+-- Storage bucket for document files (run once via dashboard or SQL)
+-- insert into storage.buckets (id, name, public) values ('documents', 'documents', false)
+-- on conflict do nothing;

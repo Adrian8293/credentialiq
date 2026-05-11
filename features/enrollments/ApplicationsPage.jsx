@@ -3,7 +3,8 @@
  * Features:
  *  1. Inline stage progression — one-click "→ Next Stage" from row
  *  2. Bulk actions — select rows to bulk-update stage or delete
- * Bug fixes: missing stopPropagation on checkboxes, menu close on outside click
+ *  3. Loading skeleton while data loads
+ *  4. Pagination via usePagination hook (25 per page)
  */
 
 import { useState, useEffect, useRef } from 'react'
@@ -11,6 +12,9 @@ import { STAGES } from '../../constants/stages.js'
 import { StageBadge } from '../../components/ui/Badge.jsx'
 import { daysUntil, fmtDate, pNameShort, payName } from '../../lib/helpers.js'
 import { useSorted } from '../../hooks/useSorted.js'
+import { usePagination } from '../../hooks/usePagination.js'
+import { ApplicationsTableSkeleton } from '../../components/ui/Skeletons.jsx'
+import { Pagination } from '../../components/ui/Pagination.jsx'
 
 const SearchIcon = <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
 const MailIcon   = <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -32,12 +36,11 @@ function appId(e) {
 
 function nextStage(current) {
   const idx = STAGES.indexOf(current)
-  // Don't advance if at the last stage or if Denied
   if (idx === -1 || idx >= STAGES.length - 2) return null
   return STAGES[idx + 1]
 }
 
-export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStage, setFStage, fProv, setFProv, handleDeleteEnrollment, onDraftEmail, handleStageChange }) {
+export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStage, setFStage, fProv, setFProv, handleDeleteEnrollment, onDraftEmail, handleStageChange, loading }) {
   const [subtab, setSubtab]       = useState('All Applications')
   const [menuOpen, setMenuOpen]   = useState(null)
   const [selected, setSelected]   = useState(new Set())
@@ -45,7 +48,6 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
   const [advancing, setAdvancing] = useState(null)
   const menuRef = useRef(null)
 
-  // Close dropdown on outside click
   useEffect(() => {
     if (!menuOpen) return
     function handler(e) {
@@ -73,19 +75,25 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
 
   const { sorted: list, thProps } = useSorted(filtered, 'submitted')
 
+  // ── Pagination ────────────────────────────────────────────────────────────
+  const pagination = usePagination(list, { pageSize: 25 })
+  const pagedList  = pagination.paginated
+
+  // Reset to page 1 when filters change
+  useEffect(() => { pagination.setPage(1) }, [search, fStage, fProv, subtab]) // pagination.setPage is stable (from usePagination)
+
   function tabCount(t) {
     const stages = STAGE_TO_TAB[t]
     if (!stages) return db.enrollments.length
     return db.enrollments.filter(e => stages.some(s => (e.stage||'').toLowerCase().includes(s.toLowerCase()))).length
   }
 
-  // Selection
-  const allSelected  = list.length > 0 && list.every(e => selected.has(e.id))
-  const someSelected = list.some(e => selected.has(e.id))
+  const allSelected  = pagedList.length > 0 && pagedList.every(e => selected.has(e.id))
+  const someSelected = pagedList.some(e => selected.has(e.id))
 
   function toggleAll() {
     if (allSelected) setSelected(new Set())
-    else setSelected(new Set(list.map(e => e.id)))
+    else setSelected(new Set(pagedList.map(e => e.id)))
   }
 
   function toggleOne(id) {
@@ -194,6 +202,11 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
         </div>
       )}
 
+      {/* Loading skeleton */}
+      {loading ? (
+        <ApplicationsTableSkeleton rows={7} />
+      ) : (
+      <>
       {/* Table */}
       <div className="tbl-wrap">
         <table>
@@ -213,7 +226,7 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
             </tr>
           </thead>
           <tbody>
-            {!list.length ? (
+            {!pagedList.length ? (
               <tr><td colSpan={9}>
                 <div className="empty-state">
                   <div className="empty-state-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E56F0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
@@ -222,7 +235,7 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
                   {!search && !fProv && !fStage && <button className="btn btn-primary btn-sm" onClick={() => openEnrollModal()}>+ New Application</button>}
                 </div>
               </td></tr>
-            ) : list.map(e => {
+            ) : pagedList.map(e => {
               const fuD    = daysUntil(e.followup)
               const fuCol  = fuD !== null && fuD <= 0 ? 'var(--danger)' : fuD !== null && fuD <= 7 ? 'var(--warning)' : 'var(--text-3)'
               const isOpen = menuOpen === e.id
@@ -258,7 +271,6 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
                   </td>
                   <td onClick={ev => ev.stopPropagation()} style={{ position: 'relative', whiteSpace: 'nowrap' }}>
                     <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
-                      {/* Inline next-stage advance button */}
                       {next && (
                         <button
                           title={`Advance to: ${next}`}
@@ -279,7 +291,6 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
                           </span>
                         </button>
                       )}
-                      {/* More menu */}
                       <div ref={isOpen ? menuRef : null} style={{ position: 'relative' }}>
                         <button className="btn btn-secondary btn-sm" style={{ padding: '4px 10px', fontSize: 12 }} onClick={() => setMenuOpen(isOpen ? null : e.id)}>···</button>
                         {isOpen && (
@@ -305,13 +316,31 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
             })}
           </tbody>
         </table>
-        {list.length > 0 && (
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 16px', background: 'var(--elevated)', borderTop: '1px solid var(--border-l)' }}>
-            <span style={{ fontSize: 11.5, color: 'var(--text-4)' }}>Showing {list.length} of {db.enrollments.length} applications</span>
-            {someSelected && <span style={{ fontSize: 11.5, color: 'var(--pr)', fontWeight: 600 }}>{selected.size} row{selected.size !== 1 ? 's' : ''} selected</span>}
-          </div>
-        )}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 16px', background: 'var(--elevated)', borderTop: '1px solid var(--border-l)', flexWrap: 'wrap', gap: 8 }}>
+          <span style={{ fontSize: 11.5, color: 'var(--text-4)' }}>
+            Showing {pagedList.length ? ((pagination.page - 1) * 25) + 1 : 0}–{Math.min(pagination.page * 25, list.length)} of {list.length} applications
+            {list.length !== db.enrollments.length && <span> (filtered from {db.enrollments.length} total)</span>}
+          </span>
+          {someSelected && <span style={{ fontSize: 11.5, color: 'var(--pr)', fontWeight: 600 }}>{selected.size} row{selected.size !== 1 ? 's' : ''} selected</span>}
+        </div>
       </div>
+
+      {/* Pagination */}
+      {pagination.totalPages > 1 && (
+        <div style={{ marginTop: 12 }}>
+          <Pagination
+            page={pagination.page}
+            totalPages={pagination.totalPages}
+            totalItems={pagination.totalItems}
+            pageSize={25}
+            onPageChange={pagination.setPage}
+            onNext={pagination.nextPage}
+            onPrev={pagination.prevPage}
+          />
+        </div>
+      )}
+      </>
+      )}
     </div>
   )
 }

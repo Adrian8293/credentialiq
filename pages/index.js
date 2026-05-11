@@ -131,7 +131,7 @@ export default function App() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, []) // eslint-disable-line
+  }, []) // keyboard shortcut listener — intentionally mounts once.
 
   if (authLoading) return (
     <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Inter,sans-serif', color:'#6B7280', flexDirection:'column', gap:12 }}>

@@ -21,6 +21,45 @@ function StatusBadge({ status }) {
   return <span className={`badge ${map[status]||'b-gray'}`}>{status||'Unknown'}</span>
 }
 
+/**
+ * CaqhAttestBadge — shows a warning when CAQH attestation is stale.
+ * Most payers require re-attestation every 120 days; warn at 90 days elapsed.
+ */
+const CAQH_ATTEST_WARN_DAYS  = 90   // yellow warning
+const CAQH_ATTEST_ALERT_DAYS = 120  // red — payers may reject
+
+function CaqhAttestBadge({ caqhAttest }) {
+  if (!caqhAttest) return null
+  const attested = new Date(caqhAttest)
+  if (isNaN(attested.getTime())) return null
+  const daysSince = Math.floor((Date.now() - attested.getTime()) / 86400000)
+  if (daysSince < CAQH_ATTEST_WARN_DAYS) return null
+
+  const isAlert = daysSince >= CAQH_ATTEST_ALERT_DAYS
+  const color   = isAlert ? 'var(--danger)' : 'var(--warning)'
+  const bg      = isAlert ? 'rgba(239,68,68,.09)' : 'rgba(245,158,11,.09)'
+  const border  = isAlert ? 'rgba(239,68,68,.3)' : 'rgba(245,158,11,.3)'
+  const label   = isAlert
+    ? `CAQH attestation is ${daysSince}d old — payers may reject`
+    : `CAQH attestation is ${daysSince}d old — re-attest soon (120d limit)`
+
+  return (
+    <span
+      title={label}
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: 3,
+        marginLeft: 5, padding: '1px 6px',
+        fontSize: 10, fontWeight: 700, letterSpacing: '.02em',
+        background: bg, border: `1px solid ${border}`,
+        borderRadius: 99, color, cursor: 'default',
+        whiteSpace: 'nowrap', flexShrink: 0,
+      }}
+    >
+      {isAlert ? '⚠' : '●'} {daysSince}d
+    </span>
+  )
+}
+
 function CredWarning({ prov }) {
   const licD  = daysUntil(prov.licenseExp)
   const malD  = daysUntil(prov.malExp)
@@ -141,7 +180,17 @@ export function Providers({ db, search, setSearch, fStatus, setFStatus, fSpec, s
                     </div>
                   </td>
                   <td style={{ fontFamily: 'var(--fn-mono)', fontSize: 12, color: 'var(--text-3)' }}>{p.npi || '—'}</td>
-                  <td style={{ fontFamily: 'var(--fn-mono)', fontSize: 12, color: 'var(--text-3)' }}>{p.caqh || '—'}</td>
+                  <td style={{ fontFamily: 'var(--fn-mono)', fontSize: 12, color: 'var(--text-3)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 2 }}>
+                      {p.caqh || '—'}
+                      <CaqhAttestBadge caqhAttest={p.caqhAttest} />
+                    </div>
+                    {p.caqhAttest && (
+                      <div style={{ fontSize: 10, color: 'var(--text-4)', fontFamily: 'var(--fn-sans)', marginTop: 1 }}>
+                        Attested {fmtDate(p.caqhAttest)}
+                      </div>
+                    )}
+                  </td>
                   <td style={{ fontFamily: 'var(--fn-mono)', fontSize: 12, color: 'var(--text-3)' }}>{p.medicaid || '—'}</td>
                   <td>
                     <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>

@@ -9,12 +9,13 @@ export function useDocumentActions({ db, setDb, toast, requestConfirm }) {
 
   async function handleSaveDocument() {
     if (!docForm.provId || !docForm.exp) {
-      toast('Provider and expiration date required.', 'error'); return
+      toast('Provider and expiration date required.', 'error'); return null
     }
     setSaving(true)
+    let saved = null
     try {
       const provN = pNameShort(db.providers, docForm.provId)
-      const saved = await upsertDocument({ ...docForm, id: editingDocId || undefined }, provN)
+      saved = await upsertDocument({ ...docForm, id: editingDocId || undefined }, provN)
       setDb(prev => ({
         ...prev,
         documents: editingDocId
@@ -26,6 +27,7 @@ export function useDocumentActions({ db, setDb, toast, requestConfirm }) {
       setEditingDocId(null)
     } catch(err) { toast(err.message, 'error') }
     setSaving(false)
+    return saved  // DocModal uses this to immediately upload the staged file
   }
 
   async function handleDeleteDocument(id) {
