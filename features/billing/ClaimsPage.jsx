@@ -74,6 +74,12 @@ export function ClaimsPage({ db, toast, requestConfirm }) {
 
   return (
     <div className="page">
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
+        <div>
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)', letterSpacing: '-.03em', marginBottom: 3 }}>Claims</h2>
+          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Track and manage all billing claims and accounts receivable.</p>
+        </div>
+      </div>
       <div className="kpi-grid">
         <div className="kpi"><div className="kpi-label">Total Billed</div><div className="kpi-value" style={{fontSize:26}}>{fmtMoney(totalBilled)}</div></div>
         <div className="kpi kpi-teal"><div className="kpi-label">Total Paid</div><div className="kpi-value" style={{fontSize:26}}>{fmtMoney(totalPaid)}</div><div className="kpi-sub">{totalBilled>0?((totalPaid/totalBilled)*100).toFixed(1):0}% collection rate</div></div>

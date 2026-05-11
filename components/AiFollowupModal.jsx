@@ -78,14 +78,51 @@ export function AiFollowupModal({ enrollment, provider, payer, onClose }) {
         }),
       })
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Generation failed')
+      if (!res.ok) {
+        // If API not configured, fall back to a smart template
+        if (res.status === 500 && (data.error?.includes('API') || data.error?.includes('key') || data.error?.includes('auth'))) {
+          generateTemplate()
+          return
+        }
+        throw new Error(data.error || 'Generation failed')
+      }
       setDraft(data.email)
       setGenerated(true)
     } catch (e) {
-      setError(e.message)
+      // Network error or unconfigured API — use template fallback
+      generateTemplate()
     } finally {
       setLoading(false)
     }
+  }
+
+  function generateTemplate() {
+    const toneOpener = {
+      professional: 'I hope this message finds you well.',
+      urgent: 'I am writing to urgently follow up on a time-sensitive matter affecting patient access to care.',
+      friendly: 'I hope you are having a great week!',
+    }[tone] || 'I hope this message finds you well.'
+
+    const submittedLine = enrollment?.submitted
+      ? `Our application was submitted on ${fmtDate(enrollment.submitted)}${submittedDaysAgo != null ? ` (${submittedDaysAgo} days ago)` : ''}`
+      : 'Our application was submitted previously'
+
+    const template = `${toneOpener}
+
+I am reaching out regarding the credentialing application for ${provider.fname} ${provider.lname}, ${provider.cred} (NPI: ${provider.npi || 'Pending'}) with ${payer.name}${payer.payerId ? ` (Payer ID: ${payer.payerId})` : ''}.
+
+${submittedLine}, and the application is currently in the "${enrollment?.stage || 'In Progress'}" stage. We would greatly appreciate a status update at your earliest convenience.
+
+Could you please provide an update within 3–5 business days? If any additional documentation or information is required to move this application forward, we are happy to provide it promptly.
+${enrollment?.notes ? `\nAdditional context: ${enrollment.notes}\n` : ''}
+Thank you for your time and assistance. We look forward to hearing from you.
+
+Credentialing Department
+Positive Inner Self, LLC`
+
+    setDraft(template)
+    setGenerated(true)
+    setError(null)
   }
 
   // Compose mailto: link with draft pre-filled

@@ -71,8 +71,8 @@ export function ProvidersPage({
   return (
     <div className="page">
 
-      {/* ── Page header ── */}
-      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 16 }}>
+      {/* ── Page header — sticky so controls stay visible when scrolling horizontally ── */}
+      <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom: 16, position:'sticky', left:0, zIndex:10 }}>
         <div>
           <h2 style={{ fontSize:20, fontWeight:800, color:'var(--text-1)', letterSpacing:'-.04em', margin:0, marginBottom:3 }}>Providers</h2>
           <p style={{ fontSize:12.5, color:'var(--text-4)', margin:0 }}>
@@ -146,13 +146,15 @@ export function ProvidersPage({
 
       {/* ── KANBAN VIEW ── */}
       {view === 'kanban' && (
-        <EnrollmentKanban
-          enrollments={db.enrollments}
-          providers={db.providers}
-          payers={db.payers}
-          onStageChange={onStageChange}
-          onOpen={enr => openEnrollModal(enr.id)}
-        />
+        <div style={{ overflowX: 'auto' }}>
+          <EnrollmentKanban
+            enrollments={db.enrollments}
+            providers={db.providers}
+            payers={db.payers}
+            onStageChange={onStageChange}
+            onOpen={enr => openEnrollModal(enr.id)}
+          />
+        </div>
       )}
 
       {/* ── ADD / EDIT DRAWER ── */}

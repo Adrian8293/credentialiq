@@ -953,20 +953,15 @@ export function ProviderCommandCenter({ prov, db, onClose, onEdit, openEnrollMod
 
 export function WorkflowTasks({ db, openTaskModal, handleMarkDone, handleDeleteTask }) {
   const [filter, setFilter] = useState('open')
-  const [tasks, setTasks] = useState(db.tasks)
   const [completing, setCompleting] = useState(new Set())
 
-  // Sync when db.tasks changes
-  if (tasks !== db.tasks && tasks.length !== db.tasks.length) {
-    setTasks(db.tasks)
-  }
-
+  // Always read directly from db.tasks so priority/status edits are immediately reflected
   function pName(id) {
     const p = db.providers.find(x => x.id === id)
     return p ? `${p.fname} ${p.lname}` : null
   }
 
-  const shown = tasks.filter(t => {
+  const shown = db.tasks.filter(t => {
     if (filter === 'open') return t.status !== 'Done'
     if (filter === 'urgent') return t.status !== 'Done' && t.priority === 'Urgent'
     if (filter === 'done') return t.status === 'Done'
@@ -984,10 +979,26 @@ export function WorkflowTasks({ db, openTaskModal, handleMarkDone, handleDeleteT
     setCompleting(prev => { const s = new Set(prev); s.delete(id); return s })
   }
 
-  const FILTERS = [['open', 'Open'], ['urgent', '🔴 Urgent'], ['done', 'Done'], ['all', 'All']]
+  const openCount   = db.tasks.filter(t => t.status !== 'Done').length
+  const urgentCount = db.tasks.filter(t => t.status !== 'Done' && t.priority === 'Urgent').length
+  const doneCount   = db.tasks.filter(t => t.status === 'Done').length
+
+  const FILTERS = [
+    ['open',   `Open (${openCount})`],
+    ['urgent', `🔴 Urgent (${urgentCount})`],
+    ['done',   `Done (${doneCount})`],
+    ['all',    'All'],
+  ]
 
   return (
     <div className="page">
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
+        <div>
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)', letterSpacing: '-.03em', marginBottom: 3 }}>Tasks</h2>
+          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Manage and track credentialing workflow tasks by priority.</p>
+        </div>
+        <button className="btn btn-primary btn-sm" onClick={() => openTaskModal()}>+ New Task</button>
+      </div>
       <div className="toolbar">
         <div style={{ display: 'flex', gap: 4, background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 999, padding: 4 }}>
           {FILTERS.map(([k, l]) => (
@@ -1000,9 +1011,6 @@ export function WorkflowTasks({ db, openTaskModal, handleMarkDone, handleDeleteT
               {l}
             </button>
           ))}
-        </div>
-        <div className="toolbar-right">
-          <button className="btn btn-primary btn-sm" onClick={() => openTaskModal()}>+ New Task</button>
         </div>
       </div>
 
@@ -1032,23 +1040,27 @@ export function WorkflowTasks({ db, openTaskModal, handleMarkDone, handleDeleteT
               transform: isCompleting ? 'translateX(20px)' : 'none',
             }}
           >
-            {/* Check circle */}
-            <div
-              onClick={() => !done && markDoneWithAnimation(t.id, t.task)}
+            {/* Check circle — use <button> for proper click handling */}
+            <button
+              type="button"
+              disabled={done || isCompleting}
+              onClick={async (e) => { e.stopPropagation(); if (!done && !isCompleting) await markDoneWithAnimation(t.id, t.task) }}
+              title={done ? 'Completed' : 'Mark as done'}
               style={{
-                width: 20, height: 20, borderRadius: '50%',
-                border: done ? 'none' : '1.5px solid var(--border)',
+                width: 24, height: 24, borderRadius: '50%',
+                border: done ? '2px solid var(--green)' : '1.5px solid var(--border)',
                 background: done ? 'var(--green-l)' : 'transparent',
                 color: done ? 'var(--green-d)' : 'transparent',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                cursor: done ? 'default' : 'pointer', flexShrink: 0, fontSize: 10,
-                fontWeight: 700, transition: 'all .14s',
+                cursor: done ? 'default' : 'pointer', flexShrink: 0, fontSize: 12,
+                fontWeight: 800, transition: 'all .14s',
+                fontFamily: 'inherit', padding: 0, outline: 'none',
               }}
-              onMouseEnter={e => { if (!done) { e.currentTarget.style.borderColor = 'var(--green)'; e.currentTarget.style.background = 'var(--green-l)' } }}
-              onMouseLeave={e => { if (!done) { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'transparent' } }}
+              onMouseEnter={e => { if (!done) { e.currentTarget.style.borderColor = 'var(--green)'; e.currentTarget.style.background = 'var(--green-l)'; e.currentTarget.style.color = 'var(--green)' } }}
+              onMouseLeave={e => { if (!done) { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'transparent' } }}
             >
-              {done ? '✓' : ''}
-            </div>
+              {(done || isCompleting) ? '✓' : ''}
+            </button>
 
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 13, fontWeight: 500, textDecoration: done ? 'line-through' : 'none', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>

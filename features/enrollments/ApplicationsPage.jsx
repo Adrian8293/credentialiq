@@ -72,7 +72,7 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
           <div>
             <h2 style={{ fontSize: 20, fontWeight: 800, color: 'var(--text-1)', letterSpacing: '-.04em', margin: 0, marginBottom: 4 }}>Applications</h2>
             <p style={{ fontSize: 12.5, color: 'var(--text-4)', margin: 0 }}>
-              Track and manage all credentialing applications. {fmtFull()}
+              Track and manage all credentialing applications.
             </p>
           </div>
           {/* SINGLE "New Application" button — only here */}

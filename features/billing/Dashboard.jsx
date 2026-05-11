@@ -223,32 +223,7 @@ function RecentAppsTable({ db, openEnrollModal, setPage }) {
   )
 }
 
-// ─── QUICK ACTIONS ────────────────────────────────────────────────────────────
-function QuickActions({ setPage, openEnrollModal }) {
-  const actions = [
-    { label: 'New Application', icon: Icon.plus, color: 'var(--pr)', action: () => openEnrollModal?.() },
-    { label: 'Add Provider', icon: Icon.users, color: 'var(--success)', action: () => setPage('add-provider') },
-    { label: 'Upload Document', icon: Icon.doc, color: 'var(--warning)', action: () => setPage('documents') },
-    { label: 'View Alerts', icon: Icon.alert, color: 'var(--danger)', action: () => setPage('alerts') },
-    { label: 'Run Reports', icon: Icon.download, color: '#7C3AED', action: () => setPage('reports') },
-  ]
-  return (
-    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 18 }}>
-      {actions.map(a => (
-        <button key={a.label} onClick={a.action} style={{
-          display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px',
-          background: 'var(--card)', border: '1.5px solid var(--border)',
-          borderRadius: 'var(--r)', fontSize: 12, fontWeight: 500, color: 'var(--text-2)',
-          cursor: 'pointer', transition: 'all .14s',
-        }}
-        onMouseEnter={e => { e.currentTarget.style.borderColor = a.color; e.currentTarget.style.color = a.color }}
-        onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--text-2)' }}>
-          <span style={{ color: a.color }}>{a.icon}</span> {a.label}
-        </button>
-      ))}
-    </div>
-  )
-}
+// QuickActions removed per UX cleanup — shortcuts are now available via the sidebar nav
 
 // ─── SPECIALTY BREAKDOWN ──────────────────────────────────────────────────────
 function SpecialtyBreakdown({ db }) {
@@ -332,6 +307,8 @@ function UpcomingExpirations({ db, setPage }) {
 export function Dashboard({ db, setPage, openEnrollModal, onDraftEmail }) {
   const alertDays = db.settings.alertDays || 90
   const meta = {}
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo]     = useState('')
 
   const activeProvs   = db.providers.filter(p => p.status === 'Active').length
   const activeEnr     = db.enrollments.filter(e => e.stage === 'Active').length
@@ -364,20 +341,43 @@ export function Dashboard({ db, setPage, openEnrollModal, onDraftEmail }) {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
         <div>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)', letterSpacing: '-.03em', marginBottom: 3 }}>Dashboard</h2>
-          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Welcome back! Here's what's happening with your credentialing. {fmtFull()}</p>
+          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Welcome back! Here's what's happening with your credentialing.</p>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          {/* Date range selector */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: 'var(--elevated)', border: '1.5px solid var(--border)', borderRadius: 'var(--r)', padding: '5px 10px' }}>
+            <span style={{ fontSize: 11, color: 'var(--text-4)', fontWeight: 500 }}>From</span>
+            <input type="date" value={dateFrom} onChange={e => setDateFrom(e.target.value)}
+              style={{ border: 'none', background: 'transparent', fontSize: 12, color: 'var(--text-2)', outline: 'none', fontFamily: 'inherit' }} />
+            <span style={{ fontSize: 11, color: 'var(--text-4)', fontWeight: 500 }}>To</span>
+            <input type="date" value={dateTo} onChange={e => setDateTo(e.target.value)}
+              style={{ border: 'none', background: 'transparent', fontSize: 12, color: 'var(--text-2)', outline: 'none', fontFamily: 'inherit' }} />
+          </div>
+          <button className="btn btn-secondary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+            onClick={() => {
+              const from = dateFrom || '1970-01-01'
+              const to   = dateTo   || new Date().toISOString().split('T')[0]
+              const rows = db.enrollments.filter(e => {
+                const d = (e.updated || e.created || '').split('T')[0]
+                return d >= from && d <= to
+              })
+              const csv = ['Provider,Payer,Stage,Date'].concat(
+                rows.map(e => {
+                  const prov = db.providers.find(p => p.id === e.provId)
+                  const pay  = db.payers.find(p => p.id === e.payId)
+                  return `"${prov ? prov.fname+' '+prov.lname : '—'}","${pay?.name||'—'}","${e.stage||'—'}","${(e.updated||e.created||'').split('T')[0]}"`
+                })
+              ).join('\n')
+              const blob = new Blob([csv], { type: 'text/csv' })
+              const a = document.createElement('a')
+              a.href = URL.createObjectURL(blob)
+              a.download = `credentialing-report-${from}-to-${to}.csv`
+              a.click()
+            }}>
             {Icon.download} Download Report
-          </button>
-          <button className="btn btn-primary btn-sm" style={{ display: 'flex', alignItems: 'center', gap: 6 }} onClick={() => openEnrollModal?.()}>
-            {Icon.plus} New Application
           </button>
         </div>
       </div>
-
-      {/* Quick Actions */}
-      <QuickActions setPage={setPage} openEnrollModal={openEnrollModal} />
 
       {/* KPI Grid */}
       <div className="kpi-grid">
@@ -397,10 +397,10 @@ export function Dashboard({ db, setPage, openEnrollModal, onDraftEmail }) {
           onClick={() => setPage('documents')} />
       </div>
 
-      {/* Main 3-column layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
+      {/* Main layout: responsive grid — 2-col base, expands to 3-col on wide screens */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 14 }}>
 
-        {/* LEFT: Alerts + Followups */}
+        {/* COL 1: Alerts + Followups */}
         <div>
           <div className="card mb-16" style={{ marginBottom: 14 }}>
             <div className="card-header">
@@ -428,7 +428,7 @@ export function Dashboard({ db, setPage, openEnrollModal, onDraftEmail }) {
           </div>
         </div>
 
-        {/* CENTER: Pipeline + Expirations */}
+        {/* COL 2: Pipeline Donut + Docs Expiring */}
         <div>
           <div className="card" style={{ marginBottom: 14 }}>
             <div className="card-header">
@@ -441,10 +441,10 @@ export function Dashboard({ db, setPage, openEnrollModal, onDraftEmail }) {
           <UpcomingExpirations db={db} setPage={setPage} />
         </div>
 
-        {/* RIGHT: Recent Apps + Specialty */}
+        {/* COL 3: Recent Applications + Specialty Breakdown */}
         <div>
           <RecentAppsTable db={db} openEnrollModal={openEnrollModal} setPage={setPage} />
-          <div className="card">
+          <div className="card" style={{ marginTop: 14 }}>
             <div className="card-header">
               <SH icon={Icon.users} title="Providers by Specialty" onViewAll={() => setPage('providers')} />
             </div>

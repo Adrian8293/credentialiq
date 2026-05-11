@@ -117,10 +117,46 @@ export function Audit({ db, search, setSearch, fType, setFType, handleClearAudit
                   </td>
                   <td style={{ fontSize: 12, color: 'var(--text-4)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--pr)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 8.5, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-                        {(a.user || a.email || 'S')[0]?.toUpperCase()}
-                      </div>
-                      <span>{a.user || a.email || 'System'}</span>
+                      {(() => {
+                        const raw = a.user || a.email || ''
+                        // Format: "First L." from "First Last" or email
+                        let display = 'System'
+                        let avatarLetter = 'S'
+                        if (raw) {
+                          // Check if it looks like an email
+                          if (raw.includes('@')) {
+                            const localPart = raw.split('@')[0]
+                            // Try to parse "firstname.lastname" or "firstlast"
+                            const parts = localPart.split('.')
+                            if (parts.length >= 2) {
+                              const first = parts[0].charAt(0).toUpperCase() + parts[0].slice(1)
+                              const lastInit = parts[1].charAt(0).toUpperCase()
+                              display = `${first} ${lastInit}.`
+                            } else {
+                              display = localPart.charAt(0).toUpperCase() + localPart.slice(1)
+                            }
+                            avatarLetter = localPart.charAt(0).toUpperCase()
+                          } else {
+                            // Assume "First Last" format
+                            const parts = raw.trim().split(/\s+/)
+                            if (parts.length >= 2) {
+                              const lastInit = parts[parts.length - 1].charAt(0).toUpperCase()
+                              display = `${parts[0]} ${lastInit}.`
+                            } else {
+                              display = raw
+                            }
+                            avatarLetter = raw.charAt(0).toUpperCase()
+                          }
+                        }
+                        return (
+                          <>
+                            <div style={{ width: 22, height: 22, borderRadius: '50%', background: 'var(--pr)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 8.5, fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                              {avatarLetter}
+                            </div>
+                            <span>{display}</span>
+                          </>
+                        )
+                      })()}
                     </div>
                   </td>
                 </tr>

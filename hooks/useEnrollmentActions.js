@@ -26,7 +26,7 @@ export function useEnrollmentActions({ db, setDb, toast, requestConfirm }) {
           : [...prev.enrollments, saved],
       }))
       toast(editingEnrollmentId ? 'Enrollment updated!' : 'Enrollment saved!', 'success')
-      setModal(null)
+      // setModal(null) is handled by handleSaveEnrollment wrapper in index.js
       setEnrollForm({})
       setEditingEnrollmentId(null)
     } catch(err) { toast(err.message, 'error') }
@@ -74,7 +74,7 @@ export function useEnrollmentActions({ db, setDb, toast, requestConfirm }) {
     } else {
       setEnrollForm({ stage: 'Not Started', eft: 'Not Set Up', era: 'Not Set Up', contract: 'No', provId: preProvId || '', payId: '' })
     }
-    setModal('enroll')
+    // Note: setModal('enroll') is called by the wrapper in index.js — do NOT call it here
   }
 
   return {

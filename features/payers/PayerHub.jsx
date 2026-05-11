@@ -156,10 +156,10 @@ export function PayerHub({ db, initialTab, openEnrollModal, openPayerModal, sear
   return (
     <div className="page">
       {/* Page header */}
-      <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:20 }}>
+      <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:20, position:'sticky', left:0, zIndex:10 }}>
         <div>
           <h2 style={{ fontSize:20, fontWeight:800, color:'var(--text-1)', letterSpacing:'-.04em', margin:0, marginBottom:4 }}>Payers</h2>
-          <p style={{ fontSize:12.5, color:'var(--text-4)', margin:0 }}>Manage payer enrollments and relationships. {fmtFull()}</p>
+          <p style={{ fontSize:12.5, color:'var(--text-4)', margin:0 }}>Manage payer enrollments and relationships.</p>
         </div>
         <div style={{ display:'flex', gap:8 }}>
           <button className="btn btn-secondary btn-sm" onClick={() => openPayerModal()}>+ Add Payer</button>
@@ -168,7 +168,7 @@ export function PayerHub({ db, initialTab, openEnrollModal, openPayerModal, sear
       </div>
 
       {/* View switcher — horizontal pill buttons */}
-      <div style={{ display:'flex', gap:6, marginBottom:18, background:'var(--elevated)', border:'1.5px solid var(--border)', borderRadius:'var(--r-lg)', padding:4, width:'fit-content' }}>
+      <div style={{ display:'flex', gap:6, marginBottom:18, background:'var(--elevated)', border:'1.5px solid var(--border)', borderRadius:'var(--r-lg)', padding:4, width:'fit-content', position:'sticky', left:0 }}>
         {VIEWS.map(v => (
           <button key={v.id} onClick={() => setView(v.id)} style={{
             display:'flex', alignItems:'center', gap:6, padding:'6px 14px',
@@ -196,7 +196,9 @@ export function PayerHub({ db, initialTab, openEnrollModal, openPayerModal, sear
         <PayersTab db={db} search={paySearch} setSearch={setPaySearch} fType={payFType} setFType={setPayFType} openPayerModal={openPayerModal} handleDeletePayer={handleDeletePayer} />
       )}
       {view === 'pipeline' && (
-        <KanbanPipeline db={db} openEnrollModal={openEnrollModal} />
+        <div style={{ overflowX: 'auto' }}>
+          <KanbanPipeline db={db} openEnrollModal={openEnrollModal} />
+        </div>
       )}
       {view === 'library' && (
         <PayerRequirements db={db} />

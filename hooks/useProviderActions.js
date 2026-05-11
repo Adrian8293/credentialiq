@@ -230,7 +230,7 @@ export function useProviderActions({ db, setDb, toast, requestConfirm, setPage }
     setProvForm({ ...prov })
     setNpiInput(prov.npi || '')
     setNpiResult(null)
-    setPage('add-provider')
+    // Note: caller (ProvidersPage.handleEditFromCard) is responsible for opening the drawer
   }
 
   return {

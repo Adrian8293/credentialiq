@@ -82,8 +82,13 @@ export function EligibilityPage({ db, toast, requestConfirm }) {
 
   return (
     <div className="page">
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
+        <div>
+          <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)', letterSpacing: '-.03em', marginBottom: 3 }}>Eligibility</h2>
+          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Verify patient insurance eligibility and coverage status.</p>
+        </div>
+      </div>
       <div className="kpi-grid">
-        {[['Total Checks', checks.length, ''],
           ['Eligible', checks.filter(c=>c.status==='Eligible').length, 'kpi-teal'],
           ['Ineligible', checks.filter(c=>c.status==='Ineligible').length, 'kpi-red'],
           ['Pending', checks.filter(c=>c.status==='Pending').length, 'kpi-amber'],

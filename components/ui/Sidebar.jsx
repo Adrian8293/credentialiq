@@ -129,12 +129,10 @@ export function Sidebar({ page, setPage, alertCount, expDocs, user, signOut, db 
         {navItem('tasks',        'Tasks',        I.tasks,     taskCount)}
         {navItem('alerts',       'Alerts',       I.alerts,    alertCount)}
 
-        {expandableItem('billing', 'Billing', I.billing, [
-          { pg: 'claims',      label: 'Claims',       icon: I.claims },
-          { pg: 'eligibility', label: 'Eligibility',  icon: I.eligibility },
-          { pg: 'denials',     label: 'Denial Log',   icon: I.denials },
-          { pg: 'revenue',     label: 'Revenue',      icon: I.revenue },
-        ], billingOpen, setBillingOpen)}
+        {navItem('claims',      'Claims',      I.claims)}
+        {navItem('eligibility', 'Eligibility', I.eligibility)}
+        {navItem('denials',     'Denial Log',  I.denials)}
+        {navItem('revenue',     'Revenue',     I.revenue)}
 
         {expandableItem('marketing', 'Marketing', I.marketing, [
           { pg: 'marketing', label: 'Psychology Today', icon: I.pt },

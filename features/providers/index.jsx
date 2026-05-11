@@ -111,9 +111,9 @@ export function Providers({ db, search, setSearch, fStatus, setFStatus, fSpec, s
               const ini     = ((p.fname||'')[0]||'') + ((p.lname||'')[0]||'')
 
               return (
-                <tr key={p.id} style={{ cursor: 'pointer' }} onClick={() => openProvDetail(p.id)}>
-                  {/* Provider name — clickable like a link */}
-                  <td onClick={ev => ev.stopPropagation()}>
+                <tr key={p.id}>
+                  {/* Provider name — only this cell triggers the detail modal */}
+                  <td>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                       {/* Mini avatar */}
                       <div style={{
