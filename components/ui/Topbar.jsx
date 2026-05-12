@@ -5,13 +5,10 @@
  */
 
 import { useState, useEffect, useRef } from 'react'
-import { GlobalSearch } from '../GlobalSearch.jsx'
 
 export function Topbar({ page, setPage, openDocModal, openTaskModal, openEnrollModal, exportJSON, saving, onOpenSearch, alertCount, user, signOut, db, openProvDetail }) {
   const [userMenuOpen, setUserMenuOpen]   = useState(false)
-  const [searchActive, setSearchActive]   = useState(false)
   const userMenuRef = useRef(null)
-  const searchRef   = useRef(null)
 
   useEffect(() => {
     function onDown(e) {
@@ -19,15 +16,6 @@ export function Topbar({ page, setPage, openDocModal, openTaskModal, openEnrollM
     }
     document.addEventListener('mousedown', onDown)
     return () => document.removeEventListener('mousedown', onDown)
-  }, [])
-
-  // ⌘K shortcut
-  useEffect(() => {
-    function onKey(e) {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); setSearchActive(true) }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
   }, [])
 
   const titles = {
@@ -47,25 +35,15 @@ export function Topbar({ page, setPage, openDocModal, openTaskModal, openEnrollM
   return (
     <>
       <div className="topbar">
-        {/* Left: inline search bar (replaces tab title) */}
+        {/* Left: search button — opens the global search overlay in index.js */}
         <div className="topbar-left" style={{ flex: '1 1 auto', minWidth: 0 }}>
-          {searchActive ? (
-            <GlobalSearch
-              db={db}
-              onClose={() => setSearchActive(false)}
-              setPage={setPage}
-              openProvDetail={openProvDetail}
-              openEnrollModal={openEnrollModal}
-            />
-          ) : (
-            <button className="topbar-search-btn" onClick={() => setSearchActive(true)} style={{ width: '100%', maxWidth: 320 }}>
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
-              <span>Search providers, apps…</span>
-              <kbd>⌘K</kbd>
-            </button>
-          )}
+          <button className="topbar-search-btn" onClick={onOpenSearch} style={{ width: '100%', maxWidth: 320 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <span>Search providers, apps…</span>
+            <kbd>⌘K</kbd>
+          </button>
         </div>
 
         {/* Right: actions */}

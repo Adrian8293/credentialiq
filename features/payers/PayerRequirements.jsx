@@ -147,7 +147,7 @@ function PayerCard({ name, req, isExpanded, onToggle, activeState, onClickState,
           border: `1.5px solid ${req.color || meta.color}30`,
           display:'flex', alignItems:'center', justifyContent:'center',
           fontSize: 16, fontWeight: 900, color: req.color || meta.color,
-          letterSpacing: '-.02em', fontFamily: 'var(--fn-sans)',
+          letterSpacing: '-.02em', fontFamily: 'var(--fn)',
         }}>
           {name[0]}
         </div>

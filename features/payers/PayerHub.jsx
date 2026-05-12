@@ -151,7 +151,7 @@ function EnrollmentTable({ db, search, setSearch, fStage, setFStage, fProv, setF
 }
 
 export function PayerHub({ db, initialTab, openEnrollModal, openPayerModal, search, setSearch, fStage, setFStage, fProv, setFProv, handleDeleteEnrollment, paySearch, setPaySearch, payFType, setPayFType, handleDeletePayer, onDraftEmail }) {
-  const [view, setView] = useState('enrollments')
+  const [view, setView] = useState(initialTab || 'enrollments')
 
   return (
     <div className="page">

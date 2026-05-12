@@ -166,7 +166,10 @@ export default function App() {
 
   async function handleSaveEnrollment() { await enrollments.handleSaveEnrollment(); setModal(null) }
   async function handleSavePayer()      { await payers.handleSavePayer();           setModal(null) }
-  async function handleSaveDocument()   { await documents.handleSaveDocument();     setModal(null) }
+  // BUG-001: Do NOT call setModal(null) here. DocModal.handleSaveWithUpload calls
+  // handleSaveDocument to get the saved record, then uploads the staged file, then
+  // calls onClose itself. Closing the modal here unmounts DocModal mid-upload.
+  async function handleSaveDocument()   { return await documents.handleSaveDocument() }
   async function handleSaveTask()       { await tasks.handleSaveTask();             setModal(null) }
 
   async function handleSaveSettings() {
@@ -310,6 +313,7 @@ export default function App() {
                   handleDeleteEnrollment={enrollments.handleDeleteEnrollment}
                   onDraftEmail={openAiFollowup}
                   handleStageChange={enrollments.handleStageChange}
+                  loading={loading}
                 />
               )}
 
@@ -324,6 +328,7 @@ export default function App() {
                   paySearch={paySearch} setPaySearch={setPaySearch}
                   payFType={payFType} setPayFType={setPayFType}
                   handleDeletePayer={payers.handleDeletePayer}
+                  onDraftEmail={openAiFollowup}
                 />
               )}
 
@@ -376,6 +381,7 @@ export default function App() {
             handleSaveEnrollment={handleSaveEnrollment}
             onClose={() => { setModal(null); enrollments.setEnrollForm({}); enrollments.setEditingEnrollmentId?.(null) }}
             saving={enrollments.saving}
+            onAddPayer={() => { setModal(null); setTimeout(() => openPayerModal(), 50) }}
           />
         )}
         {modal === 'payer' && (

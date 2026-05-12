@@ -186,7 +186,7 @@ export function Providers({ db, search, setSearch, fStatus, setFStatus, fSpec, s
                       <CaqhAttestBadge caqhAttest={p.caqhAttest} />
                     </div>
                     {p.caqhAttest && (
-                      <div style={{ fontSize: 10, color: 'var(--text-4)', fontFamily: 'var(--fn-sans)', marginTop: 1 }}>
+                      <div style={{ fontSize: 10, color: 'var(--text-4)', fontFamily: 'var(--fn)', marginTop: 1 }}>
                         Attested {fmtDate(p.caqhAttest)}
                       </div>
                     )}

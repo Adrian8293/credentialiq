@@ -128,10 +128,10 @@ export function Settings({ settingsForm, setSettingsForm, handleSaveSettings, ex
                 </div>
               </div>
               <div style={{ marginTop: 16 }}>
-                <Toggle label="Auto-send applications" checked={notifs.emailExpiry} onChange={v => setNotifs(n=>({...n,emailExpiry:v}))} />
-                <Toggle label="Email notifications" checked={notifs.taskReminders} onChange={v => setNotifs(n=>({...n,taskReminders:v}))} />
-                <Toggle label="Task due-date reminder" checked={notifs.docExpiry} onChange={v => setNotifs(n=>({...n,docExpiry:v}))} />
-                <Toggle label="Document expiration reminder" checked={notifs.enableAuditLog} onChange={v => setNotifs(n=>({...n,enableAuditLog:v}))} />
+                <Toggle label="Document / credential expiration emails" checked={notifs.emailExpiry} onChange={v => setNotifs(n=>({...n,emailExpiry:v}))} />
+                <Toggle label="Task due-date reminders" checked={notifs.taskReminders} onChange={v => setNotifs(n=>({...n,taskReminders:v}))} />
+                <Toggle label="Document upload confirmations" checked={notifs.docExpiry} onChange={v => setNotifs(n=>({...n,docExpiry:v}))} />
+                <Toggle label="Enable audit log" checked={notifs.enableAuditLog} onChange={v => setNotifs(n=>({...n,enableAuditLog:v}))} />
                 <Toggle label="Two-factor authentication" checked={notifs.twoFactor} onChange={v => setNotifs(n=>({...n,twoFactor:v}))} />
               </div>
               <button className="btn btn-primary mt-12" onClick={handleSaveSettings}>Save Changes</button>

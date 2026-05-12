@@ -91,10 +91,11 @@ export function DocModal({ db, docForm, setDocForm, editingId, handleSaveDocumen
     setUploading(false)
   }
 
-  // Called by parent after upsertDocument resolves — passes the saved doc
+  // Called by the Save button — saves metadata, then uploads any staged file,
+  // then closes the modal. The parent wrapper intentionally does NOT close the
+  // modal so this function owns the full sequence.
   async function handleSaveWithUpload() {
     const saved = await handleSaveDocument()
-    // handleSaveDocument returns the saved doc object from the hook
     if (saved && stagedFile) {
       setUploading(true)
       try {
@@ -104,9 +105,13 @@ export function DocModal({ db, docForm, setDocForm, editingId, handleSaveDocumen
         toast?.('File attached successfully.', 'success')
       } catch (err) {
         toast?.(`File upload failed: ${err.message}`, 'error')
+        setUploading(false)
+        return // leave modal open so user can retry
       }
       setUploading(false)
     }
+    // Close the modal only after the full save+upload sequence completes
+    if (saved) onClose()
   }
 
   const isBusy = saving || uploading

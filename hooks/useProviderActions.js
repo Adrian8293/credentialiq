@@ -20,7 +20,7 @@ export function useProviderActions({ db, setDb, toast, requestConfirm, setPage }
   const [npiSyncModal, setNpiSyncModal]   = useState(null)
 
   async function handlePhotoUpload(file, providerId) {
-    if (!providerId) { alert('Save the provider first before uploading a photo.'); return }
+    if (!providerId) { toast('Save the provider first before uploading a photo.', 'error'); return }
     setPhotoUploading(true)
     try {
       const url = await uploadProviderPhoto(providerId, file)

@@ -16,16 +16,12 @@
  */
 
 import { useState, useCallback } from 'react'
-import { useRouter } from 'next/router'
+import { daysUntil } from '../lib/helpers.js'
 
 // ─── HELPERS ──────────────────────────────────────────────────────────────────
 
-const TODAY = new Date()
-
-export function daysUntilWF(d) {
-  if (!d) return null
-  return Math.ceil((new Date(d) - TODAY) / 86400000)
-}
+// daysUntilWF removed — use daysUntil from lib/helpers.js for consistent
+// timezone handling across the whole app.
 
 export function fmtDateWF(d) {
   if (!d) return '—'
@@ -36,13 +32,13 @@ export function fmtDateWF(d) {
 export function providerReadiness(prov) {
   let score = 100
   if (!prov.npi) score -= 20
-  const licD = daysUntilWF(prov.licenseExp)
+  const licD = daysUntil(prov.licenseExp)
   if (licD === null || licD < 0) score -= 25
   else if (licD <= 30) score -= 10
-  const malD = daysUntilWF(prov.malExp)
+  const malD = daysUntil(prov.malExp)
   if (malD === null || malD < 0) score -= 25
   else if (malD <= 30) score -= 10
-  const caqhD = daysUntilWF(prov.caqhDue)
+  const caqhD = daysUntil(prov.caqhDue)
   if (caqhD === null || caqhD < 0) score -= 15
   return Math.max(0, score)
 }
@@ -164,7 +160,7 @@ export function EnrollmentStageBar({ stage, submitted, slaTarget, notes, onActio
 
 export function NextActionBanner({ task, provName, onViewAll }) {
   if (!task) return null
-  const d = daysUntilWF(task.due)
+  const d = daysUntil(task.due)
   const dueText = d < 0
     ? `${Math.abs(d)} days overdue`
     : d === 0 ? 'due today'
@@ -227,10 +223,10 @@ export function WorkflowDashboard({ db, setPage, openEnrollModal }) {
 
   // Priority tasks: overdue or urgent
   const urgentTasks = db.tasks.filter(t =>
-    t.status !== 'Done' && (t.priority === 'Urgent' || daysUntilWF(t.due) <= 0)
-  ).sort((a, b) => (daysUntilWF(a.due) ?? 99) - (daysUntilWF(b.due) ?? 99))
+    t.status !== 'Done' && (t.priority === 'Urgent' || daysUntil(t.due) <= 0)
+  ).sort((a, b) => (daysUntil(a.due) ?? 99) - (daysUntil(b.due) ?? 99))
 
-  const overdueTasks = db.tasks.filter(t => t.status !== 'Done' && daysUntilWF(t.due) < 0)
+  const overdueTasks = db.tasks.filter(t => t.status !== 'Done' && daysUntil(t.due) < 0)
   const pendingEnr = db.enrollments.filter(e => !['Active', 'Denied'].includes(e.stage))
   const overdueEnr = pendingEnr.filter(e =>
     e.submitted && (TODAY - new Date(e.submitted)) / 86400000 > (e.slaTarget || 90)
@@ -243,7 +239,7 @@ export function WorkflowDashboard({ db, setPage, openEnrollModal }) {
 
   // Expiring credentials
   const expiringProvs = db.providers.filter(p => {
-    const l = daysUntilWF(p.licenseExp), m = daysUntilWF(p.malExp), c = daysUntilWF(p.caqhDue)
+    const l = daysUntil(p.licenseExp), m = daysUntil(p.malExp), c = daysUntil(p.caqhDue)
     return (l !== null && l <= 60) || (m !== null && m <= 60) || (c !== null && c <= 14)
   })
 
@@ -307,7 +303,7 @@ export function WorkflowDashboard({ db, setPage, openEnrollModal }) {
                   <p>All clear — no urgent tasks!</p>
                 </div>
               ) : urgentTasks.slice(0, 5).map(t => {
-                const d = daysUntilWF(t.due)
+                const d = daysUntil(t.due)
                 return (
                   <div key={t.id} style={{
                     display: 'flex', alignItems: 'center', gap: 10,
@@ -367,9 +363,9 @@ export function WorkflowDashboard({ db, setPage, openEnrollModal }) {
             </div>
             <div className="card-body" style={{ paddingTop: 12 }}>
               {expiringProvs.slice(0, 4).map(p => {
-                const licD = daysUntilWF(p.licenseExp)
-                const malD = daysUntilWF(p.malExp)
-                const caqhD = daysUntilWF(p.caqhDue)
+                const licD = daysUntil(p.licenseExp)
+                const malD = daysUntil(p.malExp)
+                const caqhD = daysUntil(p.caqhDue)
                 return (
                   <div key={p.id} className="alert-item al-amber mb-16" style={{ cursor: 'pointer' }}>
                     <div className="al-body">
@@ -408,16 +404,15 @@ export function WorkflowDashboard({ db, setPage, openEnrollModal }) {
 
 export function WorkflowProviderCard({ prov, db, onOpen, onEdit, onEnroll, onTask, onSync }) {
   const score = providerReadiness(prov)
-  const licD  = daysUntilWF(prov.licenseExp)
-  const malD  = daysUntilWF(prov.malExp)
-  const caqhD = daysUntilWF(prov.caqhDue)
-  const deaD  = daysUntilWF(prov.deaExp)
+  const licD  = daysUntil(prov.licenseExp)
+  const malD  = daysUntil(prov.malExp)
+  const caqhD = daysUntil(prov.caqhDue)
+  const deaD  = daysUntil(prov.deaExp)
   const urgent = (licD !== null && licD <= 30) || (malD !== null && malD <= 30) || (caqhD !== null && caqhD <= 0)
   const expired = (licD !== null && licD < 0) || (malD !== null && malD < 0)
   const activeP = db.enrollments.filter(e => e.provId === prov.id && e.stage === 'Active').length
   const totalP  = db.enrollments.filter(e => e.provId === prov.id).length
   const [menuOpen, setMenuOpen] = useState(false)
-  const router = useRouter()
 
   const SPEC_COLORS = {
     'Mental Health': '#3563c9', 'Massage Therapy': '#1a8a7a',
@@ -603,18 +598,18 @@ export function ProviderCommandCenter({ prov, db, onClose, onEdit, openEnrollMod
 
   // Build alerts
   const alerts = []
-  if (daysUntilWF(prov.licenseExp) !== null && daysUntilWF(prov.licenseExp) < 0)
+  if (daysUntil(prov.licenseExp) !== null && daysUntil(prov.licenseExp) < 0)
     alerts.push({ label: 'State License EXPIRED', sev: 'error' })
-  else if (daysUntilWF(prov.licenseExp) !== null && daysUntilWF(prov.licenseExp) <= 30)
-    alerts.push({ label: `License expires in ${daysUntilWF(prov.licenseExp)}d`, sev: 'warn' })
+  else if (daysUntil(prov.licenseExp) !== null && daysUntil(prov.licenseExp) <= 30)
+    alerts.push({ label: `License expires in ${daysUntil(prov.licenseExp)}d`, sev: 'warn' })
 
-  if (daysUntilWF(prov.malExp) !== null && daysUntilWF(prov.malExp) < 0)
+  if (daysUntil(prov.malExp) !== null && daysUntil(prov.malExp) < 0)
     alerts.push({ label: 'Malpractice Insurance EXPIRED', sev: 'error' })
-  else if (daysUntilWF(prov.malExp) !== null && daysUntilWF(prov.malExp) <= 30)
-    alerts.push({ label: `Malpractice expires in ${daysUntilWF(prov.malExp)}d`, sev: 'warn' })
+  else if (daysUntil(prov.malExp) !== null && daysUntil(prov.malExp) <= 30)
+    alerts.push({ label: `Malpractice expires in ${daysUntil(prov.malExp)}d`, sev: 'warn' })
 
-  if (daysUntilWF(prov.caqhDue) !== null && daysUntilWF(prov.caqhDue) < 0)
-    alerts.push({ label: `CAQH attestation overdue (${Math.abs(daysUntilWF(prov.caqhDue))}d)`, sev: 'error' })
+  if (daysUntil(prov.caqhDue) !== null && daysUntil(prov.caqhDue) < 0)
+    alerts.push({ label: `CAQH attestation overdue (${Math.abs(daysUntil(prov.caqhDue))}d)`, sev: 'error' })
 
   const STAGE_BADGE = {
     'Not Started': 'b-gray', 'Application Submitted': 'b-blue',
@@ -775,7 +770,7 @@ export function ProviderCommandCenter({ prov, db, onClose, onEdit, openEnrollMod
             {tasks.length === 0 ? (
               <div style={{ color: 'var(--ink-4)', fontSize: 13 }}>No open tasks for this provider.</div>
             ) : tasks.map(t => {
-              const d = daysUntilWF(t.due)
+              const d = daysUntil(t.due)
               return (
                 <div key={t.id} style={{
                   display: 'flex', alignItems: 'center', gap: 10,
@@ -846,7 +841,7 @@ export function ProviderCommandCenter({ prov, db, onClose, onEdit, openEnrollMod
                 ['DEA Expiry',           prov.deaExp ? fmtDateWF(prov.deaExp) : null, prov.deaExp],
                 ['Recredentialing Due',  prov.recred ? fmtDateWF(prov.recred) : null, prov.recred],
               ].filter(([, val]) => val).map(([label, val, expDate]) => {
-                const d = expDate ? daysUntilWF(expDate) : null
+                const d = expDate ? daysUntil(expDate) : null
                 const badgeCls = d === null ? null : d < 0 ? 'b-red' : d <= 30 ? 'b-red' : d <= 90 ? 'b-amber' : 'b-green'
                 return (
                   <div key={label} style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderRadius: 8, padding: '11px 13px' }}>
@@ -920,7 +915,7 @@ export function ProviderCommandCenter({ prov, db, onClose, onEdit, openEnrollMod
           {tasks.length === 0 ? (
             <div className="empty-state"><div style={{ fontSize: 36 }}>✅</div><p>No open tasks for this provider.</p></div>
           ) : tasks.map(t => {
-            const d = daysUntilWF(t.due)
+            const d = daysUntil(t.due)
             return (
               <div key={t.id} style={{
                 display: 'flex', alignItems: 'center', gap: 10,
@@ -967,8 +962,8 @@ export function WorkflowTasks({ db, openTaskModal, handleMarkDone, handleDeleteT
     if (filter === 'done') return t.status === 'Done'
     return true
   }).sort((a, b) => {
-    const da = daysUntilWF(a.due) ?? 99
-    const db2 = daysUntilWF(b.due) ?? 99
+    const da = daysUntil(a.due) ?? 99
+    const db2 = daysUntil(b.due) ?? 99
     return da - db2
   })
 
@@ -1022,7 +1017,7 @@ export function WorkflowTasks({ db, openTaskModal, handleMarkDone, handleDeleteT
       )}
 
       {shown.map(t => {
-        const d = daysUntilWF(t.due)
+        const d = daysUntil(t.due)
         const done = t.status === 'Done'
         const isCompleting = completing.has(t.id)
         const pn = pName(t.provId)
@@ -1102,7 +1097,7 @@ export function WorkflowDocuments({ db, openDocModal, handleDeleteDocument }) {
 
   const allDocs = db.documents.map(d => ({
     ...d,
-    days: daysUntilWF(d.exp),
+    days: daysUntil(d.exp),
     provName: pName(d.provId),
   }))
 
