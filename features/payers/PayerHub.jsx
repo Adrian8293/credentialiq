@@ -201,7 +201,7 @@ export function PayerHub({ db, initialTab, openEnrollModal, openPayerModal, sear
         </div>
       )}
       {view === 'library' && (
-        <PayerRequirements db={db} />
+        <PayerRequirements db={db} openEnrollModal={openEnrollModal} />
       )}
     </div>
   )
