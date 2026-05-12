@@ -145,7 +145,8 @@ export default function App() {
     return null
   }
 
-  const alertDays   = db.settings.alertDays || 90
+  const alertDays   = db.settings.alertDays  || 90
+  const caqhDays    = db.settings.caqhDays   || 30
   // MED-015: use shared providerAlertCount — now includes supExp (was missing from badge)
   const alertCount  = db.providers.reduce((n, prov) => {
     return n + providerAlertCount(prov, { alertDays, caqhDays })
