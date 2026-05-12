@@ -133,9 +133,16 @@ export function Alerts({ db, onOpenProvider, onDraftEmail, onMarkDone }) {
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           {items.length > 0 && (
-            <span style={{ fontSize: 12, color: 'var(--pr)', fontWeight: 600, cursor: 'pointer' }}>Mark all as read ✓</span>
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={() => {
+                // Mark all alerts resolved by dismissing via onMarkDone for each provider
+                items.forEach(a => onMarkDone?.(a.p?.id, a.field))
+              }}
+            >
+              Mark all resolved
+            </button>
           )}
-          <button className="btn btn-secondary btn-sm">Filter by type ▾</button>
         </div>
       </div>
 
@@ -143,12 +150,18 @@ export function Alerts({ db, onOpenProvider, onDraftEmail, onMarkDone }) {
       {items.length > 0 && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 20 }}>
           {[
-            { label: 'Expired', count: expired.length, color: 'var(--danger)', bg: 'rgba(239,68,68,.08)' },
-            { label: 'Critical (≤30d)', count: critical.length, color: 'var(--danger)', bg: 'rgba(239,68,68,.08)' },
-            { label: 'Warnings (31–60d)', count: warning.length, color: 'var(--warning)', bg: 'rgba(245,158,11,.08)' },
-            { label: 'Notices (61–90d)', count: info.length, color: 'var(--pr)', bg: 'rgba(30,86,240,.08)' },
+            { label: 'Expired', count: expired.length, color: 'var(--danger)', bg: 'rgba(239,68,68,.08)', tab: 'Critical' },
+            { label: 'Critical (≤30d)', count: critical.length, color: 'var(--danger)', bg: 'rgba(239,68,68,.08)', tab: 'Critical' },
+            { label: 'Warnings (31–60d)', count: warning.length, color: 'var(--warning)', bg: 'rgba(245,158,11,.08)', tab: 'Warnings' },
+            { label: 'Notices (61–90d)', count: info.length, color: 'var(--pr)', bg: 'rgba(30,86,240,.08)', tab: 'Information' },
           ].map((kpi, i) => (
-            <div key={i} style={{ background: 'var(--card)', border: '1.5px solid var(--border)', borderRadius: 'var(--r-lg)', padding: '14px 16px', textAlign: 'center' }}>
+            <div
+              key={i}
+              onClick={() => setActiveTab(kpi.tab)}
+              style={{ background: 'var(--card)', border: '1.5px solid var(--border)', borderRadius: 'var(--r-lg)', padding: '14px 16px', textAlign: 'center', cursor: 'pointer', transition: 'border-color .15s' }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = kpi.color}
+              onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+            >
               <div style={{ fontSize: 28, fontWeight: 800, color: kpi.color, marginBottom: 4 }}>{kpi.count}</div>
               <div style={{ fontSize: 11, color: 'var(--text-4)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.04em' }}>{kpi.label}</div>
             </div>

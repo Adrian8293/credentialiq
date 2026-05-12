@@ -551,7 +551,7 @@ export function WorkflowProviderCard({ prov, db, onOpen, onEdit, onEnroll, onTas
                 borderRadius: 'var(--r-lg)', boxShadow: 'var(--shadow-lg)',
                 zIndex: 50, minWidth: 160, overflow: 'hidden',
               }}>
-                <button className="dropdown-item" onClick={() => { router.push(`/review/${prov.id}`); setMenuOpen(false) }}>
+                <button className="dropdown-item" onClick={() => { window.location.href = `/review/${prov.id}`; setMenuOpen(false) }}>
                   📋 OPCA Review
                 </button>
                 {onEnroll && (
