@@ -108,7 +108,7 @@ function PayerLogo({ name, color, size = 28 }) {
   )
 }
 
-
+function EnrollmentBar({ count, active }) {
   if (!count) return <span style={{ fontSize:11.5, color:'var(--text-4)' }}>No enrollments</span>
   return (
     <div style={{ display:'flex', alignItems:'center', gap:7 }}>
