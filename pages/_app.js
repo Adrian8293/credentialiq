@@ -8,7 +8,7 @@ if (typeof window === 'undefined' && process.env.NODE_ENV === 'development') {
   const missing = required.filter(k => !process.env[k])
   if (missing.length) {
     throw new Error(
-      `[PrimeCredential] Missing required environment variables:\n${missing.map(k => `  • ${k}`).join('\n')}\n\nCopy .env.example → .env.local and fill in your Supabase credentials.`
+      `[Lacentra] Missing required environment variables:\n${missing.map(k => `  • ${k}`).join('\n')}\n\nCopy .env.example → .env.local and fill in your Supabase credentials.`
     )
   }
 }
@@ -26,14 +26,14 @@ export default function App({ Component, pageProps }) {
       <Head>
         <link rel="icon" href={FAVICON_URL} type="image/svg+xml" />
         <link rel="shortcut icon" href={FAVICON_URL} />
-        {/* Plus Jakarta Sans + Geist Mono — PrimeCredential design system v2 */}
+        {/* Plus Jakarta Sans + Geist Mono — Lacentra design system v2 */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
           rel="stylesheet"
         />
-        <title>PrimeCredential</title>
+        <title>Lacentra</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Component {...pageProps} />

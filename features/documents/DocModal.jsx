@@ -1,5 +1,5 @@
 /**
- * DocModal.jsx — PrimeCredential
+ * DocModal.jsx — Lacentra
  * Document add/edit modal with Supabase Storage file attachment.
  *
  * Flow:

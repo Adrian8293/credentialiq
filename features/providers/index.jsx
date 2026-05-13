@@ -1,5 +1,5 @@
 /**
- * Providers/index.jsx — PrimeCredential
+ * Providers/index.jsx — Lacentra
  * Premium provider TABLE matching the design reference:
  * Provider Name (clickable link) | NPI | CAQH ID | Medicaid ID | Specialty | Status | Last Updated | Actions (···)
  * Filters on the RIGHT side of search bar.
@@ -9,6 +9,9 @@ import { useState } from 'react'
 import { fmtDate, daysUntil } from '../../lib/helpers.js'
 import { providerReadiness } from '../../components/WorkflowOverhaul.jsx'
 import { useSorted } from '../../hooks/useSorted.js'
+import { usePagination } from '../../hooks/usePagination.js'
+
+const PAGE_SIZE = 10
 
 const SearchIcon = <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
 
@@ -84,6 +87,7 @@ export function Providers({ db, search, setSearch, fStatus, setFStatus, fSpec, s
   })
 
   const { sorted: list, thProps } = useSorted(filtered, 'lname')
+  const { paginated, page, totalPages, nextPage, prevPage, setPage: goToPage, totalItems } = usePagination(list, { pageSize: PAGE_SIZE })
 
   return (
     <div>
@@ -98,11 +102,11 @@ export function Providers({ db, search, setSearch, fStatus, setFStatus, fSpec, s
         {/* Filters on the right */}
         <div style={{ display: 'flex', gap: 8, marginLeft: 'auto', alignItems: 'center' }}>
           <select className="filter-select" value={fStatus} onChange={e => setFStatus(e.target.value)}>
-            <option value="">Status</option>
+            <option value="">Status: All</option>
             <option>Active</option><option>Pending</option><option>Inactive</option>
           </select>
           <select className="filter-select" value={fSpec} onChange={e => setFSpec(e.target.value)}>
-            <option value="">Specialty</option>
+            <option value="">Specialty: All</option>
             {specs.map(s => <option key={s}>{s}</option>)}
           </select>
           {(search || fStatus || fSpec) && (
@@ -250,8 +254,29 @@ export function Providers({ db, search, setSearch, fStatus, setFStatus, fSpec, s
           </tbody>
         </table>
         {list.length > 0 && (
-          <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 16px', background: 'var(--elevated)', borderTop: '1px solid var(--border-l)' }}>
-            <span style={{ fontSize: 11.5, color: 'var(--text-4)' }}>Showing {list.length} of {db.providers.length} providers</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 16px', background: 'var(--elevated)', borderTop: '1px solid var(--border-l)' }}>
+            <span style={{ fontSize: 11.5, color: 'var(--text-4)' }}>
+              Showing {Math.min((page - 1) * PAGE_SIZE + 1, totalItems)}–{Math.min(page * PAGE_SIZE, totalItems)} of {totalItems} providers
+            </span>
+            {totalPages > 1 && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <button onClick={prevPage} disabled={page === 1}
+                  style={{ padding: '4px 10px', fontSize: 12, borderRadius: 6, border: '1.5px solid var(--border)', background: 'var(--card)', cursor: page === 1 ? 'default' : 'pointer', color: page === 1 ? 'var(--text-4)' : 'var(--text-2)', fontFamily: 'inherit' }}>
+                  ‹ Prev
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(n => (
+                  <button key={n} onClick={() => goToPage(n)}
+                    style={{ padding: '4px 9px', fontSize: 12, borderRadius: 6, border: '1.5px solid var(--border)', fontFamily: 'inherit', cursor: 'pointer',
+                      background: n === page ? 'var(--pr)' : 'var(--card)', color: n === page ? '#fff' : 'var(--text-3)', fontWeight: n === page ? 700 : 400 }}>
+                    {n}
+                  </button>
+                ))}
+                <button onClick={nextPage} disabled={page === totalPages}
+                  style={{ padding: '4px 10px', fontSize: 12, borderRadius: 6, border: '1.5px solid var(--border)', background: 'var(--card)', cursor: page === totalPages ? 'default' : 'pointer', color: page === totalPages ? 'var(--text-4)' : 'var(--text-2)', fontFamily: 'inherit' }}>
+                  Next ›
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

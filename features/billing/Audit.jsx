@@ -1,5 +1,5 @@
 /**
- * Audit.jsx — PrimeCredential
+ * Audit.jsx — Lacentra
  * Full audit trail with search, type filtering, and compliance export.
  */
 
@@ -56,7 +56,7 @@ export function Audit({ db, search, setSearch, fType, setFType, handleClearAudit
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
         <div>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)', letterSpacing: '-.03em', marginBottom: 3 }}>Audit Trail</h2>
-          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Immutable, append-only activity log for compliance and governance in PrimeCredential.</p>
+          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Immutable, append-only activity log for compliance and governance in Lacentra.</p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <div style={{ padding: '6px 12px', background: 'rgba(16,185,129,.08)', border: '1px solid rgba(16,185,129,.2)', borderRadius: 'var(--r)', fontSize: 11.5, color: 'var(--success)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 5 }}>
@@ -105,7 +105,7 @@ export function Audit({ db, search, setSearch, fType, setFType, handleClearAudit
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E56F0" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </div>
             <div className="empty-state-title">{search || fType ? 'No matching entries' : 'No audit events yet'}</div>
-            <div className="empty-state-desc">{search || fType ? 'Try adjusting your search or filter.' : 'Audit events are recorded automatically as you use PrimeCredential.'}</div>
+            <div className="empty-state-desc">{search || fType ? 'Try adjusting your search or filter.' : 'Audit events are recorded automatically as you use Lacentra.'}</div>
           </div>
         ) : (
           <table>

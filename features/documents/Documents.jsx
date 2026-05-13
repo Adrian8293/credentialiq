@@ -1,5 +1,5 @@
 /**
- * Documents.jsx — PrimeCredential
+ * Documents.jsx — Lacentra
  * Redesigned document table: expiry urgency bars, file attachment indicators,
  * provider avatars, and visual status system.
  */
@@ -139,13 +139,13 @@ export function Documents({ db, search, setSearch, fType, setFType, fStatus, set
           <input type="text" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search by provider, type, issuer…" />
         </div>
 
-        <select className="filter-select" value={fType} onChange={e => setFType(e.target.value)}>
-          <option value="">All Types</option>
+        <select className="filter-select" value={fType} onChange={e => setFType(e.target.value)} aria-label="Filter by type">
+          <option value="">Type: All</option>
           {DOC_TYPES.map(t => <option key={t}>{t}</option>)}
         </select>
 
-        <select className="filter-select" value={fStatus} onChange={e => setFStatus(e.target.value)}>
-          <option value="">All Status</option>
+        <select className="filter-select" value={fStatus} onChange={e => setFStatus(e.target.value)} aria-label="Filter by status">
+          <option value="">Status: All</option>
           <option value="expired">Expired</option>
           <option value="critical">Critical (≤30d)</option>
           <option value="warning">Warning (≤90d)</option>
@@ -158,12 +158,6 @@ export function Documents({ db, search, setSearch, fType, setFType, fStatus, set
             Clear ×
           </button>
         )}
-
-        <div style={{ marginLeft: 'auto' }}>
-          <button className="btn btn-primary btn-sm" onClick={() => openDocModal()} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-            <PlusIcon /> Add Document
-          </button>
-        </div>
       </div>
 
       {/* Empty state */}

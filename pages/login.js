@@ -102,7 +102,7 @@ export default function Login() {
   return (
     <>
       <Head>
-        <title>PrimeCredential — {mode === 'login' ? 'Sign In' : mode === 'signup' ? 'Create Account' : 'Reset Password'}</title>
+        <title>Lacentra — {mode === 'login' ? 'Sign In' : mode === 'signup' ? 'Create Account' : 'Reset Password'}</title>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
         <style dangerouslySetInnerHTML={{ __html: LOGIN_CSS }} />
       </Head>
@@ -120,7 +120,7 @@ export default function Login() {
           <div className="pc-logo">
             <PcMark size={36} />
             <div className="pc-logo-text">
-              <span className="pc-prime">Prime</span><span className="pc-credential">Credential</span>
+              <span className="pc-prime">La</span><span className="pc-credential">centra</span>
             </div>
           </div>
 

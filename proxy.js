@@ -1,5 +1,5 @@
 /**
- * middleware.js — Auth edge guard for PrimeCredential
+ * middleware.js — Auth edge guard for Lacentra
  *
  * Runs at the edge (Vercel Edge Runtime) on every request before it hits
  * any page or API route. Redirects unauthenticated visitors to /login.

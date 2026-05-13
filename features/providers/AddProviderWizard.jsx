@@ -1,5 +1,5 @@
 /**
- * AddProviderWizard.jsx — PrimeCredential v2
+ * AddProviderWizard.jsx — Lacentra v2
  *
  * Replaces the 100-line single-form AddProvider.jsx with a 4-step wizard:
  *   Step 1: Basic Info (name, credential, specialty, status, contact)

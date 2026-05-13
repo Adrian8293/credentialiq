@@ -247,9 +247,15 @@ export function DocumentsPage({ db, docSearch, setDocSearch, docFType, setDocFTy
       <div style={{ display:'flex', alignItems:'flex-start', justifyContent:'space-between', marginBottom:20 }}>
         <div>
           <h2 style={{ fontSize:20, fontWeight:800, color:'var(--text-1)', letterSpacing:'-.04em', margin:0, marginBottom:4 }}>Documents</h2>
-          <p style={{ fontSize:12.5, color:'var(--text-4)', margin:0 }}>Store and manage all provider documents.</p>
+          <p style={{ fontSize:12.5, color:'var(--text-4)', margin:0 }}>Store and manage all provider credential documents.</p>
         </div>
-        <div style={{display:"flex",gap:8}}><button className="btn btn-secondary btn-sm" onClick={() => exportDocumentsCSV(db.documents, db.providers)} title="Export all documents to CSV">↓ Export CSV</button><button className="btn btn-primary btn-sm" onClick={() => openDocModal()}>↑ Upload Document</button></div>
+        <div style={{ display:"flex", gap:8 }}>
+          <button className="btn btn-secondary btn-sm" onClick={() => exportDocumentsCSV(db.documents, db.providers)} title="Export all documents to CSV">↓ Export CSV</button>
+          <button className="btn btn-primary btn-sm" onClick={() => openDocModal()} style={{ display:'flex', alignItems:'center', gap:5 }}>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Document
+          </button>
+        </div>
       </div>
       <div className="tabs">
         {TABS.map(t => (
@@ -259,9 +265,6 @@ export function DocumentsPage({ db, docSearch, setDocSearch, docFType, setDocFTy
             {t.id === 'missing'  && <span style={{ marginLeft: 5, background: 'rgba(239,68,68,.1)', color: '#991B1B', border: '1px solid rgba(239,68,68,.22)', borderRadius: 9, padding: '1px 6px', fontSize: 10, fontWeight: 700 }}>{missCount}</span>}
           </div>
         ))}
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', paddingBottom: 4 }}>
-          <button className="btn btn-primary btn-sm" onClick={() => openDocModal()}>+ Add Document</button>
-        </div>
       </div>
 
       {tab === 'all'      && <Documents db={db} search={docSearch} setSearch={setDocSearch} fType={docFType} setFType={setDocFType} fStatus={docFStatus} setFStatus={setDocFStatus} openDocModal={openDocModal} handleDeleteDocument={handleDeleteDocument} />}

@@ -1,6 +1,6 @@
 /**
  * ─────────────────────────────────────────────────────────────────────────────
- *  PrimeCredential — Automated Expiration Watchdog
+ *  Lacentra — Automated Expiration Watchdog
  *  FILE: pages/api/watchdog.js
  *
  *  This API route is the heart of the Watchdog. It:

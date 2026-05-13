@@ -1,5 +1,5 @@
 /**
- * Topbar.jsx — PrimeCredential
+ * Topbar.jsx — Lacentra
  * Inline search bar (no modal/overlay), global search results drop below.
  * Clean single-line topbar with page title, search, alerts, user menu.
  */
@@ -21,8 +21,7 @@ export function Topbar({ page, setPage, openDocModal, openTaskModal, openEnrollM
   const titles = {
     dashboard: 'Dashboard', providers: 'Providers', applications: 'Applications',
     payers: 'Payers', documents: 'Documents', tasks: 'Tasks', alerts: 'Alerts',
-    claims: 'Claims', eligibility: 'Eligibility', denials: 'Denial Log',
-    revenue: 'Revenue Analytics', marketing: 'Marketing', reports: 'Reports',
+    billing: 'Billing', marketing: 'Marketing', reports: 'Reports',
     audit: 'Audit Trail', settings: 'Settings', 'add-provider': 'Add Provider',
     'pt-profile': 'Psychology Today Profile',
   }

@@ -1,5 +1,5 @@
 /**
- * Settings.jsx — PrimeCredential
+ * Settings.jsx — Lacentra
  * Organization profile, alert thresholds, integrations, security, and data management.
  */
 
@@ -65,7 +65,7 @@ export function Settings({ settingsForm, setSettingsForm, handleSaveSettings, ex
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
         <div>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)', letterSpacing: '-.03em', marginBottom: 3 }}>Settings</h2>
-          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Manage system settings and configurations for PrimeCredential.</p>
+          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Manage system settings and configurations for Lacentra.</p>
         </div>
       </div>
 
@@ -79,13 +79,13 @@ export function Settings({ settingsForm, setSettingsForm, handleSaveSettings, ex
         <div className="grid-2">
           <div className="card">
             <div className="card-header">
-              <SectionHeader icon={Icon.building} title="Organization Information" subtitle="Your practice details used across PrimeCredential." />
+              <SectionHeader icon={Icon.building} title="Organization Information" subtitle="Your practice details used across Lacentra." />
             </div>
             <div className="card-body">
               <div className="form-grid">
                 <div className="fg full">
                   <label>Organization Name</label>
-                  <input type="text" value={f('practice')} onChange={e => set('practice', e.target.value)} placeholder="PrimeCredential Health Partners" />
+                  <input type="text" value={f('practice')} onChange={e => set('practice', e.target.value)} placeholder="Positive Inner Self, LLC" />
                 </div>
                 <div className="fg full">
                   <label>Tax ID (EIN)</label>
@@ -101,7 +101,7 @@ export function Settings({ settingsForm, setSettingsForm, handleSaveSettings, ex
                 </div>
                 <div className="fg">
                   <label>Email</label>
-                  <input type="email" value={f('email')} onChange={e => set('email', e.target.value)} placeholder="admin@primecredential.com" />
+                  <input type="email" value={f('email')} onChange={e => set('email', e.target.value)} placeholder="admin@positiveinnerselfllc.com" />
                 </div>
               </div>
               <button className="btn btn-primary mt-12" onClick={handleSaveSettings}>Save Changes</button>
@@ -152,10 +152,10 @@ export function Settings({ settingsForm, setSettingsForm, handleSaveSettings, ex
           </div>
           <div className="card-body">
             {[
-              { name: 'Alex Kim', email: 'alex@primecredential.com', role: 'Admin', status: 'Active', last: '2 min ago' },
-              { name: 'Jordan Smith', email: 'jordan@primecredential.com', role: 'Credentialing Specialist', status: 'Active', last: '1 hour ago' },
-              { name: 'Taylor Brown', email: 'taylor@primecredential.com', role: 'Billing Manager', status: 'Active', last: 'Yesterday' },
-              { name: 'Casey Johnson', email: 'casey@primecredential.com', role: 'Read Only', status: 'Inactive', last: '3 days ago' },
+              { name: 'Alex Kim', email: 'alex@lacentra.com', role: 'Admin', status: 'Active', last: '2 min ago' },
+              { name: 'Jordan Smith', email: 'jordan@lacentra.com', role: 'Credentialing Specialist', status: 'Active', last: '1 hour ago' },
+              { name: 'Taylor Brown', email: 'taylor@lacentra.com', role: 'Billing Manager', status: 'Active', last: 'Yesterday' },
+              { name: 'Casey Johnson', email: 'casey@lacentra.com', role: 'Read Only', status: 'Inactive', last: '3 days ago' },
             ].map((u, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border-l)' }}>
                 <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'var(--pr)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 700, flexShrink: 0 }}>
@@ -206,7 +206,7 @@ export function Settings({ settingsForm, setSettingsForm, handleSaveSettings, ex
       {activeTab === 'Notifications' && (
         <div className="card">
           <div className="card-header">
-            <SectionHeader icon={Icon.bell} title="Notification Preferences" subtitle="Choose when and how PrimeCredential alerts your team." />
+            <SectionHeader icon={Icon.bell} title="Notification Preferences" subtitle="Choose when and how Lacentra alerts your team." />
           </div>
           <div className="card-body">
             <div style={{ display: 'grid', gap: 0 }}>
@@ -226,7 +226,7 @@ export function Settings({ settingsForm, setSettingsForm, handleSaveSettings, ex
       {activeTab === 'Templates' && (
         <div className="card">
           <div className="card-header">
-            <SectionHeader icon={Icon.plug} title="Email Templates" subtitle="Customize automated communications sent by PrimeCredential." />
+            <SectionHeader icon={Icon.plug} title="Email Templates" subtitle="Customize automated communications sent by Lacentra." />
             <div style={{ marginLeft: 'auto' }}>
               <button className="btn btn-primary btn-sm">+ New Template</button>
             </div>
@@ -256,7 +256,7 @@ export function Settings({ settingsForm, setSettingsForm, handleSaveSettings, ex
         <div className="grid-2">
           <div className="card">
             <div className="card-header">
-              <SectionHeader icon={Icon.lock} title="Security Settings" subtitle="Protect your PrimeCredential workspace." />
+              <SectionHeader icon={Icon.lock} title="Security Settings" subtitle="Protect your Lacentra workspace." />
             </div>
             <div className="card-body">
               <Toggle label="Two-factor authentication (2FA)" checked={f('twoFactor') === true} onChange={v => set('twoFactor', v)} />
@@ -268,17 +268,17 @@ export function Settings({ settingsForm, setSettingsForm, handleSaveSettings, ex
           </div>
           <div className="card">
             <div className="card-header">
-              <SectionHeader icon={Icon.database} title="Data Management" subtitle="Export and manage your PrimeCredential data." />
+              <SectionHeader icon={Icon.database} title="Data Management" subtitle="Export and manage your Lacentra data." />
             </div>
             <div className="card-body">
               <p style={{ fontSize: 12.5, color: 'var(--text-3)', marginBottom: 14, lineHeight: 1.55 }}>
-                Export a full JSON backup of all providers, enrollments, documents, tasks, payers, and audit logs from PrimeCredential.
+                Export a full JSON backup of all providers, enrollments, documents, tasks, payers, and audit logs from Lacentra.
               </p>
               <button className="btn btn-secondary" onClick={exportJSON} style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
                 {Icon.download} Export Full Backup
               </button>
               <p style={{ fontSize: 11.5, color: 'var(--text-4)', lineHeight: 1.5 }}>
-                Backups include all PrimeCredential workspace data and are suitable for disaster recovery or migration purposes.
+                Backups include all Lacentra workspace data and are suitable for disaster recovery or migration purposes.
               </p>
             </div>
           </div>
@@ -308,7 +308,7 @@ export function Group2Settings({ settingsForm, setSettingsForm, handleSaveSettin
         <div className="form-grid">
           <div className="fg full">
             <label>Organization / Group Name</label>
-            <input type="text" value={f('groupName')} onChange={e=>set('groupName',e.target.value)} placeholder="PrimeCredential Health Partners LLC" />
+            <input type="text" value={f('groupName')} onChange={e=>set('groupName',e.target.value)} placeholder="Lacentra Health Partners LLC" />
           </div>
           <div className="fg">
             <label>Group NPI (Type 2)</label>

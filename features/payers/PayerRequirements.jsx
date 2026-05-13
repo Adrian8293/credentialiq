@@ -1,5 +1,5 @@
 /**
- * PayerRequirements.jsx — PrimeCredential
+ * PayerRequirements.jsx — Lacentra
  * Redesigned Payer Library: workflow-driven cards with rich visual hierarchy,
  * timeline indicators, checklist drawers, and quick-enroll CTAs.
  */
@@ -285,7 +285,7 @@ export function PayerRequirements({ db, openEnrollModal }) {
   const [fType,    setFType]    = useState('')
   const [fSpeed,   setFSpeed]   = useState('')
   const [expanded, setExpanded] = useState({})
-  const [view,     setView]     = useState('grid') // 'grid' | 'list'
+  const [view,     setView]     = useState('list') // 'grid' | 'list'
   const toggle = name => setExpanded(e => ({ ...e, [name]: !e[name] }))
 
   const allPayers = Object.keys(PAYER_REQUIREMENTS)
@@ -376,17 +376,17 @@ export function PayerRequirements({ db, openEnrollModal }) {
         </div>
 
         <select className="filter-select" value={fState} onChange={e => setFState(e.target.value)} style={{ minWidth:160 }}>
-          <option value="">All States</option>
+          <option value="">State: All</option>
           {US_STATES.map(([abbr, name]) => <option key={abbr} value={abbr}>{abbr} — {name}</option>)}
         </select>
 
         <select className="filter-select" value={fType} onChange={e => setFType(e.target.value)}>
-          <option value="">All Types</option>
+          <option value="">Type: All</option>
           {types.map(t => <option key={t} value={t}>{t}</option>)}
         </select>
 
         <select className="filter-select" value={fSpeed} onChange={e => setFSpeed(e.target.value)}>
-          <option value="">All Speeds</option>
+          <option value="">Speed: All</option>
           <option value="fast">Fast (&lt;45 days)</option>
           <option value="medium">Medium (45–75 days)</option>
           <option value="slow">Slow (&gt;75 days)</option>

@@ -1,5 +1,5 @@
 /**
- * ProvidersPage.jsx — PrimeCredential
+ * ProvidersPage.jsx — Lacentra
  * Provider list with inline slide-over drawer for Add/Edit.
  * No page navigation required — drawer opens over the current page.
  */

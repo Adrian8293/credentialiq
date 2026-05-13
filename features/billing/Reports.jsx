@@ -1,5 +1,5 @@
 /**
- * Reports.jsx — PrimeCredential
+ * Reports.jsx — Lacentra
  * Analytics overview with KPI metrics, charts, trend reporting,
  * application breakdowns, provider stats, payer analysis, turnaround time.
  */
@@ -93,7 +93,7 @@ const EXPORT_CARDS = [
   { icon: Icon.file,     title: 'Enrollment Status',  desc: 'All payer enrollments by current stage' },
   { icon: Icon.calendar, title: 'Expiration Report',  desc: 'Credentials expiring within 90 days' },
   { icon: Icon.bolt,     title: 'Open Tasks',         desc: 'All pending and in-progress tasks' },
-  { icon: Icon.archive,  title: 'Full Data Backup',   desc: 'Export all PrimeCredential data as JSON' },
+  { icon: Icon.archive,  title: 'Full Data Backup',   desc: 'Export all Lacentra data as JSON' },
 ]
 
 export function Reports({ db, exportJSON }) {
@@ -199,7 +199,7 @@ export function Reports({ db, exportJSON }) {
       XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(taskRows), 'Tasks')
 
       const date = new Date().toISOString().split('T')[0]
-      XLSX.writeFile(wb, `primecredential-report-${date}.xlsx`)
+      XLSX.writeFile(wb, `lacentra-report-${date}.xlsx`)
     } catch (err) {
       console.error('XLSX export error:', err)
       // Fallback to JSON export
@@ -251,7 +251,7 @@ export function Reports({ db, exportJSON }) {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
         <div>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)', letterSpacing: '-.03em', marginBottom: 3 }}>Reports</h2>
-          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Analyze performance and credentialing metrics across PrimeCredential.</p>
+          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Analyze performance and credentialing metrics across Lacentra.</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn btn-secondary btn-sm" onClick={exportXLSX} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>

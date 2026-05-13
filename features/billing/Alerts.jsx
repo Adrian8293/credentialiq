@@ -1,5 +1,5 @@
 /**
- * Alerts.jsx — PrimeCredential
+ * Alerts.jsx — Lacentra
  * Credential expiration alerts with categorized urgency levels and action buttons.
  */
 

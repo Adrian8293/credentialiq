@@ -1,5 +1,5 @@
 /**
- * GlobalSearch.jsx — PrimeCredential
+ * GlobalSearch.jsx — Lacentra
  * Inline topbar search: expands in place, results drop below. No modal/overlay.
  */
 
@@ -102,7 +102,31 @@ export function GlobalSearch({ db, onClose, setPage, openProvDetail, openEnrollM
     `${t.task} ${t.cat}`.toLowerCase().includes(q)
   ).slice(0, 2)
 
+  // Quick nav shortcuts — show when query matches a page name
+  const NAV_PAGES = [
+    { pg: 'dashboard',    label: 'Dashboard',          icon: '🏠' },
+    { pg: 'providers',    label: 'Providers',           icon: '👤' },
+    { pg: 'applications', label: 'Applications',        icon: '📄' },
+    { pg: 'payers',       label: 'Payers',              icon: '💳' },
+    { pg: 'documents',    label: 'Documents',           icon: '📁' },
+    { pg: 'tasks',        label: 'Tasks',               icon: '✅' },
+    { pg: 'alerts',       label: 'Alerts',              icon: '🔔' },
+    { pg: 'billing',      label: 'Billing',             icon: '💰' },
+    { pg: 'billing',      label: 'Claims → Billing',    icon: '📋' },
+    { pg: 'billing',      label: 'Eligibility → Billing', icon: '✔' },
+    { pg: 'billing',      label: 'Denial Log → Billing', icon: '⛔' },
+    { pg: 'billing',      label: 'Revenue Analytics → Billing', icon: '📊' },
+    { pg: 'marketing',    label: 'Marketing',           icon: '📢' },
+    { pg: 'reports',      label: 'Reports',             icon: '📈' },
+    { pg: 'audit',        label: 'Audit Trail',         icon: '🔍' },
+    { pg: 'settings',     label: 'Settings',            icon: '⚙️' },
+  ]
+  const navMatches = q.length < 2 ? [] : NAV_PAGES.filter(n =>
+    n.label.toLowerCase().includes(q) || n.pg.includes(q)
+  ).slice(0, 2)
+
   const allItems = [
+    ...navMatches.map(r => ({ type: 'nav',        data: r })),
     ...provs.map(r  => ({ type: 'provider',   data: r })),
     ...enrs.map(r   => ({ type: 'enrollment', data: r })),
     ...pays.map(r   => ({ type: 'payer',      data: r })),
@@ -120,6 +144,7 @@ export function GlobalSearch({ db, onClose, setPage, openProvDetail, openEnrollM
   }
 
   function select(item) {
+    if (item.type === 'nav')        { setPage(item.data.pg); onClose() }
     if (item.type === 'provider')   { setPage('providers'); openProvDetail?.(item.data.id); onClose() }
     if (item.type === 'enrollment') { setPage('applications'); openEnrollModal?.(item.data.id); onClose() }
     if (item.type === 'payer')      { setPage('payers'); onClose() }
@@ -154,6 +179,21 @@ export function GlobalSearch({ db, onClose, setPage, openProvDetail, openEnrollM
         <div className="gs-dropdown">
           {!hasResults && (
             <div className="gs-empty">No results for "<strong>{query}</strong>"</div>
+          )}
+
+          {navMatches.length > 0 && (
+            <div className="gs-section">
+              <div className="gs-section-label">Navigate to</div>
+              {navMatches.map((n, i) => {
+                const idx = allItems.findIndex(x => x.type === 'nav' && x.data.label === n.label)
+                return (
+                  <ResultRow key={n.label} icon={<span style={{ fontSize: 13 }}>{n.icon}</span>}
+                    primary={n.label}
+                    secondary="Go to page"
+                    focused={focused === idx} onClick={() => select({ type: 'nav', data: n })} />
+                )
+              })}
+            </div>
           )}
 
           {provs.length > 0 && (

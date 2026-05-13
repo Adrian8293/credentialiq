@@ -30,10 +30,7 @@ import { Alerts } from '../features/billing/Alerts.jsx'
 import { Reports } from '../features/billing/Reports.jsx'
 import { Audit } from '../features/billing/Audit.jsx'
 import { Settings } from '../features/billing/Settings.jsx'
-import { EligibilityPage } from '../features/billing/EligibilityPage.jsx'
-import { ClaimsPage } from '../features/billing/ClaimsPage.jsx'
-import { DenialLog } from '../features/billing/DenialLog.jsx'
-import { RevenueAnalytics } from '../features/billing/RevenueAnalytics.jsx'
+import { BillingHub } from '../features/billing/BillingHub.jsx'
 import { PayerHub } from '../features/payers/PayerHub.jsx'
 import { DocumentsPage } from '../features/documents/DocumentsPage.jsx'
 import { ProvidersPage } from '../features/providers/ProvidersPage.jsx'
@@ -112,6 +109,7 @@ export default function App() {
           'd': 'dashboard', 'p': 'providers', 'a': 'applications',
           'y': 'payers',    'o': 'documents', 't': 'tasks',
           'l': 'alerts',    'r': 'reports',   's': 'settings',
+          'b': 'billing',   'm': 'marketing',
         }
         const dest = map[e.key.toLowerCase()]
         if (dest) { e.preventDefault(); setPage(dest) }
@@ -137,7 +135,7 @@ export default function App() {
   if (authLoading) return (
     <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Inter,sans-serif', color:'#6B7280', flexDirection:'column', gap:12 }}>
       <div style={{ width:36,height:36,border:'3px solid #E5E7EB',borderTopColor:'#1E56F0',borderRadius:'50%',animation:'spin .65s linear infinite' }} />
-      <span style={{ fontSize:13 }}>Loading PrimeCredential…</span>
+      <span style={{ fontSize:13 }}>Loading Lacentra…</span>
     </div>
   )
   if (!user) {
@@ -201,7 +199,7 @@ export default function App() {
     const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' })
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
-    a.download = `primecredential-backup-${new Date().toISOString().split('T')[0]}.json`
+    a.download = `lacentra-backup-${new Date().toISOString().split('T')[0]}.json`
     a.click()
     toast('Backup exported!', 'success')
   }
@@ -244,8 +242,8 @@ export default function App() {
   return (
     <>
       <Head>
-        <title>PrimeCredential — Provider Credentialing Platform</title>
-        <meta name="description" content="PrimeCredential — Enterprise-grade provider credentialing management" />
+        <title>Lacentra — Provider Credentialing Platform</title>
+        <meta name="description" content="Lacentra — Enterprise-grade provider credentialing management" />
       </Head>
       <div className="app-root">
 
@@ -364,10 +362,7 @@ export default function App() {
                 />
               )}
 
-              {page === 'claims'       && <ClaimsPage db={db} toast={toast} requestConfirm={requestConfirm} />}
-              {page === 'eligibility'  && <EligibilityPage db={db} toast={toast} requestConfirm={requestConfirm} />}
-              {page === 'denials'      && <DenialLog db={db} toast={toast} onDraftAppeal={openAiFollowup} requestConfirm={requestConfirm} />}
-              {page === 'revenue'      && <RevenueAnalytics db={db} />}
+              {page === 'billing'      && <BillingHub db={db} toast={toast} requestConfirm={requestConfirm} onDraftAppeal={openAiFollowup} />}
               {page === 'marketing'    && <MarketingPage db={db} setPage={setPage} editProvider={providers.editProvider} />}
               {page === 'reports'      && <Reports db={db} exportJSON={exportJSON} />}
               {page === 'audit'        && <Audit db={db} search={auditSearch} setSearch={setAuditSearch} fType={auditFType} setFType={setAuditFType} handleClearAudit={handleClearAudit} />}

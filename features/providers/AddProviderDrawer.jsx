@@ -1,5 +1,5 @@
 /**
- * AddProviderDrawer.jsx — PrimeCredential
+ * AddProviderDrawer.jsx — Lacentra
  *
  * Slide-in drawer panel that opens OVER the Providers page.
  * Step 1 leads with NPI lookup → auto-fills the form.

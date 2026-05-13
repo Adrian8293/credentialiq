@@ -1,7 +1,7 @@
 /**
- * RevenueAnalytics.jsx — PrimeCredential
+ * RevenueAnalytics.jsx — Lacentra
  * Revenue overview with collection rate, monthly trend, provider/payer breakdown.
- * Upgraded to PrimeCredential design system.
+ * Upgraded to Lacentra design system.
  */
 
 import { useState } from 'react'
@@ -61,7 +61,7 @@ export function RevenueAnalytics({ db }) {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
         <div>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-1)', letterSpacing: '-.03em', marginBottom: 3 }}>Revenue Analytics</h2>
-          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Monitor billing performance, collection rates, and A/R aging across PrimeCredential.</p>
+          <p style={{ fontSize: 13, color: 'var(--text-4)' }}>Monitor billing performance, collection rates, and A/R aging across Lacentra.</p>
         </div>
         <div style={{ display: 'flex', gap: 3, background: 'var(--elevated)', border: '1.5px solid var(--border)', borderRadius: 'var(--r-lg)', padding: 3 }}>
           {[['month','This Month'],['quarter','Quarter'],['year','Year'],['all','All Time']].map(([v,l])=>(
@@ -197,12 +197,12 @@ export function RevenueAnalytics({ db }) {
           <ol style={{ paddingLeft: 20, fontSize: 13, color: 'var(--text-3)', lineHeight: 2 }}>
             <li>In SimplePractice, go to <strong>Reports → Billing</strong></li>
             <li>Export to CSV for the desired date range</li>
-            <li>Enter each claim in the <strong>Claims Tracker</strong> in PrimeCredential</li>
+            <li>Enter each claim in the <strong>Claims Tracker</strong> in Lacentra</li>
             <li>Update payment status when EOBs / ERAs are received</li>
             <li>Log denials in the <strong>Denial Log</strong> with the reason code from the ERA</li>
           </ol>
           <div style={{ marginTop: 12, padding: '10px 14px', background: 'var(--blue-l)', border: '1px solid var(--blue-b)', borderRadius: 'var(--r-md)', fontSize: 12, color: 'var(--pr)', lineHeight: 1.5 }}>
-            💡 <strong>Coming soon:</strong> CSV batch import for SimplePractice billing exports. Until then, manual entry ensures accurate A/R aging and denial tracking.
+            💡 <strong>CSV batch import available:</strong> Use the <strong>CSV Import</strong> button at the top of the Billing page to upload SimplePractice billing exports directly. Supports all SP export column formats.
           </div>
         </div>
       </div>

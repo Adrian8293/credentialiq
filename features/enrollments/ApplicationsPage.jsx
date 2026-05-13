@@ -1,5 +1,5 @@
 /**
- * ApplicationsPage.jsx — PrimeCredential
+ * ApplicationsPage.jsx — Lacentra
  * Features:
  *  1. Inline stage progression — one-click "→ Next Stage" from row
  *  2. Bulk actions — select rows to bulk-update stage or delete

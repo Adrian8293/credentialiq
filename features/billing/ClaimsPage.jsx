@@ -131,17 +131,17 @@ export function ClaimsPage({ db, toast, requestConfirm }) {
         <div className="toolbar">
           <div className="search-box"><span className="si"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input placeholder="Search patient, claim #…" value={search} onChange={e=>setSearch(e.target.value)} /></div>
           <select className="filter-select" value={fStatus} onChange={e=>setFStatus(e.target.value)}>
-            <option value="">All Statuses</option>
+            <option value="">Status: All</option>
             {['Submitted','Pending','Paid','Denied','Partial','Appeal'].map(s=><option key={s}>{s}</option>)}
           </select>
           <select className="filter-select" value={fProv} onChange={e=>setFProv(e.target.value)}>
-            <option value="">All Providers</option>
+            <option value="">Provider: All</option>
             {providers.map(p=><option key={p.id} value={p.id}>{p.fname} {p.lname}</option>)}
           </select>
           <div className="toolbar-right"><button className="btn btn-primary btn-sm" onClick={openAdd}>＋ Add Claim</button></div>
         </div>
         <div style={{marginBottom:12,fontSize:12,color:'var(--ink-4)',padding:'8px 12px',background:'var(--amber-l)',border:'1px solid var(--amber-b)',borderRadius:'var(--r-md)'}}>
-          💡 <strong>SimplePractice users:</strong> Export claims from SP → Reports → Billing, then enter manually here. A CSV import tool is planned for a future update.
+          💡 <strong>SimplePractice users:</strong> Use the <strong>CSV Import</strong> button at the top of the Billing page to batch-import claims from SP exports (Reports → Billing → Export CSV).
         </div>
         <div className="tbl-wrap">
           <table>

@@ -19,5 +19,5 @@ export function TaskModal({ db, taskForm, setTaskForm, editingId, handleSaveTask
 }
 
 // ─── NPI SYNC MODAL ───────────────────────────────────────────────────────────
-// Shows a field-by-field diff between NPPES and PrimeCredential.
+// Shows a field-by-field diff between NPPES and Lacentra.
 // User can check/uncheck individual fields before applying.

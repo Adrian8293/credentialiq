@@ -1,5 +1,5 @@
 /**
- * PayersTab.jsx — PrimeCredential
+ * PayersTab.jsx — Lacentra
  * Redesigned Payer Directory: card-table hybrid with health indicators,
  * enrollment counts per payer, and rich workflow context.
  */
@@ -41,7 +41,74 @@ function payerColor(name) {
   return PAYER_COLORS[Math.abs(h) % PAYER_COLORS.length]
 }
 
-function EnrollmentBar({ count, active }) {
+// Known payer domain map for logo lookup
+const PAYER_DOMAINS = {
+  'Aetna': 'aetna.com',
+  'BCBS': 'bcbs.com',
+  'Blue Cross': 'bcbs.com',
+  'Blue Shield': 'blueshieldca.com',
+  'Regence': 'regence.com',
+  'BCBS Oregon': 'regence.com',
+  'Cigna': 'cigna.com',
+  'United': 'uhc.com',
+  'UnitedHealth': 'uhc.com',
+  'UHC': 'uhc.com',
+  'Humana': 'humana.com',
+  'Kaiser': 'kp.org',
+  'Moda': 'modahealth.com',
+  'Providence': 'providence.org',
+  'Premera': 'premera.com',
+  'Cambia': 'cambiahealth.com',
+  'Molina': 'molinahealthcare.com',
+  'Centene': 'centene.com',
+  'Anthem': 'anthem.com',
+  'CVS': 'cvs.com',
+  'Tricare': 'tricare.mil',
+  'Medicare': 'medicare.gov',
+  'Medicaid': 'medicaid.gov',
+  'OHA': 'oregon.gov',
+  'Availity': 'availity.com',
+  'Magellan': 'magellanhealth.com',
+  'Optum': 'optum.com',
+  'Beacon': 'beaconhealthoptions.com',
+  'Evernorth': 'evernorth.com',
+  'ValueOptions': 'valueoptions.com',
+  'Multiplan': 'multiplan.com',
+  'Zelis': 'zelis.com',
+}
+
+function getPayerDomain(name) {
+  if (!name) return null
+  for (const [key, domain] of Object.entries(PAYER_DOMAINS)) {
+    if (name.toLowerCase().includes(key.toLowerCase())) return domain
+  }
+  return null
+}
+
+function PayerLogo({ name, color, size = 28 }) {
+  const [imgErr, setImgErr] = useState(false)
+  const domain = getPayerDomain(name)
+
+  if (domain && !imgErr) {
+    return (
+      <div style={{ width: size, height: size, borderRadius: 7, flexShrink: 0, background: '#fff', border: '1.5px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+        <img
+          src={`https://logo.clearbit.com/${domain}`}
+          alt={name}
+          style={{ width: size - 6, height: size - 6, objectFit: 'contain' }}
+          onError={() => setImgErr(true)}
+        />
+      </div>
+    )
+  }
+  return (
+    <div style={{ width: size, height: size, borderRadius: 7, flexShrink: 0, background: `${color}18`, border: `1.5px solid ${color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800, color, letterSpacing: '-.01em' }}>
+      {payerInitials(name)}
+    </div>
+  )
+}
+
+
   if (!count) return <span style={{ fontSize:11.5, color:'var(--text-4)' }}>No enrollments</span>
   return (
     <div style={{ display:'flex', alignItems:'center', gap:7 }}>
@@ -56,7 +123,7 @@ function EnrollmentBar({ count, active }) {
 }
 
 export function PayersTab({ db, search, setSearch, fType, setFType, openPayerModal, handleDeletePayer }) {
-  const [viewMode, setViewMode] = useState('cards') // 'cards' | 'table'
+  const [viewMode, setViewMode] = useState('table') // 'cards' | 'table'
   const [menuOpen, setMenuOpen] = useState(null)
 
   const rawPayers = db.payers.filter(p =>
@@ -100,7 +167,7 @@ export function PayersTab({ db, search, setSearch, fType, setFType, openPayerMod
         </div>
 
         <select className="filter-select" value={fType} onChange={e=>setFType(e.target.value)}>
-          <option value="">All Types</option>
+          <option value="">Type: All</option>
           {typeOptions.map(t => <option key={t}>{t}</option>)}
         </select>
 
@@ -258,9 +325,7 @@ export function PayersTab({ db, search, setSearch, fType, setFType, openPayerMod
                   <tr key={p.id}>
                     <td>
                       <div style={{ display:'flex', alignItems:'center', gap:9 }}>
-                        <div style={{ width:28, height:28, borderRadius:7, flexShrink:0, background:`${color}18`, border:`1.5px solid ${color}30`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, fontWeight:800, color, letterSpacing:'-.01em' }}>
-                          {payerInitials(p.name)}
-                        </div>
+                        <PayerLogo name={p.name} color={color} size={28} />
                         <span style={{ fontSize:13, fontWeight:700, color:'var(--text-1)' }}>{p.name}</span>
                       </div>
                     </td>

@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   PrimeCredential — Design System v3.0
-   Matches: primecredential_design.png reference
+   Lacentra — Design System v3.0
+   Matches: lacentra_design.png reference
    Theme: Light, clean, enterprise-grade
    Font: Inter (from Google Fonts)
    Primary: #1E56F0 (bright blue from mockup)
@@ -1125,7 +1125,7 @@ input::placeholder, textarea::placeholder { color: var(--text-4); }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   PrimeCredential — Design System v3.1 additions
+   Lacentra — Design System v3.1 additions
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ─── SIDEBAR GROUPS ─────────────────────────────────────────────────────── */
@@ -1299,7 +1299,7 @@ tr:hover .row-actions { opacity: 1; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   PrimeCredential v3.2 — Fix pack: search icons, topbar, sidebar, dashboard
+   Lacentra v3.2 — Fix pack: search icons, topbar, sidebar, dashboard
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ─── SEARCH INPUT — fix icon overlap universally ────────────────────────── */
@@ -1905,7 +1905,7 @@ button:focus-visible, input:focus-visible, select:focus-visible {
 ::-webkit-scrollbar-thumb:hover { background: var(--text-4); }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   PrimeCredential — Mobile Responsive Layer
+   Lacentra — Mobile Responsive Layer
    Breakpoints: tablet (≤900px) | mobile (≤640px) | small (≤480px)
    ═══════════════════════════════════════════════════════════════════════════ */
 

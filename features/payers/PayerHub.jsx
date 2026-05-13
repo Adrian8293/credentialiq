@@ -1,5 +1,5 @@
 /**
- * PayerHub.jsx — PrimeCredential
+ * PayerHub.jsx — Lacentra
  * Simplified: single "Enrollments" tab as default view.
  * Secondary access to Payer Directory, Kanban Pipeline, and Library via view-switcher buttons.
  * No sub-tabs — just one clean enrollment table with inner navigation.
@@ -50,11 +50,11 @@ function EnrollmentTable({ db, search, setSearch, fStage, setFStage, fProv, setF
         </div>
         <div style={{ display: 'flex', gap: 8, marginLeft: 'auto', alignItems: 'center' }}>
           <select className="filter-select" value={fProv} onChange={e => setFProv(e.target.value)}>
-            <option value="">All Providers</option>
+            <option value="">Provider: All</option>
             {db.providers.map(p => <option key={p.id} value={p.id}>{p.fname} {p.lname}</option>)}
           </select>
           <select className="filter-select" value={fStage} onChange={e => setFStage(e.target.value)}>
-            <option value="">All Stages</option>
+            <option value="">Stage: All</option>
             {STAGES.map(s => <option key={s}>{s}</option>)}
           </select>
           {(search || fStage || fProv) && (

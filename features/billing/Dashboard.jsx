@@ -1,5 +1,5 @@
 /**
- * Dashboard.jsx — PrimeCredential
+ * Dashboard.jsx — Lacentra
  * Premium enterprise dashboard with KPI cards, pipeline donut,
  * upcoming expirations, recent applications, quick actions.
  */
@@ -67,7 +67,7 @@ function OnboardingChecklist({ db, setPage, openEnrollModal, openPayerModal }) {
         <div style={{ width: 56, height: 56, borderRadius: 16, background: '#1E56F0', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 8px 24px rgba(30,86,240,.25)' }}>
           <svg width="28" height="28" viewBox="0 0 48 48" fill="none"><text x="8" y="36" fontFamily="Inter,sans-serif" fontWeight="800" fontSize="30" fill="#fff">P</text></svg>
         </div>
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-1)', letterSpacing: '-.04em', margin: '0 0 8px' }}>Welcome to PrimeCredential</h2>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-1)', letterSpacing: '-.04em', margin: '0 0 8px' }}>Welcome to Lacentra</h2>
         <p style={{ fontSize: 14, color: 'var(--text-4)', maxWidth: 380, margin: '0 auto' }}>
           Get started by completing these setup steps. Your dashboard will populate as you add data.
         </p>
@@ -121,7 +121,7 @@ function OnboardingChecklist({ db, setPage, openEnrollModal, openPayerModal }) {
       </div>
 
       <p style={{ marginTop: 20, fontSize: 12, color: 'var(--text-4)' }}>
-        Need help? <span style={{ color: 'var(--pr)', cursor: 'pointer', fontWeight: 500 }} onClick={() => window.open('mailto:support@primecredential.com')}>Contact support →</span>
+        Need help? <span style={{ color: 'var(--pr)', cursor: 'pointer', fontWeight: 500 }} onClick={() => window.open('mailto:support@lacentra.com')}>Contact support →</span>
       </p>
     </div>
   )
