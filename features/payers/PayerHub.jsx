@@ -87,7 +87,7 @@ function EnrollmentTable({ db, search, setSearch, fStage, setFStage, fProv, setF
             {!list.length ? (
               <tr><td colSpan={8}>
                 <div className="empty-state">
-                  <div className="empty-state-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E56F0" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+                  <div className="empty-state-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1565C0" strokeWidth="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
                   <div className="empty-state-title">No enrollments found</div>
                   <div className="empty-state-desc">Create an enrollment to start tracking payer credentialing.</div>
                   <button className="btn btn-primary btn-sm" onClick={() => openEnrollModal()}>+ New Application</button>

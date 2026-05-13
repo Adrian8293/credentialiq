@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { pNameShort, payName } from '../../lib/helpers.js'
 import { fmtMoney } from '../../constants/rcm.js'
 
-const COLORS = ['#1E56F0','#10B981','#F59E0B','#7C3AED','#EF4444','#0891B2']
+const COLORS = ['#1565C0','#10B981','#F59E0B','#7C3AED','#EF4444','#0891B2']
 
 export function RevenueAnalytics({ db }) {
   const { providers, payers, claims = [] } = db
@@ -117,7 +117,7 @@ export function RevenueAnalytics({ db }) {
         <div className="card-body">
           {months.every(m=>m.billed===0) ? (
             <div className="empty-state">
-              <div className="empty-state-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E56F0" strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+              <div className="empty-state-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1565C0" strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
               <div className="empty-state-title">No claim data yet</div>
               <div className="empty-state-desc">Add claims to see monthly billing trends and collection analytics.</div>
             </div>
@@ -127,7 +127,7 @@ export function RevenueAnalytics({ db }) {
                 {months.map((m, i) => (
                   <div key={i} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
                     <div style={{ width: '100%', display: 'flex', gap: 2, alignItems: 'flex-end', height: 108 }}>
-                      <div title={`Billed: ${fmtMoney(m.billed)}`} style={{ flex: 1, background: 'rgba(30,86,240,.25)', borderRadius: '4px 4px 0 0', height: `${(m.billed/maxMonthVal)*100}%`, minHeight: m.billed>0?3:0, transition:'height .4s' }} />
+                      <div title={`Billed: ${fmtMoney(m.billed)}`} style={{ flex: 1, background: 'rgba(21,101,192,.25)', borderRadius: '4px 4px 0 0', height: `${(m.billed/maxMonthVal)*100}%`, minHeight: m.billed>0?3:0, transition:'height .4s' }} />
                       <div title={`Paid: ${fmtMoney(m.paid)}`} style={{ flex: 1, background: 'var(--success)', borderRadius: '4px 4px 0 0', height: `${(m.paid/maxMonthVal)*100}%`, minHeight: m.paid>0?3:0, transition:'height .4s' }} />
                     </div>
                     <div style={{ fontSize: 9, color: 'var(--text-4)', whiteSpace: 'nowrap', position: 'absolute', bottom: 0 }}>{m.label}</div>
@@ -135,7 +135,7 @@ export function RevenueAnalytics({ db }) {
                 ))}
               </div>
               <div style={{ display: 'flex', gap: 16, marginTop: 4 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11 }}><div style={{ width: 10, height: 10, background: 'rgba(30,86,240,.25)', borderRadius: 2 }} /><span>Billed</span></div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11 }}><div style={{ width: 10, height: 10, background: 'rgba(21,101,192,.25)', borderRadius: 2 }} /><span>Billed</span></div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11 }}><div style={{ width: 10, height: 10, background: 'var(--success)', borderRadius: 2 }} /><span>Collected</span></div>
               </div>
             </>

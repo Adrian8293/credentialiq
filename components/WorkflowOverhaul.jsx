@@ -445,7 +445,7 @@ export function WorkflowProviderCard({ prov, db, onOpen, onEdit, onEnroll, onTas
       cursor: 'pointer',
       position: 'relative',
     }}
-    onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow)'; e.currentTarget.style.borderColor = 'rgba(30,86,240,.25)' }}
+    onMouseEnter={e => { e.currentTarget.style.boxShadow = 'var(--shadow)'; e.currentTarget.style.borderColor = 'rgba(21,101,192,.25)' }}
     onMouseLeave={e => { e.currentTarget.style.boxShadow = ''; e.currentTarget.style.borderColor = expired ? 'rgba(239,68,68,.3)' : urgent ? 'rgba(245,158,11,.3)' : 'var(--border)' }}
     onClick={() => onOpen(prov.id)}
     >

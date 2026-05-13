@@ -196,7 +196,7 @@ export function DocModal({ db, docForm, setDocForm, editingId, handleSaveDocumen
 
           {/* Staged (pending upload) file */}
           {stagedFile && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: 'rgba(30,86,240,.05)', border: '1.5px solid rgba(30,86,240,.22)', borderRadius: 'var(--r)', marginBottom: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: 'rgba(21,101,192,.05)', border: '1.5px solid rgba(21,101,192,.22)', borderRadius: 'var(--r)', marginBottom: 10 }}>
               <span style={{ color: 'var(--pr)', flexShrink: 0 }}><FileIcon /></span>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--text-1)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -228,7 +228,7 @@ export function DocModal({ db, docForm, setDocForm, editingId, handleSaveDocumen
                 padding: '22px 20px',
                 textAlign: 'center',
                 cursor: 'pointer',
-                background: dragOver ? 'rgba(30,86,240,.04)' : 'var(--elevated)',
+                background: dragOver ? 'rgba(21,101,192,.04)' : 'var(--elevated)',
                 transition: 'all .15s',
               }}
             >

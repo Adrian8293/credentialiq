@@ -119,7 +119,7 @@ export function CredentialTimeline({ providers, onOpenProvider }) {
                 <div style={{
                   position: 'absolute', left: `${todayPct * 100}%`, top: 0, bottom: 0,
                   width: 2, background: 'var(--pr)', borderRadius: 1, zIndex: 2,
-                  boxShadow: '0 0 4px rgba(30,86,240,.4)',
+                  boxShadow: '0 0 4px rgba(21,101,192,.4)',
                 }} />
 
                 {/* Credential dots */}

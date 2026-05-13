@@ -64,7 +64,7 @@ function OnboardingChecklist({ db, setPage, openEnrollModal, openPayerModal }) {
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 420, padding: '40px 20px' }}>
       {/* Logo/welcome */}
       <div style={{ marginBottom: 24, textAlign: 'center' }}>
-        <div style={{ width: 56, height: 56, borderRadius: 16, background: '#1E56F0', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 8px 24px rgba(30,86,240,.25)' }}>
+        <div style={{ width: 56, height: 56, borderRadius: 16, background: '#1565C0', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 8px 24px rgba(21,101,192,.25)' }}>
           <svg width="28" height="28" viewBox="0 0 48 48" fill="none"><text x="8" y="36" fontFamily="Inter,sans-serif" fontWeight="800" fontSize="30" fill="#fff">P</text></svg>
         </div>
         <h2 style={{ fontSize: 22, fontWeight: 800, color: 'var(--text-1)', letterSpacing: '-.04em', margin: '0 0 8px' }}>Welcome to Lacentra</h2>

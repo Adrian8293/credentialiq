@@ -253,7 +253,7 @@ export function BillingHub({ db, toast, requestConfirm, onDraftAppeal }) {
       {/* CSV Import Panel */}
       {showImport && (
         <div style={{ marginBottom: 16 }}>
-          <div style={{ background: 'var(--pr-l)', border: '1.5px solid rgba(30,86,240,.2)', borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#1e40af', fontWeight: 500, marginBottom: 10 }}>
+          <div style={{ background: 'var(--pr-l)', border: '1.5px solid rgba(21,101,192,.2)', borderRadius: 10, padding: '10px 14px', fontSize: 12, color: '#1e40af', fontWeight: 500, marginBottom: 10 }}>
             ℹ Import from SimplePractice: Reports → Billing → Export CSV. Works for Claims and Revenue exports.
           </div>
           <CSVImportBanner onImport={handleCSVImport} target={activeTab === 'revenue' ? 'Revenue Analytics' : 'Claims'} />

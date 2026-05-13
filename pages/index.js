@@ -134,7 +134,7 @@ export default function App() {
 
   if (authLoading) return (
     <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', fontFamily:'Inter,sans-serif', color:'#6B7280', flexDirection:'column', gap:12 }}>
-      <div style={{ width:36,height:36,border:'3px solid #E5E7EB',borderTopColor:'#1E56F0',borderRadius:'50%',animation:'spin .65s linear infinite' }} />
+      <div style={{ width:36,height:36,border:'3px solid #E5E7EB',borderTopColor:'#1565C0',borderRadius:'50%',animation:'spin .65s linear infinite' }} />
       <span style={{ fontSize:13 }}>Loading Lacentra…</span>
     </div>
   )

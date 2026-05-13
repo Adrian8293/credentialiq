@@ -136,7 +136,7 @@ export function EnrollModal({ db, enrollForm, setEnrollForm, editingId, handleSa
       {/* Payer requirements auto-suggest */}
       {payerHints.length > 0 && showHints && (
         <div className="fg full">
-          <div style={{ background: 'rgba(30,86,240,.05)', border: '1.5px solid rgba(30,86,240,.18)', borderRadius: 'var(--r-lg)', padding: '12px 14px' }}>
+          <div style={{ background: 'rgba(21,101,192,.05)', border: '1.5px solid rgba(21,101,192,.18)', borderRadius: 'var(--r-lg)', padding: '12px 14px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
               <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--pr)', display: 'flex', alignItems: 'center', gap: 6 }}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>

@@ -8,11 +8,11 @@ import { useState, useEffect } from 'react'
 
 const PIPELINE = [
   { id: 'not_started',  label: 'Not Started',                    color: '#64748B' },
-  { id: 'submitted',    label: 'Application Submitted',           color: '#1E56F0' },
+  { id: 'submitted',    label: 'Application Submitted',           color: '#1565C0' },
   { id: 'caqh',         label: 'Awaiting CAQH',                  color: '#8B5CF6' },
   { id: 'pending',      label: 'Pending Verification',            color: '#F59E0B' },
   { id: 'info',         label: 'Additional Info Requested',       color: '#EF4444' },
-  { id: 'review',       label: 'Under Review',                    color: '#0EA5FF' },
+  { id: 'review',       label: 'Under Review',                    color: '#1976D2' },
   { id: 'approved',     label: 'Approved – Awaiting Contract',    color: '#10B981' },
   { id: 'contracted',   label: 'Contracted – Pending Effective',  color: '#22C55E' },
   { id: 'active',       label: 'Active',                          color: '#16A34A' },
@@ -178,7 +178,7 @@ function FilterBar({ providers, payers, filter, setFilter }) {
         {payers.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
       </select>
       <label style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#64748B', fontSize: 12, cursor: 'pointer' }}>
-        <input type="checkbox" checked={filter.followupOnly} onChange={e => setFilter(f => ({ ...f, followupOnly: e.target.checked }))} style={{ accentColor: '#1E56F0' }} />
+        <input type="checkbox" checked={filter.followupOnly} onChange={e => setFilter(f => ({ ...f, followupOnly: e.target.checked }))} style={{ accentColor: '#1565C0' }} />
         Follow-up due
       </label>
       {active && (
@@ -263,7 +263,7 @@ export default function EnrollmentKanban({ enrollments = [], providers = [], pay
       {/* Stats */}
       <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
         {[
-          { label: 'Total',            value: stats.total,    color: '#1E56F0' },
+          { label: 'Total',            value: stats.total,    color: '#1565C0' },
           { label: 'Active',           value: stats.active,   color: '#16A34A' },
           { label: 'In Pipeline',      value: stats.pending,  color: '#F59E0B' },
           { label: 'Urgent Follow-up', value: stats.followup, color: '#EF4444' },

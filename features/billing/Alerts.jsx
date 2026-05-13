@@ -31,7 +31,7 @@ const AlertIcon = ({ type }) => {
     expired:  { bg: 'rgba(239,68,68,.08)',   color: 'var(--danger)',  icon: '!' },
     critical: { bg: 'rgba(239,68,68,.08)',   color: 'var(--danger)',  icon: '!' },
     warning:  { bg: 'rgba(245,158,11,.08)', color: 'var(--warning)', icon: '~' },
-    info:     { bg: 'rgba(30,86,240,.08)',  color: 'var(--pr)',       icon: 'i' },
+    info:     { bg: 'rgba(21,101,192,.08)',  color: 'var(--pr)',       icon: 'i' },
   }
   const s = map[type] || map.info
   return (
@@ -71,7 +71,7 @@ export function Alerts({ db, onOpenProvider, onDraftEmail, onMarkDone }) {
     const isWarning  = a.days > 30 && a.days <= 60
     const iconType   = isExpired ? 'expired' : isCritical ? 'critical' : isWarning ? 'warning' : 'info'
     const borderColor = isExpired || isCritical ? 'var(--danger)' : isWarning ? 'var(--warning)' : 'var(--pr)'
-    const bgColor     = isExpired || isCritical ? 'rgba(239,68,68,.035)' : isWarning ? 'rgba(245,158,11,.035)' : 'rgba(30,86,240,.035)'
+    const bgColor     = isExpired || isCritical ? 'rgba(239,68,68,.035)' : isWarning ? 'rgba(245,158,11,.035)' : 'rgba(21,101,192,.035)'
 
     return (
       <div style={{
@@ -145,7 +145,7 @@ export function Alerts({ db, onOpenProvider, onDraftEmail, onMarkDone }) {
             { label: 'Expired', count: expired.length, color: 'var(--danger)', bg: 'rgba(239,68,68,.08)', tab: 'Critical' },
             { label: 'Critical (≤30d)', count: critical.length, color: 'var(--danger)', bg: 'rgba(239,68,68,.08)', tab: 'Critical' },
             { label: 'Warnings (31–60d)', count: warning.length, color: 'var(--warning)', bg: 'rgba(245,158,11,.08)', tab: 'Warnings' },
-            { label: 'Notices (61–90d)', count: info.length, color: 'var(--pr)', bg: 'rgba(30,86,240,.08)', tab: 'Information' },
+            { label: 'Notices (61–90d)', count: info.length, color: 'var(--pr)', bg: 'rgba(21,101,192,.08)', tab: 'Information' },
           ].map((kpi, i) => (
             <div
               key={i}

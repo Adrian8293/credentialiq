@@ -14,7 +14,7 @@ const PlusIcon    = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="
 const AlertIcon   = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
 
 const DOC_COLORS = {
-  'License':              '#1E56F0',
+  'License':              '#1565C0',
   'Malpractice':          '#dc2626',
   'DEA':                  '#7c3aed',
   'CAQH Attestation':     '#059669',
@@ -54,7 +54,7 @@ function ProviderChip({ providers, provId }) {
   const ini = ((p.fname||'')[0]||'') + ((p.lname||'')[0]||'')
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-      <div style={{ width: 26, height: 26, borderRadius: 6, background: 'var(--pr-l)', border: '1.5px solid rgba(30,86,240,.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9.5, fontWeight: 800, color: 'var(--pr)', flexShrink: 0, letterSpacing: '-.01em' }}>
+      <div style={{ width: 26, height: 26, borderRadius: 6, background: 'var(--pr-l)', border: '1.5px solid rgba(21,101,192,.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9.5, fontWeight: 800, color: 'var(--pr)', flexShrink: 0, letterSpacing: '-.01em' }}>
         {ini}
       </div>
       <div>

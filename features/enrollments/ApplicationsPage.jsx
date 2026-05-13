@@ -185,7 +185,7 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
         {SUBTABS.map(t => (
           <div key={t} className={`tab${subtab === t ? ' active' : ''}`} onClick={() => { setSubtab(t); setSelected(new Set()) }}>
             {t}
-            <span style={{ marginLeft: 5, fontSize: 10, fontWeight: 700, background: subtab === t ? 'rgba(30,86,240,.12)' : 'var(--elevated)', color: subtab === t ? 'var(--pr)' : 'var(--text-4)', border: '1px solid var(--border)', borderRadius: 9, padding: '1px 6px' }}>{tabCount(t)}</span>
+            <span style={{ marginLeft: 5, fontSize: 10, fontWeight: 700, background: subtab === t ? 'rgba(21,101,192,.12)' : 'var(--elevated)', color: subtab === t ? 'var(--pr)' : 'var(--text-4)', border: '1px solid var(--border)', borderRadius: 9, padding: '1px 6px' }}>{tabCount(t)}</span>
           </div>
         ))}
       </div>
@@ -216,7 +216,7 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
 
       {/* Bulk action bar */}
       {someSelected && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px', background: 'rgba(30,86,240,.06)', border: '1.5px solid var(--pr)', borderRadius: 'var(--r)', marginBottom: 10, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 14px', background: 'rgba(21,101,192,.06)', border: '1.5px solid var(--pr)', borderRadius: 'var(--r)', marginBottom: 10, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--pr)' }}>{selected.size} selected</span>
           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
             <select className="filter-select" style={{ fontSize: 12, height: 30 }} value={bulkStage} onChange={e => setBulkStage(e.target.value)}>
@@ -257,7 +257,7 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
             {!pagedList.length ? (
               <tr><td colSpan={9}>
                 <div className="empty-state">
-                  <div className="empty-state-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E56F0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+                  <div className="empty-state-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1565C0" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
                   <div className="empty-state-title">No applications found</div>
                   <div className="empty-state-desc">{search || fProv || fStage ? 'Try adjusting your filters.' : 'Create your first application to get started.'}</div>
                   {!search && !fProv && !fStage && <button className="btn btn-primary btn-sm" onClick={() => openEnrollModal()}>+ New Application</button>}
@@ -272,7 +272,7 @@ export function ApplicationsPage({ db, openEnrollModal, search, setSearch, fStag
               const isAdv = advancing === e.id
 
               return (
-                <tr key={e.id} style={{ cursor: 'pointer', background: isChecked ? 'rgba(30,86,240,.04)' : undefined }} onClick={() => openEnrollModal(e.id)}>
+                <tr key={e.id} style={{ cursor: 'pointer', background: isChecked ? 'rgba(21,101,192,.04)' : undefined }} onClick={() => openEnrollModal(e.id)}>
                   <td onClick={ev => ev.stopPropagation()} style={{ paddingLeft: 12 }}>
                     <input type="checkbox" checked={isChecked} onChange={() => toggleOne(e.id)} style={{ cursor: 'pointer' }} />
                   </td>

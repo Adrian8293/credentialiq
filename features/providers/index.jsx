@@ -140,7 +140,7 @@ export function Providers({ db, search, setSearch, fStatus, setFStatus, fSpec, s
               <tr><td colSpan={8}>
                 <div className="empty-state">
                   <div className="empty-state-icon">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E56F0" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1565C0" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
                   </div>
                   <div className="empty-state-title">No providers found</div>
                   <div className="empty-state-desc">{search || fStatus || fSpec ? 'Try adjusting your filters.' : 'Add your first provider to get started.'}</div>

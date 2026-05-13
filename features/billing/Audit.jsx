@@ -72,10 +72,10 @@ export function Audit({ db, search, setSearch, fType, setFType, handleClearAudit
       {Object.keys(typeCounts).length > 0 && (
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
           {Object.entries(typeCounts).map(([type, count]) => (
-            <div key={type} onClick={() => setFType(fType === type ? '' : type)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 12px', background: fType === type ? 'var(--pr-l)' : 'var(--elevated)', border: `1.5px solid ${fType === type ? 'rgba(30,86,240,.3)' : 'var(--border)'}`, borderRadius: 'var(--r-pill)', cursor: 'pointer', transition: 'all .14s' }}>
+            <div key={type} onClick={() => setFType(fType === type ? '' : type)} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 12px', background: fType === type ? 'var(--pr-l)' : 'var(--elevated)', border: `1.5px solid ${fType === type ? 'rgba(21,101,192,.3)' : 'var(--border)'}`, borderRadius: 'var(--r-pill)', cursor: 'pointer', transition: 'all .14s' }}>
               <span style={{ color: fType === type ? 'var(--pr)' : 'var(--text-3)' }}>{TYPE_ICON[type]}</span>
               <span style={{ fontSize: 12, fontWeight: 500, color: fType === type ? 'var(--pr)' : 'var(--text-2)' }}>{type}</span>
-              <span style={{ fontSize: 10, fontWeight: 700, color: fType === type ? 'var(--pr)' : 'var(--text-4)', background: fType === type ? 'rgba(30,86,240,.12)' : 'var(--card)', padding: '1px 6px', borderRadius: 10 }}>{count}</span>
+              <span style={{ fontSize: 10, fontWeight: 700, color: fType === type ? 'var(--pr)' : 'var(--text-4)', background: fType === type ? 'rgba(21,101,192,.12)' : 'var(--card)', padding: '1px 6px', borderRadius: 10 }}>{count}</span>
             </div>
           ))}
           {fType && <button onClick={() => setFType('')} style={{ fontSize: 11.5, color: 'var(--pr)', background: 'none', border: 'none', cursor: 'pointer' }}>Clear filter ×</button>}
@@ -102,7 +102,7 @@ export function Audit({ db, search, setSearch, fType, setFType, handleClearAudit
         {!list.length ? (
           <div className="empty-state">
             <div className="empty-state-icon">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E56F0" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1565C0" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </div>
             <div className="empty-state-title">{search || fType ? 'No matching entries' : 'No audit events yet'}</div>
             <div className="empty-state-desc">{search || fType ? 'Try adjusting your search or filter.' : 'Audit events are recorded automatically as you use Lacentra.'}</div>

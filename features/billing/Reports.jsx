@@ -24,7 +24,7 @@ const Icon = {
   trend:    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>,
 }
 
-const COLORS = ['#1E56F0','#10B981','#F59E0B','#7C3AED','#EF4444','#0891B2','#E11D48','#0D9488']
+const COLORS = ['#1565C0','#10B981','#F59E0B','#7C3AED','#EF4444','#0891B2','#E11D48','#0D9488']
 
 function SH({ icon, title }) {
   return (

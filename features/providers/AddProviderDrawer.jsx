@@ -209,8 +209,8 @@ export function AddProviderDrawer({
 
             {/* NPI Lookup — first on the page */}
             <div style={{
-              background: 'linear-gradient(135deg, rgba(30,86,240,.06) 0%, rgba(30,86,240,.02) 100%)',
-              border: '1.5px solid rgba(30,86,240,.2)',
+              background: 'linear-gradient(135deg, rgba(21,101,192,.06) 0%, rgba(21,101,192,.02) 100%)',
+              border: '1.5px solid rgba(21,101,192,.2)',
               borderRadius: 'var(--r-lg)',
               padding: '14px 16px',
             }}>

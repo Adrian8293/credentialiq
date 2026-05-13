@@ -20,7 +20,7 @@ const PlusIcon      = () => <svg width="11" height="11" viewBox="0 0 24 24" fill
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 const TYPE_META = {
-  National:    { color: '#1E56F0', bg: 'rgba(30,86,240,.09)',   border: 'rgba(30,86,240,.22)',   label: 'National'    },
+  National:    { color: '#1565C0', bg: 'rgba(21,101,192,.09)',   border: 'rgba(21,101,192,.22)',   label: 'National'    },
   Regional:    { color: '#0891b2', bg: 'rgba(8,145,178,.09)',   border: 'rgba(8,145,178,.22)',   label: 'Regional'    },
   Medicaid:    { color: '#059669', bg: 'rgba(5,150,105,.09)',   border: 'rgba(5,150,105,.22)',   label: 'Medicaid'    },
   Medicare:    { color: '#7c3aed', bg: 'rgba(124,58,237,.09)',  border: 'rgba(124,58,237,.22)',  label: 'Medicare'    },
@@ -253,7 +253,7 @@ function PayerCard({ name, req, isExpanded, onToggle, activeState, onClickState,
 
           {/* Notes */}
           {req.notes && (
-            <div style={{ padding:'12px 16px', background:'rgba(30,86,240,.025)', borderBottom:'1px solid var(--border-l)' }}>
+            <div style={{ padding:'12px 16px', background:'rgba(21,101,192,.025)', borderBottom:'1px solid var(--border-l)' }}>
               <div style={{ fontSize:10, fontWeight:700, letterSpacing:'.06em', textTransform:'uppercase', color:'var(--text-4)', marginBottom:5 }}>Credentialing Notes</div>
               <div style={{ fontSize:12.5, color:'var(--text-2)', lineHeight:1.55 }}>{req.notes}</div>
             </div>
@@ -340,12 +340,12 @@ export function PayerRequirements({ db, openEnrollModal }) {
     <div>
       {/* ── Hero banner ──────────────────────────────────────────────────── */}
       <div style={{
-        background: 'linear-gradient(135deg, rgba(30,86,240,.06) 0%, rgba(30,86,240,.02) 100%)',
-        border: '1.5px solid rgba(30,86,240,.14)',
+        background: 'linear-gradient(135deg, rgba(21,101,192,.06) 0%, rgba(21,101,192,.02) 100%)',
+        border: '1.5px solid rgba(21,101,192,.14)',
         borderRadius: 14, padding: '16px 20px', marginBottom: 18,
         display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
       }}>
-        <div style={{ display:'flex', alignItems:'center', justifyContent:'center', width:44, height:44, background:'rgba(30,86,240,.12)', borderRadius:12, flexShrink:0 }}>
+        <div style={{ display:'flex', alignItems:'center', justifyContent:'center', width:44, height:44, background:'rgba(21,101,192,.12)', borderRadius:12, flexShrink:0 }}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--pr)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
         </div>
         <div style={{ flex:1 }}>
@@ -441,7 +441,7 @@ export function PayerRequirements({ db, openEnrollModal }) {
       {/* ── Empty state ───────────────────────────────────────────────────── */}
       {filtered.length === 0 && (
         <div className="empty-state">
-          <div className="empty-state-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1E56F0" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+          <div className="empty-state-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1565C0" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
           <div className="empty-state-title">No payers match your filters</div>
           <div className="empty-state-desc">Try clearing the state or type filter.</div>
           <button className="btn btn-secondary btn-sm" onClick={() => { setSearch(''); setFState(''); setFType(''); setFSpeed('') }}>Clear all filters</button>

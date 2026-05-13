@@ -10,8 +10,11 @@ import { useState } from 'react'
 function LacentraMark({ size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
-      <rect x="2" y="2" width="44" height="44" rx="12" fill="#1E56F0"/>
-      <text x="8" y="34" fontFamily="Inter,system-ui,sans-serif" fontWeight="800" fontSize="24" fill="#FFFFFF">La</text>
+      {/* Shield shape split: left half blue, right half green */}
+      <path d="M24 4L6 12V26C6 35 14 42 24 46C34 42 42 35 42 26V12L24 4Z" fill="#1565C0"/>
+      <path d="M24 4L42 12V26C42 35 34 42 24 46V4Z" fill="#5CB85C"/>
+      {/* Checkmark */}
+      <polyline points="14,25 21,32 34,18" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
     </svg>
   )
 }
@@ -79,7 +82,7 @@ export function Sidebar({ page, setPage, alertCount, expDocs, user, signOut, db 
           <LacentraMark size={collapsed ? 26 : 28} />
           {!collapsed && (
             <div className="sb-logo-text">
-              <h1><span className="brand-prime">La</span><span className="brand-credential">centra</span></h1>
+              <h1><span className="brand-prime">LAC</span><span className="brand-credential">entra</span></h1>
               <div className="sb-logo-sub">Credentialing Platform</div>
             </div>
           )}
