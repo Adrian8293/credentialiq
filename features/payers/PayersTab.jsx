@@ -29,7 +29,7 @@ const PAYER_COLORS = [
   '#AD1457','#283593','#558B2F','#6D4C41','#1565C0',
 ]
 
-// Payer-specific brand colors for known payers
+// Payer-specific brand colors for known payers (fallback when logo fails)
 const PAYER_BRAND = {
   'aetna':       '#7B1FA2',
   'bcbs':        '#003781',
@@ -59,6 +59,54 @@ const PAYER_BRAND = {
   'cambia':      '#00695C',
 }
 
+// Canonical domain for each known payer — used for logo fetching
+const PAYER_DOMAINS = {
+  'aetna':         'aetna.com',
+  'bcbs':          'bcbs.com',
+  'blue cross':    'bcbs.com',
+  'blue shield':   'blueshieldca.com',
+  'cigna':         'cigna.com',
+  'evernorth':     'evernorth.com',
+  'united':        'uhc.com',
+  'uhc':           'uhc.com',
+  'unitedhealthcare': 'uhc.com',
+  'humana':        'humana.com',
+  'kaiser':        'kp.org',
+  'anthem':        'anthem.com',
+  'elevance':      'elevancehealth.com',
+  'molina':        'molinahealthcare.com',
+  'centene':       'centene.com',
+  'medicare':      'medicare.gov',
+  'medicaid':      'medicaid.gov',
+  'tricare':       'tricare.mil',
+  'optum':         'optum.com',
+  'magellan':      'magellanhealth.com',
+  'beacon':        'beaconhealthoptions.com',
+  'multiplan':     'multiplan.com',
+  'availity':      'availity.com',
+  'regence':       'regence.com',
+  'premera':       'premera.com',
+  'providence':    'providence.org',
+  'moda':          'modahealth.com',
+  'cambia':        'cambiahealth.com',
+  'oscar':         'hioscar.com',
+  'pacificsource': 'pacificsource.com',
+  'first choice':  'fchn.com',
+  'zelis':         'zelis.com',
+  'oha':           'oregon.gov',
+  'cvs':           'cvs.com',
+  'carelon':       'carelon.com',
+}
+
+function getPayerDomain(name) {
+  if (!name) return null
+  const lower = name.toLowerCase()
+  for (const [key, domain] of Object.entries(PAYER_DOMAINS)) {
+    if (lower.includes(key)) return domain
+  }
+  return null
+}
+
 function payerInitials(name) {
   return name.split(/[\s\/]+/).slice(0,2).map(w => w[0]).join('').toUpperCase()
 }
@@ -76,21 +124,65 @@ function payerColor(name) {
   return PAYER_COLORS[Math.abs(h) % PAYER_COLORS.length]
 }
 
+// Logo source waterfall: Google favicon (64px) → DuckDuckGo → initials
+function getLogoSources(domain) {
+  if (!domain) return []
+  return [
+    `https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${domain}&size=64`,
+    `https://icons.duckduckgo.com/ip3/${domain}.ico`,
+    `https://www.google.com/s2/favicons?domain=${domain}&sz=64`,
+  ]
+}
 
 function PayerLogo({ name, color, size = 28 }) {
-  const initials = payerInitials(name)
+  const domain   = getPayerDomain(name)
+  const sources  = getLogoSources(domain)
+  const [srcIdx, setSrcIdx] = useState(0)
+  const [failed, setFailed] = useState(false)
+
+  const radius  = Math.round(size * 0.26)
   const fontSize = size <= 28 ? 10 : size <= 36 ? 12 : 14
+  const imgSize  = Math.round(size * 0.72)
+
+  const handleError = () => {
+    if (srcIdx + 1 < sources.length) {
+      setSrcIdx(i => i + 1)
+    } else {
+      setFailed(true)
+    }
+  }
+
+  // Initials fallback
+  const Fallback = (
+    <div style={{
+      width: size, height: size, borderRadius: radius, flexShrink: 0,
+      background: `${color}18`, border: `1.5px solid ${color}35`,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontSize, fontWeight: 800, color,
+      letterSpacing: '-.02em', fontFamily: 'var(--fn)', userSelect: 'none',
+    }}>
+      {payerInitials(name)}
+    </div>
+  )
+
+  if (!domain || failed) return Fallback
+
   return (
     <div style={{
-      width: size, height: size, borderRadius: Math.round(size * 0.26),
-      flexShrink: 0, background: `${color}18`,
-      border: `1.5px solid ${color}35`,
+      width: size, height: size, borderRadius: radius, flexShrink: 0,
+      background: '#fff', border: '1.5px solid var(--border)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontSize: fontSize, fontWeight: 800, color,
-      letterSpacing: '-.02em', fontFamily: 'var(--fn)',
-      userSelect: 'none',
+      overflow: 'hidden',
     }}>
-      {initials}
+      <img
+        key={srcIdx}
+        src={sources[srcIdx]}
+        alt={name}
+        width={imgSize}
+        height={imgSize}
+        style={{ objectFit: 'contain', display: 'block' }}
+        onError={handleError}
+      />
     </div>
   )
 }
@@ -214,7 +306,6 @@ export function PayersTab({ db, search, setSearch, fType, setFType, openPayerMod
             const meta  = TYPE_META[p.type] || TYPE_META['Other']
             const color = payerColor(p.name)
             const stats = payerStats(p.id)
-            const ini   = payerInitials(p.name)
             return (
               <div key={p.id} style={{ background:'var(--card)', border:'1.5px solid var(--border)', borderRadius:12, overflow:'hidden', transition:'box-shadow .15s, border-color .15s', boxShadow:'var(--shadow-sm)' }}
                 onMouseEnter={e=>{ e.currentTarget.style.boxShadow='var(--shadow-md)'; e.currentTarget.style.borderColor='rgba(21,101,192,.3)' }}
@@ -226,9 +317,7 @@ export function PayersTab({ db, search, setSearch, fType, setFType, openPayerMod
                 {/* Card body */}
                 <div style={{ padding:'14px 16px' }}>
                   <div style={{ display:'flex', alignItems:'flex-start', gap:10, marginBottom:12 }}>
-                    <div style={{ width:38, height:38, borderRadius:9, background:`${color}18`, border:`1.5px solid ${color}30`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:12, fontWeight:900, color, flexShrink:0, letterSpacing:'-.01em' }}>
-                      {ini}
-                    </div>
+                    <PayerLogo name={p.name} color={color} size={38} />
                     <div style={{ flex:1, minWidth:0 }}>
                       <div style={{ fontSize:13.5, fontWeight:800, color:'var(--text-1)', letterSpacing:'-.025em', marginBottom:3, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{p.name}</div>
                       <div style={{ display:'flex', gap:5, flexWrap:'wrap', alignItems:'center' }}>
