@@ -200,9 +200,8 @@ export function Documents({ db, search, setSearch, fType, setFType, fStatus, set
                 const days   = daysUntil(d.exp)
                 const status = ExpiryStatus({ days })
                 return (
-                  <tr key={d.id} style={{ cursor: 'pointer', background: status.urgency >= 3 ? status.bg : undefined }}
-                    onClick={() => openDocModal(d.id)}>
-                    <td onClick={e => e.stopPropagation()}>
+                  <tr key={d.id} style={{ background: status.urgency >= 3 ? status.bg : undefined }}>
+                    <td>
                       <ProviderChip providers={db.providers} provId={d.provId} />
                     </td>
                     <td>

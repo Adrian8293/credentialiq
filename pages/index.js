@@ -406,6 +406,7 @@ export default function App() {
             handleSaveDocument={handleSaveDocument}
             onClose={() => { setModal(null); documents.setDocForm({}) }}
             saving={documents.saving}
+            toast={toast}
           />
         )}
         {modal === 'task' && (
