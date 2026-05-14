@@ -228,10 +228,10 @@ export function Documents({ db, search, setSearch, fType, setFType, fStatus, set
                         <UrgencyBar days={days} />
                       </div>
                     </td>
-                    <td style={{ textAlign: 'center' }} onClick={e => e.stopPropagation()}>
+                    <td style={{ textAlign: 'center' }}>
                       {d.fileUrl ? (
                         <button
-                          onClick={() => setViewingDoc(d)}
+                          onClick={e => { e.stopPropagation(); setViewingDoc(d) }}
                           title={d.fileName || 'View file'}
                           style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28, borderRadius: 6, background: 'rgba(16,185,129,.1)', border: '1.5px solid rgba(16,185,129,.3)', color: 'var(--success)', cursor: 'pointer' }}
                         >
