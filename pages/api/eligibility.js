@@ -14,6 +14,11 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing required fields' })
   }
 
+  // BUG-006: Single AbortController covers both sequential Availity calls.
+  // 25s timeout: two real network round-trips to Availity can legitimately take 10-15s.
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 25000)
+
   try {
     // 1. Get OAuth token from Availity
     const tokenRes = await fetch('https://api.availity.com/availity/v1/token', {
@@ -24,7 +29,8 @@ export default async function handler(req, res) {
         client_id: process.env.AVAILITY_CLIENT_ID,
         client_secret: process.env.AVAILITY_CLIENT_SECRET,
         scope: 'hipaa'
-      })
+      }),
+      signal: controller.signal,
     })
     if (!tokenRes.ok) {
       const errText = await tokenRes.text()
@@ -57,7 +63,8 @@ export default async function handler(req, res) {
         },
         serviceTypeCodes: ['30'], // Health Benefit Plan Coverage
         serviceDate: dos || new Date().toISOString().split('T')[0]
-      })
+      }),
+      signal: controller.signal,
     })
 
     const data = await eligRes.json()
@@ -92,7 +99,12 @@ export default async function handler(req, res) {
 
     res.status(200).json(result)
   } catch (err) {
+    if (err.name === 'AbortError') {
+      return res.status(504).json({ error: 'Eligibility check timed out. Availity may be slow — please try again.' })
+    }
     console.error('Availity error:', err)
     res.status(500).json({ error: err.message })
+  } finally {
+    clearTimeout(timeout) // always cancel the timer
   }
 }

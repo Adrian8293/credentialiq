@@ -29,8 +29,11 @@ export function useEnrollmentActions({ db, setDb, toast, requestConfirm }) {
       // setModal(null) is handled by handleSaveEnrollment wrapper in index.js
       setEnrollForm({})
       setEditingEnrollmentId(null)
-    } catch(err) { toast(err.message, 'error') }
-    setSaving(false)
+    } catch(err) {
+      toast(err.message, 'error')
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function handleDeleteEnrollment(id) {

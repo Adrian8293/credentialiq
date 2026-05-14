@@ -22,8 +22,11 @@ export function useTaskActions({ db, setDb, toast, requestConfirm }) {
       toast(editingTaskId ? 'Task updated!' : 'Task saved!', 'success')
       setTaskForm({})
       setEditingTaskId(null)
-    } catch(err) { toast(err.message, 'error') }
-    setSaving(false)
+    } catch(err) {
+      toast(err.message, 'error')
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function handleMarkDone(id, taskName) {

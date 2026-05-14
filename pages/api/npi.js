@@ -14,14 +14,22 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Missing NPI number" });
   }
 
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 8000) // 8s — within Vercel's 10s limit
+
   try {
     const response = await fetch(
-      `https://npiregistry.cms.hhs.gov/api/?number=${encodeURIComponent(number)}&version=2.1`
-    );
-
-    const data = await response.json();
-    return res.status(200).json(data);
+      `https://npiregistry.cms.hhs.gov/api/?number=${encodeURIComponent(number)}&version=2.1`,
+      { signal: controller.signal }
+    )
+    const data = await response.json()
+    return res.status(200).json(data)
   } catch (err) {
-    return res.status(500).json({ error: "Could not reach NPI registry" });
+    if (err.name === 'AbortError') {
+      return res.status(504).json({ error: 'NPI registry timed out. Please try again in a moment.' })
+    }
+    return res.status(500).json({ error: 'Could not reach NPI registry' })
+  } finally {
+    clearTimeout(timeout) // always cancel the timer, even on success
   }
 }

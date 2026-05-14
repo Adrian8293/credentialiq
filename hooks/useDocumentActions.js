@@ -25,9 +25,13 @@ export function useDocumentActions({ db, setDb, toast, requestConfirm }) {
       toast(editingDocId ? 'Document updated!' : 'Document saved!', 'success')
       setDocForm({})
       setEditingDocId(null)
-    } catch(err) { toast(err.message, 'error') }
-    setSaving(false)
-    return saved  // DocModal uses this to immediately upload the staged file
+    } catch(err) {
+      toast(err.message, 'error')
+    } finally {
+      setSaving(false)
+    }
+    // Returns null on error — DocModal checks for null before attempting file upload
+    return saved
   }
 
   async function handleDeleteDocument(id) {

@@ -20,8 +20,11 @@ export function usePayerActions({ db, setDb, toast, requestConfirm }) {
       toast(editingPayerId ? 'Payer updated!' : 'Payer saved!', 'success')
       setPayerForm({})
       setEditingPayerId(null)
-    } catch(err) { toast(err.message, 'error') }
-    setSaving(false)
+    } catch(err) {
+      toast(err.message, 'error')
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function handleDeletePayer(id) {

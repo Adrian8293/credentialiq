@@ -37,6 +37,9 @@ const DEFAULT_ALERT_DAYS = 90   // warn X days before expiry
 const DEFAULT_FOLLOWUP_OVERDUE = 0 // flag follow-ups on or past due date
 
 // Which provider fields represent expiration dates (field → human label)
+// NOTE: caqh_attest is intentionally excluded — it is the date of last attestation
+// (a trailing indicator). caqh_due is the forward-looking deadline that matters.
+// This must stay in sync with ALERT_FIELDS in lib/helpers.js.
 const PROVIDER_EXP_FIELDS = {
   license_exp:  'License',
   mal_exp:      'Malpractice Insurance',
@@ -44,7 +47,6 @@ const PROVIDER_EXP_FIELDS = {
   sup_exp:      'Supervisory Agreement',
   caqh_due:     'CAQH Attestation',
   recred:       'Re-credentialing',
-  caqh_attest:  'CAQH Profile',
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -98,6 +100,7 @@ async function checkProviderExpiries(alertDays, alerts) {
     .from('providers')
     .select('id, fname, lname, cred, ' + Object.keys(PROVIDER_EXP_FIELDS).join(', '))
     .eq('status', 'Active')
+    .is('deleted_at', null)   // BUG-003: exclude soft-deleted providers
 
   if (error) throw error
 
@@ -141,13 +144,15 @@ async function checkDocumentExpiries(alertDays, alerts) {
     .select('id, prov_id, type, issuer, number, exp')
     .not('exp', 'is', null)
     .gte('exp', new Date(Date.now() - 30 * 86_400_000).toISOString().slice(0, 10)) // include 30d past
+    .is('deleted_at', null)   // BUG-003: exclude soft-deleted documents
 
   if (error) throw error
 
-  // Join provider names
+  // Join provider names — exclude deleted providers
   const { data: providers } = await supabase
     .from('providers')
     .select('id, fname, lname, cred')
+    .is('deleted_at', null)   // BUG-003: exclude deleted providers from name map
 
   const provMap = Object.fromEntries((providers ?? []).map(p => [p.id, p]))
 
@@ -184,12 +189,16 @@ async function checkEnrollmentFollowups(alerts) {
     .from('enrollments')
     .select('id, prov_id, pay_id, stage, followup')
     .not('followup', 'is', null)
-    .lte('followup', isoToday())  // on or before today
-    .not('stage', 'in', '("Active","Denied")')
+    .lte('followup', isoToday())               // on or before today
+    .not('stage', 'in', '(Active,Denied)')     // BUG-002: unquoted CSV — PostgREST format
+    .is('deleted_at', null)                    // BUG-003: exclude soft-deleted enrollments
 
   if (error) throw error
 
-  const { data: providers } = await supabase.from('providers').select('id, fname, lname')
+  const { data: providers } = await supabase
+    .from('providers')
+    .select('id, fname, lname')
+    .is('deleted_at', null)   // BUG-003: exclude deleted providers from name map
   const { data: payers }    = await supabase.from('payers').select('id, name')
   const provMap  = Object.fromEntries((providers ?? []).map(p => [p.id, p]))
   const payerMap = Object.fromEntries((payers    ?? []).map(p => [p.id, p]))

@@ -84,8 +84,11 @@ export function useProviderActions({ db, setDb, toast, requestConfirm, setPage }
       setNpiResult(null)
       setNpiInput('')
       setPage('providers')
-    } catch(err) { toast(err.message, 'error') }
-    setSaving(false)
+    } catch(err) {
+      toast(err.message, 'error')
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function handleDeleteProvider(id) {
@@ -102,8 +105,11 @@ export function useProviderActions({ db, setDb, toast, requestConfirm, setPage }
       toast('Provider deleted.', 'warn')
       setEditingProviderId(null)
       setPage('providers')
-    } catch(err) { toast(err.message, 'error') }
-    setSaving(false)
+    } catch(err) {
+      toast(err.message, 'error')
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function handleAlertMarkDone(providerId, field) {
@@ -219,8 +225,11 @@ export function useProviderActions({ db, setDb, toast, requestConfirm, setPage }
       await addAudit('Provider', 'NPPES Sync', `Synced ${selectedFields.join(', ')} from NPPES for NPI ${prov.npi}`, prov.id)
       toast(`✓ ${prov.fname} ${prov.lname} updated from NPPES!`, 'success')
       setNpiSyncModal(null)
-    } catch(err) { toast('Save failed: ' + err.message, 'error') }
-    setSaving(false)
+    } catch(err) {
+      toast('Save failed: ' + err.message, 'error')
+    } finally {
+      setSaving(false)
+    }
   }
 
   function editProvider(id) {

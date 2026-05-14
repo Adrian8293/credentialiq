@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Head from 'next/head'
 import { daysUntil, providerAlertCount } from '../lib/helpers.js'
 import { useAuth } from '../hooks/useAuth.js'
@@ -69,6 +69,13 @@ export default function App() {
   const tasks      = useTaskActions({ db, setDb, toast, requestConfirm })
 
   const [page, setPage]                   = useState('dashboard')
+  // MISSED-003: pageRef keeps the keyboard handler in sync with current page.
+  // The handler useEffect intentionally has [] deps (mounts once), so 'page'
+  // inside the closure would always be the initial value 'dashboard'. The ref
+  // is updated on every page change via a separate effect, giving the handler
+  // access to the current page without re-attaching the DOM listener.
+  const pageRef = useRef('dashboard')
+  useEffect(() => { pageRef.current = page }, [page])
   const [modal, setModal]                 = useState(null)
   const [provDetailId, setProvDetailId]   = useState(null)
   const [globalSearchOpen, setGlobalSearchOpen] = useState(false)
@@ -118,7 +125,7 @@ export default function App() {
 
       // N: new enrollment — only on pages where it's contextually relevant
       if (e.key === 'n' || e.key === 'N') {
-        if (!['applications', 'payers', 'dashboard'].includes(page)) return
+        if (!['applications', 'payers', 'dashboard'].includes(pageRef.current)) return
         e.preventDefault()
         openEnrollModal()
       }
@@ -148,9 +155,8 @@ export default function App() {
   // MED-015: use shared providerAlertCount — now includes supExp (was missing from badge)
   const alertCount  = db.providers.reduce((n, prov) => {
     return n + providerAlertCount(prov, { alertDays, caqhDays })
-    return n
   }, 0)
-  const expDocs     = db.documents.filter(d => { const days=daysUntil(d.exp); return days!==null && days<=90 }).length
+  const expDocs     = db.documents.filter(d => { const days=daysUntil(d.exp); return days!==null && days<=alertDays }).length
   const provDetail  = provDetailId ? db.providers.find(x => x.id === provDetailId) : null
 
   function openProvDetail(id) { setProvDetailId(id); setModal('provDetail') }
@@ -184,14 +190,15 @@ export default function App() {
   async function handleClearAudit() {
     if (!(await requestConfirm({
       title: 'Archive Audit Log',
-      body: 'Audit records are append-only for compliance. This records an archive request; authenticated users cannot delete the audit trail.',
-      confirmText: 'Record request',
+      body: 'Audit records are append-only for HIPAA compliance. This records an archive request in the audit trail. Records are not deleted — contact your administrator to export and purge old entries.',
+      confirmText: 'Record archive request',
       danger: false,
     }))) return
     try {
       await clearAuditLogDB()
-      setDb(prev => ({ ...prev, auditLog: [] }))
-      toast('Audit log cleared.', 'warn')
+      // Do NOT clear auditLog from state — records still exist in DB.
+      // On next refresh, entries return. Clearing the display would be misleading.
+      toast('Archive request recorded. Contact your admin to export old entries.', 'success')
     } catch(err) { toast(err.message, 'error') }
   }
 
