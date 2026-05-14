@@ -354,11 +354,12 @@ function Spinner() {
 function PcMark({ size = 44 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="2" y="2" width="40" height="40" rx="11" fill="#0D1B3D"/>
-      <text x="14" y="33" fontFamily="Inter, system-ui, sans-serif" fontWeight="800" fontSize="26" fill="#FFFFFF">P</text>
-      <circle cx="37" cy="37" r="8.5" fill="#1565C0" stroke="#FFFFFF" strokeWidth="2"/>
-      <rect x="35.6" y="32.6" width="2.8" height="8.8" rx="1" fill="#FFFFFF"/>
-      <rect x="32.6" y="35.6" width="8.8" height="2.8" rx="1" fill="#FFFFFF"/>
+      {/* Left half of shield — LA Blue */}
+      <path d="M24 3L5 11V27C5 37 13 44 24 47V3Z" fill="#1565C0"/>
+      {/* Right half of shield — Centre Green */}
+      <path d="M24 3L43 11V27C43 37 35 44 24 47V3Z" fill="#5CB85C"/>
+      {/* White checkmark */}
+      <polyline points="13,26 21,34 35,18" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
     </svg>
   )
 }

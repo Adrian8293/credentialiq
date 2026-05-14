@@ -24,86 +24,73 @@ const TYPE_META = {
 }
 
 const PAYER_COLORS = [
-  '#C8102E','#00539F','#004B87','#006699','#006F44','#0079C1','#007DC3',
-  '#0033A0','#003781','#C41E3A','#1B3A6B','#374151','#008080','#6B21A8',
+  '#1565C0','#1976D2','#5CB85C','#2E7D32','#7B1FA2',
+  '#C62828','#E65100','#00838F','#4527A0','#00695C',
+  '#AD1457','#283593','#558B2F','#6D4C41','#1565C0',
 ]
+
+// Payer-specific brand colors for known payers
+const PAYER_BRAND = {
+  'aetna':       '#7B1FA2',
+  'bcbs':        '#003781',
+  'blue cross':  '#003781',
+  'blue shield': '#00539F',
+  'cigna':       '#006699',
+  'united':      '#C8102E',
+  'uhc':         '#C8102E',
+  'humana':      '#007DC3',
+  'kaiser':      '#006F44',
+  'anthem':      '#003781',
+  'molina':      '#0079C1',
+  'centene':     '#0033A0',
+  'medicare':    '#1565C0',
+  'medicaid':    '#2E7D32',
+  'tricare':     '#004B87',
+  'optum':       '#F26000',
+  'magellan':    '#C62828',
+  'beacon':      '#00838F',
+  'evernorth':   '#6D4C41',
+  'multiplan':   '#4527A0',
+  'availity':    '#1565C0',
+  'regence':     '#003781',
+  'premera':     '#006699',
+  'providence':  '#006F44',
+  'moda':        '#C62828',
+  'cambia':      '#00695C',
+}
 
 function payerInitials(name) {
   return name.split(/[\s\/]+/).slice(0,2).map(w => w[0]).join('').toUpperCase()
 }
 
 function payerColor(name) {
-  // POL-012: use brand color from PAYER_CATALOG if available, fall back to hash
-  const catalog = PAYER_CATALOG.find(c => c.name.toLowerCase() === (name || '').toLowerCase())
+  if (!name) return PAYER_COLORS[0]
+  const lower = name.toLowerCase()
+  for (const [key, color] of Object.entries(PAYER_BRAND)) {
+    if (lower.includes(key)) return color
+  }
+  const catalog = PAYER_CATALOG.find(c => c.name.toLowerCase() === lower)
   if (catalog?.color) return catalog.color
   let h = 0
-  for (let i = 0; i < (name||'').length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffffffff
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffffffff
   return PAYER_COLORS[Math.abs(h) % PAYER_COLORS.length]
 }
 
-// Known payer domain map for logo lookup
-const PAYER_DOMAINS = {
-  'Aetna': 'aetna.com',
-  'BCBS': 'bcbs.com',
-  'Blue Cross': 'bcbs.com',
-  'Blue Shield': 'blueshieldca.com',
-  'Regence': 'regence.com',
-  'BCBS Oregon': 'regence.com',
-  'Cigna': 'cigna.com',
-  'United': 'uhc.com',
-  'UnitedHealth': 'uhc.com',
-  'UHC': 'uhc.com',
-  'Humana': 'humana.com',
-  'Kaiser': 'kp.org',
-  'Moda': 'modahealth.com',
-  'Providence': 'providence.org',
-  'Premera': 'premera.com',
-  'Cambia': 'cambiahealth.com',
-  'Molina': 'molinahealthcare.com',
-  'Centene': 'centene.com',
-  'Anthem': 'anthem.com',
-  'CVS': 'cvs.com',
-  'Tricare': 'tricare.mil',
-  'Medicare': 'medicare.gov',
-  'Medicaid': 'medicaid.gov',
-  'OHA': 'oregon.gov',
-  'Availity': 'availity.com',
-  'Magellan': 'magellanhealth.com',
-  'Optum': 'optum.com',
-  'Beacon': 'beaconhealthoptions.com',
-  'Evernorth': 'evernorth.com',
-  'ValueOptions': 'valueoptions.com',
-  'Multiplan': 'multiplan.com',
-  'Zelis': 'zelis.com',
-}
-
-function getPayerDomain(name) {
-  if (!name) return null
-  for (const [key, domain] of Object.entries(PAYER_DOMAINS)) {
-    if (name.toLowerCase().includes(key.toLowerCase())) return domain
-  }
-  return null
-}
 
 function PayerLogo({ name, color, size = 28 }) {
-  const [imgErr, setImgErr] = useState(false)
-  const domain = getPayerDomain(name)
-
-  if (domain && !imgErr) {
-    return (
-      <div style={{ width: size, height: size, borderRadius: 7, flexShrink: 0, background: '#fff', border: '1.5px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-        <img
-          src={`https://logo.clearbit.com/${domain}`}
-          alt={name}
-          style={{ width: size - 6, height: size - 6, objectFit: 'contain' }}
-          onError={() => setImgErr(true)}
-        />
-      </div>
-    )
-  }
+  const initials = payerInitials(name)
+  const fontSize = size <= 28 ? 10 : size <= 36 ? 12 : 14
   return (
-    <div style={{ width: size, height: size, borderRadius: 7, flexShrink: 0, background: `${color}18`, border: `1.5px solid ${color}30`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800, color, letterSpacing: '-.01em' }}>
-      {payerInitials(name)}
+    <div style={{
+      width: size, height: size, borderRadius: Math.round(size * 0.26),
+      flexShrink: 0, background: `${color}18`,
+      border: `1.5px solid ${color}35`,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontSize: fontSize, fontWeight: 800, color,
+      letterSpacing: '-.02em', fontFamily: 'var(--fn)',
+      userSelect: 'none',
+    }}>
+      {initials}
     </div>
   )
 }
