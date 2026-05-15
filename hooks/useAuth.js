@@ -6,21 +6,29 @@ function useAuth() {
   const [authLoading, setAuthLoading] = useState(true)
 
   useEffect(() => {
-    // Use getUser() for server-verified auth instead of getSession()
-    // getSession() only reads the local JWT without validating it.
-    // getUser() makes a round-trip to Supabase to verify the token is
-    // still valid, not revoked, and not expired.
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user ?? null)
-      setAuthLoading(false)
-    }).catch(() => {
-      setUser(null)
-      setAuthLoading(false)
+    // First read the session from localStorage (instant, no network call).
+    // This prevents the flash-redirect to /login on page load.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser(session.user)
+        setAuthLoading(false)
+      } else {
+        // No local session — confirm with server
+        supabase.auth.getUser().then(({ data: { user } }) => {
+          setUser(user ?? null)
+          setAuthLoading(false)
+        }).catch(() => {
+          setUser(null)
+          setAuthLoading(false)
+        })
+      }
     })
 
-    // Listen for auth state changes
+    // Listen for sign-in / sign-out events
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
+      // If a new session arrives (e.g. after magic link), stop loading
+      if (session !== undefined) setAuthLoading(false)
     })
 
     return () => subscription.unsubscribe()
