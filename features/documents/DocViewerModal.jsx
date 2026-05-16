@@ -10,7 +10,7 @@
  * so staff can review the record alongside the file.
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Modal } from '../../components/ui/Modal.jsx'
 import { fmtDate, daysUntil, pName } from '../../lib/helpers.js'
 import { NO_EXPIRY_TYPES } from '../../hooks/useDocumentActions.js'
@@ -75,12 +75,28 @@ function ExpiryChip({ doc }) {
 export function DocViewerModal({ doc, db, onClose, onEdit }) {
   const [iframeLoaded, setIframeLoaded] = useState(false)
   const [iframeError, setIframeError]   = useState(false)
+  const [freshUrl, setFreshUrl]         = useState(null)
+  const [urlLoading, setUrlLoading]     = useState(false)
+
+  // Fetch a fresh signed URL from the server when the modal opens.
+  // Stored signed URLs can expire or have path issues — the API route
+  // regenerates them using the service role key.
+  // Use useEffect equivalent via useState + immediate call pattern
+  useEffect(() => {
+    if (!doc?.id || !doc?.fileUrl) return
+    setUrlLoading(true)
+    fetch(`/api/get-document-url?documentId=${doc.id}`)
+      .then(r => r.json())
+      .then(data => { if (data.signedUrl) setFreshUrl(data.signedUrl) })
+      .catch(() => {}) // fall back to stored URL silently
+      .finally(() => setUrlLoading(false))
+  }, [doc?.id])
 
   if (!doc) return null
 
   const viewMode   = getViewMode(doc.fileName)
-  const fileUrl    = doc.fileUrl
-  const hasFile    = !!fileUrl
+  const fileUrl    = freshUrl || doc.fileUrl
+  const hasFile    = !!doc.fileUrl
   const provName   = pName(db.providers, doc.provId)
 
   return (
