@@ -107,6 +107,7 @@ export function DocViewerModal({ doc, db, onClose, onEdit }) {
 
   if (!doc) return null
 
+  const viewMode = getViewMode(doc.fileName)
   const fileUrl  = freshUrl || doc.fileUrl
   const hasFile  = !!doc.fileUrl
   const provName = pName(db.providers, doc.provId)
